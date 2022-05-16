@@ -6,6 +6,8 @@ import org.norma.finalproject.customer.repository.CustomerRepository;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
@@ -15,6 +17,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer save(Customer customer) {
+        customer.setCreatedBy("ENGIN AKIN");
+        customer.setCreatedAt(new Date());
         return customerRepository.save(customer);
     }
 }

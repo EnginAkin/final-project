@@ -24,4 +24,9 @@ public class AppExceptionHandler {
         return new GeneralErrorResponse(businessException.getMessage());
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public GeneralResponse handleIllegalArgumentException(IllegalArgumentException illegalArgumentException) {
+        return new GeneralErrorResponse(illegalArgumentException.getMessage());
+    }
+
 }

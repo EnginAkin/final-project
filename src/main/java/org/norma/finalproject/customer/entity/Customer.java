@@ -1,7 +1,6 @@
 package org.norma.finalproject.customer.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,8 +8,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@Setter
 public class Customer extends BaseExtendedModel {
 
     private String identityNumber;

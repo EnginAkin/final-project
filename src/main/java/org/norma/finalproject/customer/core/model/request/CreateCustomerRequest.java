@@ -25,7 +25,7 @@ public class CreateCustomerRequest {
     @NotNull(message = "Password Cannot be null.")
     private String password;
 
-    @Pattern(regexp ="^(1[0-2]|0[1-9])/(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$")// Doesnt work
+    @Pattern(regexp ="^(1[0-2]|0[1-9])/(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$")
     @NotNull(message = "Date Cannot be null.")
     private Date birthDay; // 01/12/2019
 

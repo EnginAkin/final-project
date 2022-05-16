@@ -9,10 +9,10 @@ import java.util.Locale;
 
 import static java.util.Calendar.*;
 
-public final class Utils {
+public  class Utils {
 
     private Utils() {
-        throw new UnsupportedOperationException();
+
     }
 
 
