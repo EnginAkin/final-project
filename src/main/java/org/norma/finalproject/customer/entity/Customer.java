@@ -12,6 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class Customer extends BaseExtendedModel {
 
     private String identityNumber;
@@ -19,6 +20,7 @@ public class Customer extends BaseExtendedModel {
     private String name;
     private String surname;
     private String password;
+    private String telephoneNumber;
 
 
 

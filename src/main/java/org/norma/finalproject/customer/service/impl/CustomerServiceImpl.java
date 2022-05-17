@@ -3,6 +3,7 @@ package org.norma.finalproject.customer.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.customer.core.exception.CustomerAlreadyRegisterException;
+import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.repository.CustomerRepository;
 import org.norma.finalproject.customer.service.CustomerService;
@@ -35,6 +36,16 @@ public class CustomerServiceImpl implements CustomerService {
     public Optional<Customer> getCustomerByIdentity(String identity) {
         Optional<Customer> customer=customerRepository.findByIdentityNumber(identity);
         return customer;
+    }
+
+    @Override
+    public Optional<Customer> getCustomerById(Long id) {
+        return customerRepository.findById(id);
+    }
+
+    @Override
+    public void update(Customer customer) {
+         customerRepository.save(customer);
     }
 
 

@@ -3,18 +3,20 @@ package org.norma.finalproject.customer.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
-import org.norma.finalproject.customer.core.exception.CustomerAlreadyRegisterException;
-import org.norma.finalproject.customer.core.exception.IdentityNotValidException;
-import org.norma.finalproject.customer.core.exception.NotAcceptableAgeException;
+import org.norma.finalproject.customer.core.exception.*;
 import org.norma.finalproject.customer.core.mapper.CustomerMapper;
 import org.norma.finalproject.customer.core.model.request.CreateCustomerRequest;
+import org.norma.finalproject.customer.core.model.request.UpdateCustomerRequest;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.core.utilities.Utils;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.norma.finalproject.customer.service.FacadeCustomerService;
 import org.norma.finalproject.customer.service.IdentityVerifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,8 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
     private final CustomerService customerService;
     private final IdentityVerifier identityVerifier;
     private final CustomerMapper customerMapper;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException {
@@ -36,8 +40,23 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         if(!isOver18YearsOld){
             throw new NotAcceptableAgeException();
         }
-
+        customer.setPassword(passwordEncoder.encode(createCustomerRequest.getPassword()));
         customerService.save(customer);
         return new GeneralSuccessfullResponse(CustomerConstant.SIGNUP_SUCESSFULL);
+    }
+
+    @Override
+    public GeneralResponse update(long id, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException {
+        Optional<Customer> customer=customerService.getCustomerById(id);
+        if(customer.isEmpty()){
+            throw new CustomerNotFoundException();
+        }
+        if(passwordEncoder.matches(updateCustomerRequest.getPassword(),customer.get().getPassword())){
+            throw new UpdateCustomerSamePasswordException();
+        }
+        customer.get().setPassword(passwordEncoder.encode(updateCustomerRequest.getPassword()));
+        customer.get().setTelephoneNumber(updateCustomerRequest.getTelephone());
+        customerService.update(customer.get());
+        return new GeneralSuccessfullResponse(CustomerConstant.UPDATE_SUCESSFULL);
     }
 }

@@ -7,7 +7,8 @@ public final class CustomerConstant {
     }
 
 
-    public static final String SIGNUP_SUCESSFULL="Signup Successfull";
+    public static final String SIGNUP_SUCESSFULL="Signup successfull";
+    public static final String UPDATE_SUCESSFULL="Update  successfull";
 
 
 }
