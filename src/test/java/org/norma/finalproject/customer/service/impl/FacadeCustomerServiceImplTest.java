@@ -6,8 +6,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.norma.finalproject.common.response.GeneralResponse;
-import org.norma.finalproject.customer.core.exception.customer.IdentityNotValidException;
-import org.norma.finalproject.customer.core.exception.customer.NotAcceptableAgeException;
+import org.norma.finalproject.customer.core.exception.CustomerAlreadyRegisterException;
+import org.norma.finalproject.customer.core.exception.IdentityNotValidException;
+import org.norma.finalproject.customer.core.exception.NotAcceptableAgeException;
 import org.norma.finalproject.customer.core.mapper.CustomerMapper;
 import org.norma.finalproject.customer.core.model.request.CreateCustomerRequest;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
@@ -21,7 +22,6 @@ import java.time.ZoneId;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -40,7 +40,7 @@ class FacadeCustomerServiceImplTest {
     private FacadeCustomerServiceImpl underTest;
 
     @Test
-    void givenValidCreateCustomerRequest_whenSignup_thenSignedIn() throws NotAcceptableAgeException, IdentityNotValidException {
+    void givenValidCreateCustomerRequest_whenSignup_thenSignedIn() throws NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException {
         // given
         MockedStatic<Utils> utilities = Mockito.mockStatic(Utils.class);
         CreateCustomerRequest createCustomerRequest = new CreateCustomerRequest();
@@ -77,8 +77,10 @@ class FacadeCustomerServiceImplTest {
 
     }
 
+
+
     @Test
-    void givenUnder18Age_whenSignup_thenThrowsNotAcceptableAgeException() throws NotAcceptableAgeException, IdentityNotValidException {
+    void givenUnder18Age_whenSignup_thenThrowsNotAcceptableAgeException() throws CustomerAlreadyRegisterException {
         // given
         CreateCustomerRequest createCustomerRequest = new CreateCustomerRequest();
         ZoneId defaultZoneId = ZoneId.systemDefault();
@@ -110,7 +112,7 @@ class FacadeCustomerServiceImplTest {
     }
 
     @Test
-    void givenInvalidIdentity_whenSignup_thenThrowsIdentityNotValidException() throws NotAcceptableAgeException, IdentityNotValidException {
+    void givenInvalidIdentity_whenSignup_thenThrowsIdentityNotValidException() throws CustomerAlreadyRegisterException {
         // given
         MockedStatic<Utils> utilities = Mockito.mockStatic(Utils.class);
         CreateCustomerRequest createCustomerRequest = new CreateCustomerRequest();

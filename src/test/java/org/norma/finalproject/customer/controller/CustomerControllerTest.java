@@ -3,7 +3,9 @@ package org.norma.finalproject.customer.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
-import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
+import org.norma.finalproject.common.response.GeneralErrorResponse;
+import org.norma.finalproject.common.response.GeneralResponse;
+import org.norma.finalproject.customer.core.exception.NotAcceptableAgeException;
 import org.norma.finalproject.customer.core.model.request.CreateCustomerRequest;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.service.FacadeCustomerService;
@@ -31,10 +33,9 @@ class CustomerControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private FacadeCustomerService customerService;
+    private FacadeCustomerService facadeCustomerService;
 
-
-    // TODO yapılack
+    // response içinde general response yok
     @Test
     void givenCreateCustomerRequest_whenCreate_thenReturnsSuccessfullResponse() throws Exception {
         // given
@@ -47,8 +48,8 @@ class CustomerControllerTest {
         createCustomerRequest.setBirthDay(Date.from(birthday.atStartOfDay(defaultZoneId).toInstant()));
         createCustomerRequest.setName("Engin");
         createCustomerRequest.setSurname("Akin");
-        GeneralSuccessfullResponse generalSuccessfullResponse=new GeneralSuccessfullResponse(CustomerConstant.SIGNUP_SUCESSFULL);
-        BDDMockito.given(customerService.signup(createCustomerRequest)).willReturn(generalSuccessfullResponse);
+        GeneralResponse generalSuccessfullResponse=new GeneralResponse(CustomerConstant.SIGNUP_SUCESSFULL,true);
+        BDDMockito.given(facadeCustomerService.signup(createCustomerRequest)).willReturn(generalSuccessfullResponse);
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/customers/sing-up").
                 contentType(MediaType.APPLICATION_JSON)
@@ -61,9 +62,40 @@ class CustomerControllerTest {
 
 
 
+    }
+
+/*
+// TODO response donmuyor .
+    @Test
+    void givenUnder18YearsOld_whenCreate_thenReturnsSuccessfullResponse() throws Exception {
+        // given
+        CreateCustomerRequest createCustomerRequest=new CreateCustomerRequest();
+        createCustomerRequest.setTelephone("5452320454");
+        createCustomerRequest.setPassword("123456");
+        createCustomerRequest.setIdentityNumber("11111111111");
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        LocalDate birthday = LocalDate.of(2018, 3, 3);
+        createCustomerRequest.setBirthDay(Date.from(birthday.atStartOfDay(defaultZoneId).toInstant()));
+        createCustomerRequest.setName("Engin");
+        createCustomerRequest.setSurname("Akin");
+        BDDMockito.given(facadeCustomerService.signup(createCustomerRequest)).willThrow(NotAcceptableAgeException.class);
+        // when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/customers/sing-up").
+                contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(createCustomerRequest)));
+
+        // then
+
+        GeneralErrorResponse errorResponse=new GeneralErrorResponse("You must be over 18 years old.");
+        resultActions.andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+
 
     }
 
+
+ */
 
 
 

@@ -1,9 +1,11 @@
 package org.norma.finalproject.customer.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.norma.finalproject.common.exception.BusinessException;
 import org.norma.finalproject.common.response.GeneralResponse;
-import org.norma.finalproject.customer.core.exception.customer.IdentityNotValidException;
-import org.norma.finalproject.customer.core.exception.customer.NotAcceptableAgeException;
+import org.norma.finalproject.customer.core.exception.CustomerAlreadyRegisterException;
+import org.norma.finalproject.customer.core.exception.IdentityNotValidException;
+import org.norma.finalproject.customer.core.exception.NotAcceptableAgeException;
 import org.norma.finalproject.customer.core.model.request.CreateCustomerRequest;
 import org.norma.finalproject.customer.service.FacadeCustomerService;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +24,7 @@ public class CustomerController {
     private final FacadeCustomerService facadeCustomerService;
 
     @PostMapping("sing-up")
-    public GeneralResponse create(@RequestBody @Valid CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, IdentityNotValidException {
+    public GeneralResponse create(@RequestBody @Valid CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, CustomerAlreadyRegisterException, IdentityNotValidException {
         return facadeCustomerService.signup(createCustomerRequest);
     }
 

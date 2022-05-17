@@ -3,8 +3,9 @@ package org.norma.finalproject.customer.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
-import org.norma.finalproject.customer.core.exception.customer.IdentityNotValidException;
-import org.norma.finalproject.customer.core.exception.customer.NotAcceptableAgeException;
+import org.norma.finalproject.customer.core.exception.CustomerAlreadyRegisterException;
+import org.norma.finalproject.customer.core.exception.IdentityNotValidException;
+import org.norma.finalproject.customer.core.exception.NotAcceptableAgeException;
 import org.norma.finalproject.customer.core.mapper.CustomerMapper;
 import org.norma.finalproject.customer.core.model.request.CreateCustomerRequest;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
@@ -24,7 +25,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
     private final CustomerMapper customerMapper;
 
     @Override
-    public GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws IdentityNotValidException, NotAcceptableAgeException {
+    public GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException {
         Customer customer = customerMapper.customerDtoToCustomer(createCustomerRequest);
 
         boolean verifyIdentityNumber = identityVerifier.verify(customer.getIdentityNumber());
@@ -37,7 +38,6 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         }
 
         customerService.save(customer);
-
         return new GeneralSuccessfullResponse(CustomerConstant.SIGNUP_SUCESSFULL);
     }
 }
