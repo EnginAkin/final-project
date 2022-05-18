@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.norma.finalproject.customer.core.exception.CustomerAlreadyRegisterException;
+import org.norma.finalproject.customer.core.exception.RoleNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.repository.CustomerRepository;
 
@@ -25,7 +26,7 @@ class CustomerServiceImplTest {
     private CustomerServiceImpl underTest;
 
     @Test
-    void givenCustomer_whenSave_thenReturnSavedCustomer() throws CustomerAlreadyRegisterException {
+    void givenCustomer_whenSave_thenReturnSavedCustomer() throws CustomerAlreadyRegisterException, RoleNotFoundException {
         // given
         Customer customer = Customer.builder().name("engin").password("123").customerNo("213").birthDay(new Date()).identityNumber("123").build();
         BDDMockito.given(customerRepository.save(customer)).willReturn(customer);

@@ -8,7 +8,7 @@ import org.norma.finalproject.customer.core.model.request.UpdateCustomerRequest;
 
 public interface FacadeCustomerService {
 
-    GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws IdentityNotValidException, NotAcceptableAgeException, NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException;
+    GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws  NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException;
 
     GeneralResponse update(long id, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException;
 }

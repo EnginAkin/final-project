@@ -4,13 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.customer.core.exception.CustomerAlreadyRegisterException;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
+import org.norma.finalproject.customer.core.exception.RoleNotFoundException;
+import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.entity.Customer;
+import org.norma.finalproject.customer.entity.Role;
 import org.norma.finalproject.customer.repository.CustomerRepository;
 import org.norma.finalproject.customer.service.CustomerService;
+import org.norma.finalproject.customer.service.RoleService;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -19,6 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     private final CustomerRepository customerRepository;
+    private final RoleService roleService;
 
     @Override
     public Customer save(Customer customer) throws CustomerAlreadyRegisterException {
@@ -28,14 +34,15 @@ public class CustomerServiceImpl implements CustomerService {
         }
         customer.setCreatedBy("ENGIN AKIN");
         customer.setCreatedAt(new Date());
+        Role roleUser=roleService.getRoleByName(CustomerConstant.ROLE_USER);
+        customer.setRoles(Set.of(roleUser));
         log.info("Customer successfull register  :{}",customer.getName());
         return customerRepository.save(customer);
     }
 
     @Override
     public Optional<Customer> getCustomerByIdentity(String identity) {
-        Optional<Customer> customer=customerRepository.findByIdentityNumber(identity);
-        return customer;
+        return customerRepository.findByIdentityNumber(identity);
     }
 
     @Override

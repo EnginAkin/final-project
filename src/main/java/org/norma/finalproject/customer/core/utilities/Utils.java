@@ -1,18 +1,24 @@
 package org.norma.finalproject.customer.core.utilities;
 
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Calendar.*;
 
-public  class Utils {
+public class Utils {
 
     private Utils() {
 
+    }
+
+    public static List<String> SimpleGrantedAuthorityToListString(Collection<SimpleGrantedAuthority> authorities) {
+        return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
     }
 
 
@@ -24,7 +30,7 @@ public  class Utils {
                 (a.get(MONTH) == b.get(MONTH) && a.get(DATE) > b.get(DATE))) {
             diff--;
         }
-        return diff>=18;
+        return diff >= 18;
     }
 
     private static Calendar getCalendar(Date date) {

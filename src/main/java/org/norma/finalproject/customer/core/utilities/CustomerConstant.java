@@ -9,6 +9,9 @@ public final class CustomerConstant {
 
     public static final String SIGNUP_SUCESSFULL="Signup successfull";
     public static final String UPDATE_SUCESSFULL="Update  successfull";
+    public static final String ROLE_USER="ROLE_USER";
+    public static final String ROLE_ADMIN="ROLE_ADMIN";
+
 
 
 }

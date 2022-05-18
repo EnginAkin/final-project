@@ -55,7 +55,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
             throw new UpdateCustomerSamePasswordException();
         }
         customer.get().setPassword(passwordEncoder.encode(updateCustomerRequest.getPassword()));
-        customer.get().setTelephoneNumber(updateCustomerRequest.getTelephone());
+        customer.get().setTelephone(updateCustomerRequest.getTelephone());
         customerService.update(customer.get());
         return new GeneralSuccessfullResponse(CustomerConstant.UPDATE_SUCESSFULL);
     }

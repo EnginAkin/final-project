@@ -20,7 +20,10 @@ public class Customer extends BaseExtendedModel {
     private String name;
     private String surname;
     private String password;
-    private String telephoneNumber;
+    private String telephone;
+
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private Set<Role> roles=new HashSet<>();
 
 
 

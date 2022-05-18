@@ -1,17 +1,19 @@
 package org.norma.finalproject.common.response;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-public class GeneralDataResponse<T>  {
+@Builder
+public class GeneralDataResponse<T> extends GeneralResponse  {
     private final T data;
-    private  GeneralResponse generalResponse;
     public GeneralDataResponse(T data){
+        super("successfull",true);
         this.data = data;
-        this.generalResponse=new GeneralResponse("Successfull",true);
+    }
+
+    public GeneralDataResponse(T data,String message){
+        super(message,true);
+        this.data = data;
     }
 }

@@ -7,6 +7,7 @@ import org.norma.finalproject.customer.core.exception.*;
 import org.norma.finalproject.customer.core.model.request.CreateCustomerRequest;
 import org.norma.finalproject.customer.core.model.request.UpdateCustomerRequest;
 import org.norma.finalproject.customer.service.FacadeCustomerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ import javax.validation.constraints.Min;
 public class CustomerController {
     private final FacadeCustomerService facadeCustomerService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/sing-up")
     public GeneralResponse create(@RequestBody @Valid CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, CustomerAlreadyRegisterException, IdentityNotValidException {
         return facadeCustomerService.signup(createCustomerRequest);
