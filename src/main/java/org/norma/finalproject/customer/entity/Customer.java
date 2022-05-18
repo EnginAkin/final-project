@@ -21,8 +21,9 @@ public class Customer extends BaseExtendedModel {
     private String surname;
     private String password;
     private String telephone;
+    // TODO aylık gelir
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles=new HashSet<>();
 
 

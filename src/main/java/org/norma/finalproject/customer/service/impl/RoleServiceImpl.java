@@ -24,11 +24,11 @@ public class RoleServiceImpl implements RoleService {
     public Role getRoleByName(String role) {
         return repository.findByName(role).get();
     }
-
     @PostConstruct
     public void addRoleDatabase(){
         Role roleUser=new Role(CustomerConstant.ROLE_USER);
         Role roleAdmin=new Role(CustomerConstant.ROLE_ADMIN);
         repository.saveAll(List.of(roleAdmin,roleUser));
     }
+
 }

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.common.security.filter.CustomAuthenticationFilter;
 import org.norma.finalproject.common.security.filter.CustomUsernamePasswordAuthenticationFilter;
 import org.norma.finalproject.common.security.user.CustomUserDetailsService;
+import org.norma.finalproject.customer.core.utilities.CustomerConstant;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeHttpRequests().antMatchers(AUTH_WHITELIST_FOR_SWAGGER).permitAll();
         http.authorizeHttpRequests().antMatchers(AUTH_WHITELIST).permitAll();
 
-        http.authorizeHttpRequests().antMatchers(AUTH_WHITELIST_FOR_USER).hasAnyAuthority("ROLE_USER");
+        http.authorizeHttpRequests().antMatchers(AUTH_WHITELIST_FOR_USER).hasAnyAuthority(CustomerConstant.ROLE_USER);
         http.authorizeHttpRequests().anyRequest().authenticated();
         http.addFilter(new CustomUsernamePasswordAuthenticationFilter(authenticationManagerBean()));
         http.addFilterBefore(authenticationFilter, CustomUsernamePasswordAuthenticationFilter.class);
@@ -67,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    @Override
+    @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }

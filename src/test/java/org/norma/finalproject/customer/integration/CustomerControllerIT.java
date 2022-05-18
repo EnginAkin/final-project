@@ -2,7 +2,11 @@ package org.norma.finalproject.customer.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.norma.finalproject.common.security.user.CustomUserDetailsService;
+import org.norma.finalproject.common.security.user.UserDetail;
 import org.norma.finalproject.customer.core.model.request.CreateCustomerRequest;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.entity.Customer;
@@ -10,7 +14,12 @@ import org.norma.finalproject.customer.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -34,6 +43,29 @@ public class CustomerControllerIT {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @MockBean
+    private CustomUserDetailsService userService;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
+
+
+    @BeforeEach
+    public void init() {
+        customerRepository.deleteAll();
+        Customer customer=new Customer();
+        customer.setPassword("123");
+        customer.setIdentityNumber("123");
+
+        UserDetail userDetail=new UserDetail(customer);
+        Mockito.when(userService.loadUserByUsername(Mockito.anyString())).thenReturn(userDetail);
+        Mockito.when(passwordEncoder.matches(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(customer.getIdentityNumber(),customer.getPassword()));
+
+    }
+
+
     @Test
     void givenCreateCustomerRequest_whenCreate_thenReturnsSuccessfullResponse() throws Exception {
         // given
@@ -53,9 +85,7 @@ public class CustomerControllerIT {
 
         // then
         resultActions.andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.isSuccessful", CoreMatchers.is(true)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message", CoreMatchers.is(CustomerConstant.SIGNUP_SUCESSFULL)));
+                .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
     @Test
@@ -86,7 +116,7 @@ public class CustomerControllerIT {
         CreateCustomerRequest createCustomerRequest = new CreateCustomerRequest();
         createCustomerRequest.setTelephone("5452320454");
         createCustomerRequest.setPassword("123456");
-        createCustomerRequest.setIdentityNumber("11111111111");
+        createCustomerRequest.setIdentityNumber("111111111110");
         ZoneId defaultZoneId = ZoneId.systemDefault();
         LocalDate birthday = LocalDate.of(2018, 3, 3); // age under 18
         createCustomerRequest.setBirthDay(Date.from(birthday.atStartOfDay(defaultZoneId).toInstant()));

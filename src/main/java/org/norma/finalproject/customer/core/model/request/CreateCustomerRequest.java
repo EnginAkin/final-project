@@ -2,6 +2,7 @@ package org.norma.finalproject.customer.core.model.request;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.norma.finalproject.customer.core.model.AddressDto;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -33,6 +34,7 @@ public class CreateCustomerRequest {
     @NotNull(message = "Telephone Cannot be null.")
     private String telephone;
 
+    //private AddressDto address;
 
 
 

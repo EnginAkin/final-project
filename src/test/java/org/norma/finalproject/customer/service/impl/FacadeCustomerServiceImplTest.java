@@ -16,6 +16,7 @@ import org.norma.finalproject.customer.core.utilities.Utils;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.norma.finalproject.customer.service.IdentityVerifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -35,6 +36,9 @@ class FacadeCustomerServiceImplTest {
 
     @Mock
     private CustomerMapper customerMapper;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private FacadeCustomerServiceImpl underTest;
