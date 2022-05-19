@@ -9,9 +9,11 @@ import java.util.Optional;
 
 public interface CustomerService {
     Customer save(Customer customer) throws CustomerAlreadyRegisterException;
+
     Optional<Customer> getCustomerByIdentity(String identity);
 
-    Optional<Customer> getCustomerById(Long id) ;
+    Optional<Customer> getCustomerById(Long id);
+
     void update(Customer customer);
 
     boolean existCustomerById(long id);

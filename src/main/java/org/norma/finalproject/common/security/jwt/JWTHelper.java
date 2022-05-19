@@ -31,7 +31,7 @@ public class JWTHelper {
         }
         return JWT.create()
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis()+expiresIn))
+                .withExpiresAt(new Date(System.currentTimeMillis() + expiresIn))
                 .withSubject(identity)
                 .withClaim("roles", roles)
                 .sign(Algorithm.HMAC512(secretKey));
@@ -43,6 +43,7 @@ public class JWTHelper {
         }
         return JWT.decode(token).getSubject();
     }
+
     public String[] getCustomerRoles(String token) {
         if (!StringUtils.hasLength(token)) {
             throw new IllegalArgumentException("Token can not be null or empty");
@@ -53,8 +54,8 @@ public class JWTHelper {
 
     public boolean validate(String token) {
         try {
-            JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC512(secretKey)).build();
-            DecodedJWT decodedJWT= jwtVerifier.verify(token);
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
+            DecodedJWT decodedJWT = jwtVerifier.verify(token);
             return true;
         } catch (AlgorithmMismatchException algorithmMismatchException) {
             log.error("JWT Token AlgorithmMismatchException occurred!");
@@ -71,7 +72,6 @@ public class JWTHelper {
 
         }
     }
-
 
 
 }

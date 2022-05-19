@@ -34,16 +34,16 @@ public class CumulativeAccount extends BaseModel {
     @Enumerated(EnumType.STRING)
     private PurposeCumulative purposeCumulative;
 
-    private BigDecimal successRate=BigDecimal.ZERO;
-    private BigDecimal targetAmount=BigDecimal.ZERO;
+    private BigDecimal successRate = BigDecimal.ZERO;
+    private BigDecimal targetAmount = BigDecimal.ZERO;
 
     @Enumerated(value = EnumType.ORDINAL)
     private TermPeriod termPeriod;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "cumulativeAccount")
-    List<CumulativeAccountActivity> activities=new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cumulativeAccount")
+    List<CumulativeAccountActivity> activities = new ArrayList<>();
 
-    public void addActivities(CumulativeAccountActivity activity){
+    public void addActivities(CumulativeAccountActivity activity) {
         activities.add(activity);
     }
 

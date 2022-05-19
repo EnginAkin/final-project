@@ -1,6 +1,9 @@
 package org.norma.finalproject.customer.controller;
 
+import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.common.exception.BusinessException;
@@ -36,36 +39,18 @@ public class CustomerController {
         return facadeCustomerService.signup(createCustomerRequest);
     }
 
-
-
     @Operation(tags = "Customer Controller", description = "Update Customer")
-    @PutMapping(path = "/{id}/update")
-    public GeneralResponse update(@PathVariable @Min(0) long id, @RequestBody UpdateCustomerRequest updateCustomerRequest) throws  UpdateCustomerSamePasswordException, CustomerNotFoundException {
-        return facadeCustomerService.update(id,updateCustomerRequest);
+    @PutMapping(path = "/update")
+    public GeneralResponse update(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody UpdateCustomerRequest updateCustomerRequest) throws UpdateCustomerSamePasswordException, CustomerNotFoundException {
+        return facadeCustomerService.update(userDetail.customer().getId(), updateCustomerRequest);
     }
 
-
-
-    // TODO Kullanıcı  JWT token ile başka  kullanıcıların hesaplarını silebiliyor.
-    @Operation(tags = "Customer Controller", description = "Delete customer")
-    @PutMapping(path = "/{id}/delete")
-    public GeneralResponse delete(@PathVariable @Min(0) long id) throws  CustomerNotFoundException, CustomerDeleteException {
-        log.info("gelindi");
-            UserDetails customUserDetail =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("gelen id : "+customUserDetail.getUsername());
-       // return facadeCustomerService.delete(id);
-        return null;
-    }
 
     @Operation(tags = "Customer Controller", description = "Delete customer")
     @PutMapping(path = "/delete")
-    public GeneralResponse delete2(@AuthenticationPrincipal CustomUserDetail userDetail) throws  CustomerNotFoundException, CustomerDeleteException {
-        log.info("gelindi");
-        System.out.println("gelen id : "+userDetail.getUsername());
-        // return facadeCustomerService.delete(id);
-        return null;
+    public GeneralResponse delete(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws CustomerNotFoundException, CustomerDeleteException {
+        return facadeCustomerService.delete(userDetail.customer().getId());
     }
-
 
 
 }

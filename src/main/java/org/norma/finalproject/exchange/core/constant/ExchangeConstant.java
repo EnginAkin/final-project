@@ -2,7 +2,7 @@ package org.norma.finalproject.exchange.core.constant;
 
 public final class ExchangeConstant {
 
-    private ExchangeConstant(){
+    private ExchangeConstant() {
         throw new UnsupportedOperationException();
     }
 

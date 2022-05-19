@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.common.security.jwt.JWTHelper;
+import org.norma.finalproject.common.security.user.CustomUserDetail;
+import org.norma.finalproject.common.security.user.CustomUserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -31,6 +34,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
     private final JWTHelper jwtHelper;
+    private final CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -43,23 +47,18 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
                     String token = authorizationHeader.substring("Bearer ".length());
                     jwtHelper.validate(token);
                     String identity = jwtHelper.findIdentity(token);
-                    String[] roles = jwtHelper.getCustomerRoles(token);
-                    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    stream(roles).forEach(role -> {
-                        authorities.add(new SimpleGrantedAuthority(role));
-                    });
-                    
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(identity, null, authorities);
+                    CustomUserDetail userDetail = (CustomUserDetail) userDetailsService.loadUserByUsername(identity);
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetail, null, userDetail.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                     filterChain.doFilter(request, response);
 
                 } catch (Exception e) {
-                    Map<String,Object> customResponse = new HashMap<>();
-                    customResponse.put("isSuccessfull",false);
-                    customResponse.put("message",e.getMessage());
+                    Map<String, Object> customResponse = new HashMap<>();
+                    customResponse.put("isSuccessfull", false);
+                    customResponse.put("message", e.getMessage());
                     response.setContentType(APPLICATION_JSON_VALUE);
                     response.setStatus(403);
-                    new ObjectMapper().writeValue(response.getOutputStream(),customResponse);
+                    new ObjectMapper().writeValue(response.getOutputStream(), customResponse);
                 }
             } else {
                 filterChain.doFilter(request, response);

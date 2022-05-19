@@ -22,19 +22,17 @@ public class DepositAccount extends BaseModel {
     private String accountNo;
     private String ibanNo;
     private String accountName;
-    private BigDecimal balance =BigDecimal.ZERO;
+    private BigDecimal balance = BigDecimal.ZERO;
 
     @Enumerated(value = EnumType.STRING)
     private CurrencyType currencyType;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "depositAccount")
-    private List<DepositAccountActivity> activities=new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "depositAccount")
+    private List<DepositAccountActivity> activities = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-
 
 
     @Temporal(value = TemporalType.TIMESTAMP)

@@ -4,23 +4,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class Exchange{
+public class Exchange {
 
-	@JsonProperty("date")
-	private String date;
+    @JsonProperty("date")
+    private String date;
 
-	@JsonProperty("result")
-	private double result;
+    @JsonProperty("result")
+    private double result;
 
-	@JsonProperty("success")
-	private boolean success;
+    @JsonProperty("success")
+    private boolean success;
 
-	@JsonProperty("query")
-	private Query query;
+    @JsonProperty("query")
+    private Query query;
 
-	@JsonProperty("historical")
-	private String historical;
+    @JsonProperty("historical")
+    private String historical;
 
-	@JsonProperty("info")
-	private Info info;
+    @JsonProperty("info")
+    private Info info;
 }

@@ -6,5 +6,5 @@ import org.springframework.web.client.HttpClientErrorException;
 
 public interface ExchangeService {
 
-    Double getExchange(String url , HttpEntity entity)throws HttpClientErrorException;
+    Double getExchange(String url, HttpEntity entity) throws HttpClientErrorException;
 }

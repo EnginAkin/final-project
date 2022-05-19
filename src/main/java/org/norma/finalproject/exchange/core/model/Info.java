@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class Info{
+public class Info {
 
-	@JsonProperty("rate")
-	private double rate;
+    @JsonProperty("rate")
+    private double rate;
 
-	@JsonProperty("timestamp")
-	private int timestamp;
+    @JsonProperty("timestamp")
+    private int timestamp;
 }

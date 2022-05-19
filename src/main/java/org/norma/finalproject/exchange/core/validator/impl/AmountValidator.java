@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class AmountValidator implements Validator<Integer> {
     @Override
     public void validate(Integer amount) throws AmountNotValidException {
-        if(amount<0){
+        if (amount < 0) {
             throw new AmountNotValidException("Amount Not Valid");
         }
     }

@@ -13,9 +13,8 @@ import org.springframework.stereotype.Service;
 public class FacadeCumulativeAccountServiceImpl implements FacadeCumulativeAccountService {
 
 
-
     @Override
-    public GeneralResponse create(Long customerId,CreateCumulativeAccountRequest createCumulativeAccountRequest) {
+    public GeneralResponse create(Long customerId, CreateCumulativeAccountRequest createCumulativeAccountRequest) {
         // Asqari tutarın üstünde para yatırmalıdır.
         // TODO vadesiz hesap ilk yapılmalı
 

@@ -24,21 +24,20 @@ public class Customer extends BaseExtendedModel {
     // TODO aylık gelir
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles=new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
 
     @Temporal(TemporalType.DATE)
     private Date birthDay;
 
-    @OneToMany(mappedBy = "customer",cascade = CascadeType.REMOVE)
-    private List<DepositAccount> depositAccounts=new ArrayList<>();
-
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
+    private List<DepositAccount> depositAccounts = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "customer")
-    private Set<Address> addresses=new HashSet<>();
+    private Set<Address> addresses = new HashSet<>();
 
 
-    public void addAddress(Address address){
+    public void addAddress(Address address) {
         addresses.add(address);
     }
 

@@ -29,14 +29,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer save(Customer customer) throws CustomerAlreadyRegisterException {
         Optional<Customer> optionalCustomer = getCustomerByIdentity(customer.getIdentityNumber());
-        if(optionalCustomer.isPresent()){
+        if (optionalCustomer.isPresent()) {
             throw new CustomerAlreadyRegisterException();
         }
         customer.setCreatedBy("ENGIN AKIN");
         customer.setCreatedAt(new Date());
-        Role roleUser=roleService.getRoleByName(CustomerConstant.ROLE_USER);
+        Role roleUser = roleService.getRoleByName(CustomerConstant.ROLE_USER);
         customer.setRoles(Set.of(roleUser));
-        log.info("Customer successfull register  :{}",customer.getName());
+        log.info("Customer successfull register  :{}", customer.getName());
         return customerRepository.save(customer);
     }
 
@@ -52,13 +52,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void update(Customer customer) {
-         customerRepository.save(customer);
+        customerRepository.save(customer);
     }
 
     @Override
     public boolean existCustomerById(long id) {
         Optional<Customer> customer = customerRepository.findById(id);
-        if(customer.isEmpty()){
+        if (customer.isEmpty()) {
             return false;
         }
         return true;

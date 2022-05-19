@@ -12,7 +12,7 @@ import org.norma.finalproject.customer.entity.Customer;
 @Mapper(componentModel = "spring")
 public interface DepositAccountMapper {
 
-    DepositAccountMapper INSTANCE= Mappers.getMapper(DepositAccountMapper.class);
+    DepositAccountMapper INSTANCE = Mappers.getMapper(DepositAccountMapper.class);
 
     DepositAccount ToEntity(CreateDepositAcoountRequest createDepositAcoountRequest);
 

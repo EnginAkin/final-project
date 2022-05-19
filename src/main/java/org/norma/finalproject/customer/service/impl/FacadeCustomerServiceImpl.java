@@ -38,25 +38,25 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         Customer customer = customerMapper.customerDtoToCustomer(createCustomerRequest);
 
         boolean verifyIdentityNumber = identityVerifier.verify(customer.getIdentityNumber());
-        if(!verifyIdentityNumber){
+        if (!verifyIdentityNumber) {
             throw new IdentityNotValidException();
         }
         boolean isOver18YearsOld = Utils.isOver18YearsOld(customer.getBirthDay());
-        if(!isOver18YearsOld){
+        if (!isOver18YearsOld) {
             throw new NotAcceptableAgeException();
         }
         customer.setPassword(passwordEncoder.encode(createCustomerRequest.getPassword()));
         Customer savedCustomer = customerService.save(customer);
-        return new GeneralDataResponse<>(savedCustomer.getId(),CustomerConstant.SIGNUP_SUCESSFULL);
+        return new GeneralDataResponse<>(savedCustomer.getId(), CustomerConstant.SIGNUP_SUCESSFULL);
     }
 
     @Override
     public GeneralResponse update(long id, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException {
-        Optional<Customer> customer=customerService.getCustomerById(id);
-        if(customer.isEmpty()){
+        Optional<Customer> customer = customerService.getCustomerById(id);
+        if (customer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        if(passwordEncoder.matches(updateCustomerRequest.getPassword(),customer.get().getPassword())){
+        if (passwordEncoder.matches(updateCustomerRequest.getPassword(), customer.get().getPassword())) {
             throw new UpdateCustomerSamePasswordException();
         }
         customer.get().setPassword(passwordEncoder.encode(updateCustomerRequest.getPassword()));
@@ -68,11 +68,11 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
     @Override
     public GeneralResponse delete(long id) throws CustomerNotFoundException, CustomerDeleteException {
         boolean existCustomer = customerService.existCustomerById(id);
-        if(!existCustomer){
+        if (!existCustomer) {
             throw new CustomerNotFoundException();
         }
-        boolean checkCustomerHasMoneyInDepositAccount=depositAccountService.checkCustomerHasMoneyInDepositAccounts(id);
-        if(checkCustomerHasMoneyInDepositAccount){
+        boolean checkCustomerHasMoneyInDepositAccount = depositAccountService.checkCustomerHasMoneyInDepositAccounts(id);
+        if (checkCustomerHasMoneyInDepositAccount) {
             throw new CustomerDeleteException(CustomerConstant.DELETE_CUSTOMER_OPERATION_HAS_BALANCE_EXCEPTION);
         }
         log.info("customer deleted ");

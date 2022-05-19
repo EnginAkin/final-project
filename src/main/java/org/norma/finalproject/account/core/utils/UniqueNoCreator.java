@@ -15,28 +15,28 @@ public final class UniqueNoCreator {
     private final DepositAccountService depositAccountService;
 
 
-
-    public  String createDepositAccountNo(){
+    public String createDepositAccountNo() {
         String randomDepositAccountNo = RandomStringUtils.randomNumeric(12);
-        if(depositAccountService.checkIsAccountNoUnique(randomDepositAccountNo)){
-            log.info("Deposit unique account no created : {}",randomDepositAccountNo);
+        if (depositAccountService.checkIsAccountNoUnique(randomDepositAccountNo)) {
+            log.info("Deposit unique account no created : {}", randomDepositAccountNo);
             return randomDepositAccountNo;
         }
         return createDepositAccountNo();
     }
 
-    public  String createDepositIbanNo(){
+    public String createDepositIbanNo() {
         String randomDepositAccountNo = RandomStringUtils.randomNumeric(16);
-        if(depositAccountService.checkIsAccountNoUnique(randomDepositAccountNo)){
-            log.info("Deposit unique iban no created : {}",randomDepositAccountNo);
+        if (depositAccountService.checkIsAccountNoUnique(randomDepositAccountNo)) {
+            log.info("Deposit unique iban no created : {}", randomDepositAccountNo);
             return toFormatIban(randomDepositAccountNo);
         }
         return createDepositAccountNo();
     }
-    private String toFormatIban(String value){
-        String formattedIban="";
-        for (int i =0;i<4;i++){
-            formattedIban+=value.substring(i*4,i*4+4)+" ";
+
+    private String toFormatIban(String value) {
+        String formattedIban = "";
+        for (int i = 0; i < 4; i++) {
+            formattedIban += value.substring(i * 4, i * 4 + 4) + " ";
         }
 
         return formattedIban.substring(0, formattedIban.length() - 1); // remove last space index

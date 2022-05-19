@@ -8,7 +8,7 @@ import org.norma.finalproject.customer.entity.Customer;
 @Mapper(componentModel = "spring")
 public interface CustomerMapper {
 
-    CustomerMapper INSTANCE= Mappers.getMapper(CustomerMapper.class);
+    CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
 
     Customer customerDtoToCustomer(CreateCustomerRequest createCustomerRequest);
 

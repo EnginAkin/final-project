@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
             String token = jwtHelper.generate(identity, roles);
             LoginResponse loginResponse = new LoginResponse(token);
             return GeneralDataResponse.builder().data(loginResponse).build();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new LoginFailedException();
         }
     }

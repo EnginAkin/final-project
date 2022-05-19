@@ -31,16 +31,16 @@ public class FacadeDepositAccountServiceImpl implements FacadeDepositAccountServ
     private final DepositAccountMapper mapper;
 
     @Override
-    public GeneralResponse create(Long customerId,CreateDepositAcoountRequest createDepositAcoountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
-        DepositAccount depositAccount= mapper.ToEntity(createDepositAcoountRequest);
+    public GeneralResponse create(Long customerId, CreateDepositAcoountRequest createDepositAcoountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
+        DepositAccount depositAccount = mapper.ToEntity(createDepositAcoountRequest);
 
         Optional<Customer> customer = customerService.getCustomerById(customerId);
-        if(customer.isEmpty()){
+        if (customer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        boolean existDepositAccountByAccountName =depositAccountService.existsCustomerDepositAccountByAccountName(customer.get(),createDepositAcoountRequest.getAccountName());
-        if(existDepositAccountByAccountName){
-            throw new AccountNameAlreadyHaveException(createDepositAcoountRequest.getAccountName()+" name already have account in your accounts.");
+        boolean existDepositAccountByAccountName = depositAccountService.existsCustomerDepositAccountByAccountName(customer.get(), createDepositAcoountRequest.getAccountName());
+        if (existDepositAccountByAccountName) {
+            throw new AccountNameAlreadyHaveException(createDepositAcoountRequest.getAccountName() + " name already have account in your accounts.");
         }
 
         String AccountNo = uniqueNoCreator.createDepositAccountNo();
@@ -50,10 +50,9 @@ public class FacadeDepositAccountServiceImpl implements FacadeDepositAccountServ
         depositAccount.setCreatedAt(new Date());
         depositAccount.setCreatedBy("ENGIN AKIN");
         depositAccount.setCustomer(customer.get());
-        DepositAccount savedDepositAccount=depositAccountService.save(depositAccount);
+        DepositAccount savedDepositAccount = depositAccountService.save(depositAccount);
         return new GeneralDataResponse<>(mapper.toDto(savedDepositAccount));
     }
-
 
 
 }

@@ -27,10 +27,10 @@ public class DepositAccountServiceImpl implements DepositAccountService {
 
     @Override
     public boolean existsCustomerDepositAccountByAccountName(Customer customer, String accountName) {
-        if(accountName.isEmpty()){
+        if (accountName.isEmpty()) {
             throw new IllegalArgumentException("account name cannot be null");
         }
-        return depositAccountRepository.existsDepositAccountByAccountNameAndCustomer(accountName,customer);
+        return depositAccountRepository.existsDepositAccountByAccountNameAndCustomer(accountName, customer);
     }
 
     @Override

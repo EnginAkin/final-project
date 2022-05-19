@@ -13,7 +13,7 @@ import java.util.Date;
 @Getter
 @Setter
 @MappedSuperclass
-public class BaseExtendedModel extends BaseModel{
+public class BaseExtendedModel extends BaseModel {
 
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdAt;

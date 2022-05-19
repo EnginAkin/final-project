@@ -20,7 +20,4 @@ public class UpdateCustomerRequest {
     private String telephone;
 
 
-
-
-
 }

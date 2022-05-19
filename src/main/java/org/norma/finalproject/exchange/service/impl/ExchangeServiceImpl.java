@@ -22,11 +22,10 @@ public class ExchangeServiceImpl implements ExchangeService {
     private final RestTemplate restTemplate;
 
     @Override
-    public Double getExchange(String url,HttpEntity httpEntity)  throws HttpClientErrorException {
+    public Double getExchange(String url, HttpEntity httpEntity) throws HttpClientErrorException {
         ResponseEntity<Exchange> exchange = restTemplate.exchange(url, HttpMethod.GET, httpEntity, Exchange.class);
         return exchange.getBody().getResult();
     }
-
 
 
 }

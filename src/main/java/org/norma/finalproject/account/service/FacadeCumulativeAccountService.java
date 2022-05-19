@@ -5,5 +5,5 @@ import org.norma.finalproject.common.response.GeneralResponse;
 
 public interface FacadeCumulativeAccountService {
 
-    GeneralResponse create(Long customerId,CreateCumulativeAccountRequest createCumulativeAccountRequest);
+    GeneralResponse create(Long customerId, CreateCumulativeAccountRequest createCumulativeAccountRequest);
 }
