@@ -3,15 +3,19 @@ package org.norma.finalproject.common.security.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.customer.entity.Customer;
+import org.norma.finalproject.customer.entity.Role;
 import org.norma.finalproject.customer.service.CustomerService;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
@@ -21,10 +25,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String identity) throws UsernameNotFoundException {
         Optional<Customer> customer = customerService.getCustomerByIdentity(identity);
-        if(customer.isEmpty()){
+        if (customer.isEmpty()) {
             throw new UsernameNotFoundException("Username not found.");
         }
-        log.info("Load by username : {}",customer.get().getName());
-        return new UserDetail(customer.get());
+        log.info("Load by username : {}", customer.get().getName());
+        return new CustomUserDetail(customer.get());
     }
+
+
 }

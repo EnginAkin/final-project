@@ -12,6 +12,7 @@ public interface CustomerService {
     Optional<Customer> getCustomerByIdentity(String identity);
 
     Optional<Customer> getCustomerById(Long id) ;
-
     void update(Customer customer);
+
+
 }

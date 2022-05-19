@@ -2,20 +2,40 @@ package org.norma.finalproject.account.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.norma.finalproject.account.entity.DepositAccount;
 import org.norma.finalproject.account.repository.DepositAccountRepository;
 import org.norma.finalproject.account.service.DepositAccountService;
+import org.norma.finalproject.customer.entity.Customer;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class DepositAccountServiceImpl implements DepositAccountService {
 
-    private final DepositAccountRepository repository;
+    private final DepositAccountRepository depositAccountRepository;
 
     @Override
     public boolean checkIsAccountNoUnique(String accountNo) {
-        return !repository.existsDepositAccountByAccountNo(accountNo);
+        return !depositAccountRepository.existsDepositAccountByAccountNo(accountNo);
     }
+
+    @Override
+    public DepositAccount save(DepositAccount depositAccount) {
+        return depositAccountRepository.save(depositAccount);
+    }
+
+    @Override
+    public boolean existsCustomerDepositAccountByAccountName(Customer customer, String accountName) {
+        if(accountName.isEmpty()){
+            throw new IllegalArgumentException("account name cannot be null");
+        }
+        return depositAccountRepository.existsDepositAccountByAccountNameAndCustomer(accountName,customer);
+    }
+
+
 }
 
 

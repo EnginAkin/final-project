@@ -2,7 +2,7 @@ package org.norma.finalproject.common.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.common.security.filter.CustomAuthenticationFilter;
-import org.norma.finalproject.common.security.filter.CustomUsernamePasswordAuthenticationFilter;
+import org.norma.finalproject.common.security.jwt.JWTHelper;
 import org.norma.finalproject.common.security.user.CustomUserDetailsService;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +24,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService userDetailsService;
+    private final JWTHelper jwtHelper;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthenticationFilter authenticationFilter;
-
-
-    private static final String[] AUTH_WHITELIST = {
-            // swagger 3 open api
-            "/api/v1/customers/sing-up/**",
-            "/api/v1/authentications/login/**"
-    };
     private static final String[] AUTH_WHITELIST_FOR_SWAGGER = {
             // swagger 3 open api
             "/v3/api-docs/**",
             "/swagger-ui/**",
     };
+    private static final String[] AUTH_WHITELIST = {
+            "/api/v1/customers/sing-up/**",
+            "/api/v1/authentications/login/**",
+    };
+
     private static final String[] AUTH_WHITELIST_FOR_USER = {
             "/api/v1/customers/**",
+            "/api/v1/accounts/**"
+
 
     };
 
@@ -49,11 +50,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests().antMatchers(AUTH_WHITELIST_FOR_SWAGGER).permitAll();
         http.authorizeHttpRequests().antMatchers(AUTH_WHITELIST).permitAll();
-
         http.authorizeHttpRequests().antMatchers(AUTH_WHITELIST_FOR_USER).hasAnyAuthority(CustomerConstant.ROLE_USER);
         http.authorizeHttpRequests().anyRequest().authenticated();
-        http.addFilter(new CustomUsernamePasswordAuthenticationFilter(authenticationManagerBean()));
-        http.addFilterBefore(authenticationFilter, CustomUsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
 

@@ -2,6 +2,7 @@ package org.norma.finalproject.customer.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.norma.finalproject.common.entity.BaseModel;
 import org.norma.finalproject.customer.entity.enums.AddressType;
 
 import javax.persistence.*;

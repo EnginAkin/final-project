@@ -5,7 +5,7 @@ import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.account.entity.enums.TermPeriod;
 import org.norma.finalproject.account.entity.enums.PurposeCumulative;
 import org.norma.finalproject.common.entity.AccountActivity;
-import org.norma.finalproject.customer.entity.BaseModel;
+import org.norma.finalproject.common.entity.BaseModel;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -40,10 +40,10 @@ public class CumulativeAccount extends BaseModel {
     @Enumerated(value = EnumType.ORDINAL)
     private TermPeriod termPeriod;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    List<AccountActivity> activities=new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "cumulativeAccount")
+    List<CumulativeAccountActivity> activities=new ArrayList<>();
 
-    public void addActivities(AccountActivity activity){
+    public void addActivities(CumulativeAccountActivity activity){
         activities.add(activity);
     }
 

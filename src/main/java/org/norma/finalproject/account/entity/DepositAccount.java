@@ -1,12 +1,9 @@
 package org.norma.finalproject.account.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
-import org.norma.finalproject.common.entity.AccountActivity;
-import org.norma.finalproject.customer.entity.BaseExtendedModel;
-import org.norma.finalproject.customer.entity.BaseModel;
+import org.norma.finalproject.common.entity.BaseModel;
+import org.norma.finalproject.customer.entity.Customer;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -18,6 +15,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 public class DepositAccount extends BaseModel {
 
     private String accountNo;
@@ -28,9 +27,12 @@ public class DepositAccount extends BaseModel {
     @Enumerated(value = EnumType.STRING)
     private CurrencyType currencyType;
 
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "depositAccount")
+    private List<DepositAccountActivity> activities=new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<AccountActivity> activities=new ArrayList<>();
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Customer customer;
+
 
 
 

@@ -1,4 +1,4 @@
-package org.norma.finalproject.customer.entity;
+package org.norma.finalproject.common.entity;
 
 import lombok.Getter;
 import lombok.Setter;

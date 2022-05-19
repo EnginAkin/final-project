@@ -13,5 +13,4 @@ import java.util.Set;
 @AllArgsConstructor
 public class LoginResponse {
     private String token;
-    private List<String> roles;
 }

@@ -10,17 +10,10 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthoritiesContainer;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -44,11 +37,11 @@ public class JWTHelper {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-    public String findUsername(String token) {
+    public String findIdentity(String token) {
         if (!StringUtils.hasLength(token)) {
             throw new IllegalArgumentException("Token can not be null or empty");
         }
-        return JWT.decode(token).getClaim("identity").asString();
+        return JWT.decode(token).getSubject();
     }
     public String[] getCustomerRoles(String token) {
         if (!StringUtils.hasLength(token)) {
@@ -58,22 +51,25 @@ public class JWTHelper {
     }
 
 
-    boolean validate(String token) {
+    public boolean validate(String token) {
         try {
-            JWT.require(Algorithm.HMAC512(secretKey))
-                    .build()
-                    .verify(token);
+            JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC512(secretKey)).build();
+            DecodedJWT decodedJWT= jwtVerifier.verify(token);
             return true;
         } catch (AlgorithmMismatchException algorithmMismatchException) {
             log.error("JWT Token AlgorithmMismatchException occurred!");
+            throw new AlgorithmMismatchException("JWT Token invalid algorithm occurred!");
         } catch (SignatureVerificationException signatureVerificationException) {
-            log.error("JWT Token SignatureVerificationException occurred!");
+            log.error("JWT Token invalid signature occurred!");
+            throw new SignatureVerificationException(Algorithm.HMAC512(secretKey));
         } catch (TokenExpiredException tokenExpiredException) {
             log.error("JWT Token TokenExpiredException occurred!");
+            throw new TokenExpiredException("JWT Token expired");
         } catch (InvalidClaimException invalidClaimException) {
             log.error("JWT Token InvalidClaimException occurred!");
+            throw new InvalidClaimException("JWT Token invalid claims");
+
         }
-        return false;
     }
 
 
