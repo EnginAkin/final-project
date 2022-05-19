@@ -38,8 +38,8 @@ public class FacadeDepositAccountServiceImpl implements FacadeDepositAccountServ
         if(customer.isEmpty()){
             throw new CustomerNotFoundException();
         }
-        boolean exisistDepositAccountByAccountName =depositAccountService.existsCustomerDepositAccountByAccountName(customer.get(),createDepositAcoountRequest.getAccountName());
-        if(exisistDepositAccountByAccountName){
+        boolean existDepositAccountByAccountName =depositAccountService.existsCustomerDepositAccountByAccountName(customer.get(),createDepositAcoountRequest.getAccountName());
+        if(existDepositAccountByAccountName){
             throw new AccountNameAlreadyHaveException(createDepositAcoountRequest.getAccountName()+" name already have account in your accounts.");
         }
 

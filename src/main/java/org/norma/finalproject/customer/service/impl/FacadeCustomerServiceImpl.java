@@ -1,6 +1,8 @@
 package org.norma.finalproject.customer.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.norma.finalproject.account.service.DepositAccountService;
 import org.norma.finalproject.common.response.GeneralDataResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
@@ -21,6 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FacadeCustomerServiceImpl implements FacadeCustomerService {
 
     private final CustomerService customerService;
@@ -28,6 +31,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
     private final CustomerMapper customerMapper;
 
     private final PasswordEncoder passwordEncoder;
+    private final DepositAccountService depositAccountService;
 
     @Override
     public GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException {
@@ -59,5 +63,20 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         customer.get().setTelephone(updateCustomerRequest.getTelephone());
         customerService.update(customer.get());
         return new GeneralSuccessfullResponse(CustomerConstant.UPDATE_SUCESSFULL);
+    }
+
+    @Override
+    public GeneralResponse delete(long id) throws CustomerNotFoundException, CustomerDeleteException {
+        boolean existCustomer = customerService.existCustomerById(id);
+        if(!existCustomer){
+            throw new CustomerNotFoundException();
+        }
+        boolean checkCustomerHasMoneyInDepositAccount=depositAccountService.checkCustomerHasMoneyInDepositAccounts(id);
+        if(checkCustomerHasMoneyInDepositAccount){
+            throw new CustomerDeleteException(CustomerConstant.DELETE_CUSTOMER_OPERATION_HAS_BALANCE_EXCEPTION);
+        }
+        log.info("customer deleted ");
+        customerService.delete(id);
+        return new GeneralSuccessfullResponse("Customer deleted.");
     }
 }

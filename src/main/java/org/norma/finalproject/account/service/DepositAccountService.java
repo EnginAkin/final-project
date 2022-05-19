@@ -10,4 +10,6 @@ public interface DepositAccountService {
     DepositAccount save(DepositAccount depositAccount);
 
     boolean existsCustomerDepositAccountByAccountName(Customer customer, String accountName);
+
+    boolean checkCustomerHasMoneyInDepositAccounts(long id);
 }

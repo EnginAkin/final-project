@@ -55,6 +55,19 @@ public class CustomerServiceImpl implements CustomerService {
          customerRepository.save(customer);
     }
 
+    @Override
+    public boolean existCustomerById(long id) {
+        Optional<Customer> customer = customerRepository.findById(id);
+        if(customer.isEmpty()){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void delete(long id) {
+        customerRepository.deleteById(id);
+    }
 
 
 }

@@ -11,4 +11,6 @@ public interface FacadeCustomerService {
     GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws  NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException;
 
     GeneralResponse update(long id, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException;
+
+    GeneralResponse delete(long id) throws CustomerNotFoundException, CustomerDeleteException;
 }

@@ -5,10 +5,7 @@ import org.norma.finalproject.account.entity.DepositAccount;
 import org.norma.finalproject.common.entity.BaseExtendedModel;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Builder
@@ -31,6 +28,9 @@ public class Customer extends BaseExtendedModel {
 
     @Temporal(TemporalType.DATE)
     private Date birthDay;
+
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.REMOVE)
+    private List<DepositAccount> depositAccounts=new ArrayList<>();
 
 
 

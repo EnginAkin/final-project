@@ -8,8 +8,6 @@ import org.norma.finalproject.account.service.DepositAccountService;
 import org.norma.finalproject.customer.entity.Customer;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -33,6 +31,11 @@ public class DepositAccountServiceImpl implements DepositAccountService {
             throw new IllegalArgumentException("account name cannot be null");
         }
         return depositAccountRepository.existsDepositAccountByAccountNameAndCustomer(accountName,customer);
+    }
+
+    @Override
+    public boolean checkCustomerHasMoneyInDepositAccounts(long id) {
+        return depositAccountRepository.existsDepositAccountsBalanceGreatherThanZeroByCustomerId(id);
     }
 
 

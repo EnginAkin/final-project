@@ -3,6 +3,7 @@ package org.norma.finalproject.common.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.norma.finalproject.common.entity.enums.ActionStatus;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -11,7 +12,6 @@ import java.util.Date;
 @Setter
 @MappedSuperclass
 public class AccountActivity {
-    // todo account ve saving hesapların ortak noktası
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

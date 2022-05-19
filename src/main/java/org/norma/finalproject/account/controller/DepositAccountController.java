@@ -7,11 +7,8 @@ import org.norma.finalproject.account.core.exception.AccountNameAlreadyHaveExcep
 import org.norma.finalproject.account.core.model.request.CreateDepositAcoountRequest;
 import org.norma.finalproject.account.service.FacadeDepositAccountService;
 import org.norma.finalproject.common.response.GeneralResponse;
-import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +25,8 @@ public class DepositAccountController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(tags = "Deposit Controller", description = "Create a deposit account.")
     @PostMapping("/{customerId}")
-    public GeneralResponse create(@PathVariable Long customerId,@RequestBody @Valid CreateDepositAcoountRequest createDepositAcoountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
-        return facadeDepositAccountService.create(customerId,createDepositAcoountRequest);
+    public GeneralResponse create(@PathVariable Long customerId, @RequestBody @Valid CreateDepositAcoountRequest createDepositAcoountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
+        return facadeDepositAccountService.create(customerId, createDepositAcoountRequest);
     }
 
 }
