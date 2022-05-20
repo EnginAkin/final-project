@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.entity.DepositAccount;
 import org.norma.finalproject.account.repository.DepositAccountRepository;
 import org.norma.finalproject.account.service.DepositAccountService;
-import org.norma.finalproject.customer.entity.Customer;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -27,14 +26,10 @@ public class DepositAccountServiceImpl implements DepositAccountService {
         return depositAccountRepository.save(depositAccount);
     }
 
-
-
     @Override
-    public boolean checkCustomerHasMoneyInDepositAccounts(long id) {
-        return depositAccountRepository.existsDepositAccountsBalanceGreatherThanZeroByCustomerId(id);
+    public Optional<DepositAccount> findById(long accountId) {
+        return depositAccountRepository.findById(accountId);
     }
-
-
 
     @Override
     public void deleteCustomerDepositAccount(DepositAccount depositAccount) {

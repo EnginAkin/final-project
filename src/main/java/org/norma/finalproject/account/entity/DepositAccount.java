@@ -36,6 +36,9 @@ public class DepositAccount extends BaseModel {
     private Customer customer;
 
 
+
+    private boolean blocked=false;
+
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdAt;
     @Temporal(value = TemporalType.TIMESTAMP)

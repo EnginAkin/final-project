@@ -30,7 +30,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public GeneralResponse logout(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws LoginFailedException {
+    public GeneralResponse logout(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) {
         JWTHelper.addJWTBlackList(userDetail.getToken());
         return new GeneralSuccessfullResponse("logout success");
     }

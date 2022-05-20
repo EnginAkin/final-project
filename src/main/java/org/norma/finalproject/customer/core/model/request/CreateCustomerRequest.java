@@ -5,9 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.norma.finalproject.customer.core.model.AddressDto;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
@@ -34,6 +36,10 @@ public class CreateCustomerRequest {
     //@Pattern(regexp = ) telefon num regex
     @NotNull(message = "Telephone Cannot be null.")
     private String telephone;
+
+    @NotNull(message = "Income Cannot be null.")
+    @Min(0)
+    private BigDecimal income;
 
     //private AddressDto address;
 

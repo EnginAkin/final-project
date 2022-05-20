@@ -5,6 +5,7 @@ import org.norma.finalproject.account.entity.DepositAccount;
 import org.norma.finalproject.common.entity.BaseExtendedModel;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Entity
@@ -21,7 +22,7 @@ public class Customer extends BaseExtendedModel {
     private String surname;
     private String password;
     private String telephone;
-    // TODO aylık gelir
+    private BigDecimal income;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
@@ -35,7 +36,6 @@ public class Customer extends BaseExtendedModel {
 
     @OneToMany(mappedBy = "customer")
     private Set<Address> addresses = new HashSet<>();
-
 
     public void addAddress(Address address) {
         addresses.add(address);

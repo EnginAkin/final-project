@@ -11,7 +11,7 @@ import static java.util.Calendar.*;
 public class Utils {
 
     private Utils() {
-
+        throw new UnsupportedOperationException();
     }
 
     public static List<String> SimpleGrantedAuthorityToListString(Collection<GrantedAuthority> authorities) {

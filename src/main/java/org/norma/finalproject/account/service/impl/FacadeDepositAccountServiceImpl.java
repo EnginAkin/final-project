@@ -2,9 +2,7 @@ package org.norma.finalproject.account.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.norma.finalproject.account.core.exception.AccountNameAlreadyHaveException;
-import org.norma.finalproject.account.core.exception.CustomerAccountNotFoundException;
-import org.norma.finalproject.account.core.exception.DeleteAccountHasBalanceException;
+import org.norma.finalproject.account.core.exception.*;
 import org.norma.finalproject.account.core.mapper.DepositAccountMapper;
 import org.norma.finalproject.account.core.model.request.CreateDepositAcoountRequest;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
@@ -40,7 +38,7 @@ public class FacadeDepositAccountServiceImpl implements FacadeDepositAccountServ
         DepositAccount depositAccount = mapper.ToEntity(createDepositAcoountRequest);
 
         Optional<DepositAccount> optionalDepositAccount = existsCustomerDepositAccountByAccountName(customer.getDepositAccounts(), createDepositAcoountRequest.getAccountName());
-        if(optionalDepositAccount.isPresent()){
+        if (optionalDepositAccount.isPresent()) {
             throw new AccountNameAlreadyHaveException(createDepositAcoountRequest.getAccountName() + " name already have account in your accounts.");
         }
 
@@ -55,25 +53,41 @@ public class FacadeDepositAccountServiceImpl implements FacadeDepositAccountServ
         DepositAccount savedDepositAccount = depositAccountService.save(depositAccount);
         return new GeneralDataResponse<>(mapper.toDto(savedDepositAccount));
     }
+
+    @Override
+    public GeneralResponse blockAccount(long accountId) throws DepositAccountNotFoundException {
+        Optional<DepositAccount> depositAccount = depositAccountService.findById(accountId);
+        if (depositAccount.isEmpty()) {
+            throw new DepositAccountNotFoundException("Deposit Account  Not Found.");
+        }
+        depositAccount.get().setBlocked(true);
+        depositAccountService.save(depositAccount.get());
+        log.info("Customer blocked.transfer authorization removed");
+        return new GeneralSuccessfullResponse("Customer Blocked successfull. Customer cannot transfer anymore.");
+    }
+
     // TODO by name iptal
     @Override
-    public GeneralResponse delete(Customer customer, String accountName) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException {
-        if(customer==null){
+    public GeneralResponse delete(Customer customer, String accountName) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException {
+        if (customer == null) {
             throw new CustomerNotFoundException();
         }
-        Optional<DepositAccount> depositAccount = existsCustomerDepositAccountByAccountName(customer.getDepositAccounts(),accountName);
-        if(depositAccount.isEmpty()){
-            throw new CustomerAccountNotFoundException("Account : "+accountName+" not found");
+        Optional<DepositAccount> depositAccount = existsCustomerDepositAccountByAccountName(customer.getDepositAccounts(), accountName);
+        if (depositAccount.isEmpty()) {
+            throw new CustomerAccountNotFoundException("Account : " + accountName + " not found");
         }
-        if(depositAccount.get().getBalance().compareTo(BigDecimal.ZERO)>0){
-            throw new DeleteAccountHasBalanceException("Balance greater than 0 in "+accountName+".Cannot be deleted.");
+        if(depositAccount.get().isBlocked()){
+            throw new CannotDeleteBlockedAccounException();
+        }
+        if (depositAccount.get().getBalance().compareTo(BigDecimal.ZERO) > 0) {
+            throw new DeleteAccountHasBalanceException("Balance greater than 0 in " + accountName + ".Cannot be deleted.");
         }
         // TODO bir deposit hesap silindiğinde ona bağlı kart da silinir.
         depositAccountService.deleteCustomerDepositAccount(depositAccount.get());
         return new GeneralSuccessfullResponse("Deleted successfully Customer Deposit account.");
     }
 
-    public Optional<DepositAccount> existsCustomerDepositAccountByAccountName(List<DepositAccount> depositAccountList, String accountName){
+    public Optional<DepositAccount> existsCustomerDepositAccountByAccountName(List<DepositAccount> depositAccountList, String accountName) {
         return depositAccountList.stream().filter(depositAccount -> depositAccount.getAccountName().equals(accountName)).findFirst();
     }
 
