@@ -29,7 +29,7 @@ public class DepositAccountController {
     @Operation(tags = "Deposit Controller", description = "Create a deposit account.")
     @PostMapping
     public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateDepositAcoountRequest createDepositAcoountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
-        return facadeDepositAccountService.create(userDetail.customer().getId(), createDepositAcoountRequest);
+        return facadeDepositAccountService.create(userDetail.getCustomer().getId(), createDepositAcoountRequest);
     }
 
 }

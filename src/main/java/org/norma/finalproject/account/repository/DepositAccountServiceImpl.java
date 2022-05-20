@@ -1,4 +1,4 @@
-package org.norma.finalproject.account.service.impl;
+package org.norma.finalproject.account.repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,14 +36,15 @@ public class AuthanticationController {
 
     private final AuthenticationManager authenticationManager;
 
+
     @PostMapping("/login")
     public GeneralResponse login(@RequestBody @Valid LoginFormRequest loginFormRequest) throws LoginFailedException {
         return authService.login(loginFormRequest.getIdentity(), loginFormRequest.getPassword());
     }
 
     @PostMapping("/logout")
-    public GeneralResponse logout() throws LoginFailedException {
-
+    public GeneralResponse logout(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws LoginFailedException {
+        JWTHelper.addJWTBlackList(userDetail.getToken());
         return new GeneralSuccessfullResponse("logout success");
     }
 

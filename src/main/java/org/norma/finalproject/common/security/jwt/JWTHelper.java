@@ -8,7 +8,10 @@ import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.norma.finalproject.common.security.exception.TokenLockedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -17,6 +20,8 @@ import java.util.*;
 
 @Slf4j
 @Service
+@Setter
+@Getter
 public class JWTHelper {
 
 
@@ -24,6 +29,12 @@ public class JWTHelper {
     private String secretKey;
     @Value("${norma.final.project.jwt.expires-in}")
     private long expiresIn;
+
+    private static List<String> blackJWTList = new ArrayList<>();
+
+    public static void addJWTBlackList(String token){
+        blackJWTList.add(token);
+    }
 
     public String generate(String identity, List<String> roles) {
         if (!StringUtils.hasLength(identity)) {
@@ -52,11 +63,14 @@ public class JWTHelper {
     }
 
 
-    public boolean validate(String token) {
+    public void validate(String token) throws TokenLockedException {
         try {
+            if (blackJWTList.contains(token)) {
+                log.error("JWT token locked. Please login again.");
+                throw new TokenLockedException();
+            }
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
-            DecodedJWT decodedJWT = jwtVerifier.verify(token);
-            return true;
+            jwtVerifier.verify(token);
         } catch (AlgorithmMismatchException algorithmMismatchException) {
             log.error("JWT Token AlgorithmMismatchException occurred!");
             throw new AlgorithmMismatchException("JWT Token invalid algorithm occurred!");

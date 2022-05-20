@@ -1,9 +1,8 @@
-package org.norma.finalproject.account.service.impl;
+package org.norma.finalproject.account.repository;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.norma.finalproject.account.entity.DepositAccount;
-import org.norma.finalproject.account.repository.DepositAccountRepository;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import java.util.List;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class DepositAccountServiceImplTest {
+class DepositAccountRepositoryTest {
 
     @Autowired
     private DepositAccountRepository underTest;
@@ -42,9 +41,8 @@ class DepositAccountServiceImplTest {
         // when
         underTest.saveAll(List.of(depositAccount1, depositAccount2, depositAccount3));
         // then -assert
-        boolean ba = underTest.existsDepositAccountsBalanceGreatherThanZeroByCustomerId(customer.getId());
-        Assertions.assertThat(ba).isTrue();
-
+        boolean existsDepositAccountsBalanceGreatherThanZero = underTest.existsDepositAccountsBalanceGreatherThanZeroByCustomerId(customer.getId());
+        Assertions.assertThat(existsDepositAccountsBalanceGreatherThanZero).isTrue();
     }
 
     @Test
@@ -66,8 +64,8 @@ class DepositAccountServiceImplTest {
         // when
         underTest.saveAll(List.of(depositAccount1, depositAccount2, depositAccount3));
         // then -assert
-        boolean ba = underTest.existsDepositAccountsBalanceGreatherThanZeroByCustomerId(customer.getId());
-        Assertions.assertThat(ba).isFalse();
+        boolean existsDepositAccountsBalanceGreatherThanZero = underTest.existsDepositAccountsBalanceGreatherThanZeroByCustomerId(customer.getId());
+        Assertions.assertThat(existsDepositAccountsBalanceGreatherThanZero).isFalse();
 
     }
 }

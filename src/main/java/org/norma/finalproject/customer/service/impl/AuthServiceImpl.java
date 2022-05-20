@@ -36,9 +36,9 @@ public class AuthServiceImpl implements AuthService {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(identity, password));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             CustomUserDetail customUserDetail = (CustomUserDetail) authentication.getPrincipal();
-
             List<String> roles = Utils.SimpleGrantedAuthorityToListString((Collection<GrantedAuthority>) customUserDetail.getAuthorities());
             String token = jwtHelper.generate(identity, roles);
+            customUserDetail.setToken(token);
             LoginResponse loginResponse = new LoginResponse(token);
             return GeneralDataResponse.builder().data(loginResponse).build();
         } catch (Exception e) {

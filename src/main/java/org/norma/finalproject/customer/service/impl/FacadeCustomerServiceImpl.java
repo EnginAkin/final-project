@@ -29,7 +29,6 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
     private final CustomerService customerService;
     private final IdentityVerifier identityVerifier;
     private final CustomerMapper customerMapper;
-
     private final PasswordEncoder passwordEncoder;
     private final DepositAccountService depositAccountService;
 

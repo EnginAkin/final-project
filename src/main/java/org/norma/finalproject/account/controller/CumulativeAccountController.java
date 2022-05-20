@@ -22,7 +22,7 @@ public class CumulativeAccountController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody CreateCumulativeAccountRequest createCumulativeAccountRequest) {
-        return facadeCumulativeAccountService.create(userDetail.customer().getId(), createCumulativeAccountRequest);
+        return facadeCumulativeAccountService.create(userDetail.getCustomer().getId(), createCumulativeAccountRequest);
     }
 
 
