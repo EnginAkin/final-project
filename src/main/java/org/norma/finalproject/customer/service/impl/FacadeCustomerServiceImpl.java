@@ -14,14 +14,18 @@ import org.norma.finalproject.customer.core.model.request.UpdateCustomerRequest;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.core.utilities.Utils;
 import org.norma.finalproject.customer.entity.Customer;
+import org.norma.finalproject.customer.entity.Role;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.norma.finalproject.customer.service.FacadeCustomerService;
 import org.norma.finalproject.customer.service.IdentityVerifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +50,8 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         if (!isOver18YearsOld) {
             throw new NotAcceptableAgeException();
         }
+        customer.setCreatedBy("ENGIN AKIN");
+        customer.setCreatedAt(new Date());
         customer.setPassword(passwordEncoder.encode(createCustomerRequest.getPassword()));
         Customer savedCustomer = customerService.save(customer);
         return new GeneralDataResponse<>(savedCustomer.getId(), CustomerConstant.SIGNUP_SUCESSFULL);
@@ -59,8 +65,11 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         if (passwordEncoder.matches(updateCustomerRequest.getPassword(), customer.getPassword())) {
             throw new UpdateCustomerSamePasswordException();
         }
+        if(updateCustomerRequest.getTelephone()!=null){
+            customer.setTelephone(updateCustomerRequest.getTelephone());
+        }
         customer.setPassword(passwordEncoder.encode(updateCustomerRequest.getPassword()));
-        customer.setTelephone(updateCustomerRequest.getTelephone());
+
         customerService.update(customer);
         return new GeneralSuccessfullResponse(CustomerConstant.UPDATE_SUCESSFULL);
     }

@@ -24,9 +24,8 @@ public class SavingAccount extends BaseModel {
 
     private String accountName;
     private String accountNo;
-    private String customerNo;
-    private String accountBalance;
     private String ibanNo;
+    private String accountBalance;
     private BigDecimal successRate = BigDecimal.ZERO;
     private BigDecimal targetAmount = BigDecimal.ZERO;
 
@@ -43,7 +42,7 @@ public class SavingAccount extends BaseModel {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    private Customer customer;//TODO düşünülmesi gereken nokta mevduat hesabından da kullanıcıya erişilebilirken burdan neden erişelim.
+    private Customer customer;
 
 
     public void addActivities(SavingAccountActivity activity) {

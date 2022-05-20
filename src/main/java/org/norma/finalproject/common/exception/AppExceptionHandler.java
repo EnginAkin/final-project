@@ -1,16 +1,24 @@
 package org.norma.finalproject.common.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.norma.finalproject.common.response.ErrorDataResponse;
 import org.norma.finalproject.common.response.GeneralErrorResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.customer.core.exception.LoginFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class AppExceptionHandler {
@@ -42,10 +50,30 @@ public class AppExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public GeneralResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException httpMessageNotReadableException) throws IOException {
+    public GeneralResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException httpMessageNotReadableException)  {
         return new GeneralErrorResponse(httpMessageNotReadableException.getLocalizedMessage());
 
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public GeneralResponse handleValidationExceptions(MethodArgumentNotValidException methodArgumentNotValidException){
+        Map<String,String> validationErrors = new HashMap<String,String>();
+
+        for(FieldError fieldError :methodArgumentNotValidException.getBindingResult().getFieldErrors()) {
+            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+
+        return new ErrorDataResponse<>(validationErrors);
+    }
+
+    @ExceptionHandler
+    public GeneralResponse handleConstraintViolationException(ConstraintViolationException exception) {
+        String errorMessage = new ArrayList<>(exception.getConstraintViolations()).get(0).getMessage();
+        return new ErrorDataResponse<>(errorMessage);
+    }
+
+
 
 
 }

@@ -32,8 +32,6 @@ public class CustomerServiceImpl implements CustomerService {
         if (optionalCustomer.isPresent()) {
             throw new CustomerAlreadyRegisterException();
         }
-        customer.setCreatedBy("ENGIN AKIN");
-        customer.setCreatedAt(new Date());
         Role roleUser = roleService.getRoleByName(CustomerConstant.ROLE_USER);
         customer.setRoles(Set.of(roleUser));
         log.info("Customer successfull register  :{}", customer.getName());
