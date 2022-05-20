@@ -30,14 +30,14 @@ public class DepositAccountController {
     @Operation(tags = "Deposit Controller", description = "Create a deposit account By customer.")
     @PostMapping
     public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateDepositAcoountRequest createDepositAcoountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
-        return facadeDepositAccountService.create(userDetail.getCustomer().getId(), createDepositAcoountRequest);
+        return facadeDepositAccountService.create(userDetail.getCustomer(), createDepositAcoountRequest);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(tags = "Deposit Controller", description = "Delete a deposit account by Customer.")
     @DeleteMapping("/{accountName}")
     public GeneralResponse deleteByAccountName(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable String accountName) throws BusinessException {
-        return facadeDepositAccountService.delete(userDetail.getCustomer().getId(),accountName);
+        return facadeDepositAccountService.delete(userDetail.getCustomer(),accountName);
     }
 
 }

@@ -27,28 +27,19 @@ public class DepositAccountServiceImpl implements DepositAccountService {
         return depositAccountRepository.save(depositAccount);
     }
 
-    @Override
-    public boolean existsCustomerDepositAccountByAccountName(Long customerId, String accountName) {
-        if (accountName.isEmpty()) {
-            throw new IllegalArgumentException("account name cannot be null");
-        }
-        return depositAccountRepository.existsDepositAccountByAccountNameAndCustomer_Id(accountName,customerId);
-    }
+
 
     @Override
     public boolean checkCustomerHasMoneyInDepositAccounts(long id) {
         return depositAccountRepository.existsDepositAccountsBalanceGreatherThanZeroByCustomerId(id);
     }
 
-    @Override
-    public boolean checkCustomerHasMoneyInDepositAccountByAccountName(Long customerId, String accountName) {
-        return depositAccountRepository.existsDepositAccountBalanceGreatherThanZeroByAccountNameAndCustomerId(customerId,accountName);
-    }
+
 
     @Override
-    public void deleteCustomerDepositAccount(Long customerId, String accountName) {
-        DepositAccount depositAccount = depositAccountRepository.findByAccountNameAndCustomer_Id(accountName, customerId);
+    public void deleteCustomerDepositAccount(DepositAccount depositAccount) {
         depositAccountRepository.delete(depositAccount);
+
     }
 
 

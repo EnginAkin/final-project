@@ -1,6 +1,7 @@
 package org.norma.finalproject.account.entity;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.common.entity.BaseModel;
 import org.norma.finalproject.customer.entity.Customer;
@@ -30,7 +31,7 @@ public class DepositAccount extends BaseModel {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "depositAccount")
     private List<DepositAccountActivity> activities = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
