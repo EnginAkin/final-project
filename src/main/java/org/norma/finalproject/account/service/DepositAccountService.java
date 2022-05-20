@@ -9,7 +9,11 @@ public interface DepositAccountService {
 
     DepositAccount save(DepositAccount depositAccount);
 
-    boolean existsCustomerDepositAccountByAccountName(Customer customer, String accountName);
+    boolean existsCustomerDepositAccountByAccountName(Long customerId, String accountName);
 
     boolean checkCustomerHasMoneyInDepositAccounts(long id);
+
+    boolean checkCustomerHasMoneyInDepositAccountByAccountName(Long customerId, String accountName);
+
+    void deleteCustomerDepositAccount(Long customerId, String accountName);
 }
