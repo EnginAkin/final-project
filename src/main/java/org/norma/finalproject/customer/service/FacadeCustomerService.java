@@ -4,13 +4,14 @@ import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.customer.core.exception.*;
 import org.norma.finalproject.customer.core.model.request.CreateCustomerRequest;
 import org.norma.finalproject.customer.core.model.request.UpdateCustomerRequest;
+import org.norma.finalproject.customer.entity.Customer;
 
 
 public interface FacadeCustomerService {
 
     GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException;
 
-    GeneralResponse update(long id, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException;
+    GeneralResponse update(Customer customer, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException;
 
-    GeneralResponse delete(long id) throws CustomerNotFoundException, CustomerDeleteException;
+    GeneralResponse delete(Customer customer) throws CustomerNotFoundException, CustomerDeleteException;
 }

@@ -19,5 +19,5 @@ public interface CustomerService {
     boolean existCustomerById(long id);
 
 
-    void delete(long id);
+    void delete(Customer customer);
 }

@@ -2,6 +2,7 @@ package org.norma.finalproject.customer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.norma.finalproject.account.entity.DepositAccount;
 import org.norma.finalproject.account.service.DepositAccountService;
 import org.norma.finalproject.common.response.GeneralDataResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
@@ -19,6 +20,8 @@ import org.norma.finalproject.customer.service.IdentityVerifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,32 +53,33 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
     }
 
     @Override
-    public GeneralResponse update(long id, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException {
-        Optional<Customer> customer = customerService.getCustomerById(id);
-        if (customer.isEmpty()) {
+    public GeneralResponse update(Customer customer, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException {
+        if (customer==null) {
             throw new CustomerNotFoundException();
         }
-        if (passwordEncoder.matches(updateCustomerRequest.getPassword(), customer.get().getPassword())) {
+        if (passwordEncoder.matches(updateCustomerRequest.getPassword(), customer.getPassword())) {
             throw new UpdateCustomerSamePasswordException();
         }
-        customer.get().setPassword(passwordEncoder.encode(updateCustomerRequest.getPassword()));
-        customer.get().setTelephone(updateCustomerRequest.getTelephone());
-        customerService.update(customer.get());
+        customer.setPassword(passwordEncoder.encode(updateCustomerRequest.getPassword()));
+        customer.setTelephone(updateCustomerRequest.getTelephone());
+        customerService.update(customer);
         return new GeneralSuccessfullResponse(CustomerConstant.UPDATE_SUCESSFULL);
     }
 
     @Override
-    public GeneralResponse delete(long id) throws CustomerNotFoundException, CustomerDeleteException {
-        boolean existCustomer = customerService.existCustomerById(id);
-        if (!existCustomer) {
+    public GeneralResponse delete(Customer customer) throws CustomerNotFoundException, CustomerDeleteException {
+        if (customer==null) {
             throw new CustomerNotFoundException();
         }
-        boolean checkCustomerHasMoneyInDepositAccount = depositAccountService.checkCustomerHasMoneyInDepositAccounts(id);
-        if (checkCustomerHasMoneyInDepositAccount) {
+        boolean checkHasMoneyInDepositAccounts = checkHasMoneyInDepositAccounts(customer.getDepositAccounts());
+        if (checkHasMoneyInDepositAccounts) {
             throw new CustomerDeleteException(CustomerConstant.DELETE_CUSTOMER_OPERATION_HAS_BALANCE_EXCEPTION);
         }
-        log.info("customer deleted ");
-        customerService.delete(id);
+        customerService.delete(customer);
         return new GeneralSuccessfullResponse("Customer deleted.");
+    }
+
+    public boolean checkHasMoneyInDepositAccounts(List<DepositAccount> depositAccountList){
+        return depositAccountList.stream().anyMatch(depositAccount -> depositAccount.getBalance().compareTo(BigDecimal.ZERO)>0);
     }
 }
