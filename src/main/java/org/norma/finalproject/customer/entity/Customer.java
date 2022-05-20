@@ -1,7 +1,7 @@
 package org.norma.finalproject.customer.entity;
 
 import lombok.*;
-import org.norma.finalproject.account.entity.DepositAccount;
+import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.common.entity.BaseExtendedModel;
 
 import javax.persistence.*;
@@ -31,7 +31,7 @@ public class Customer extends BaseExtendedModel {
     private Date birthDay;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
-    private List<DepositAccount> depositAccounts = new ArrayList<>();
+    private List<CheckingAccount> checkingAccounts = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "customer")

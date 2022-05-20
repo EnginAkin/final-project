@@ -3,14 +3,14 @@ package org.norma.finalproject.account.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.core.model.request.CreateCumulativeAccountRequest;
-import org.norma.finalproject.account.service.FacadeCumulativeAccountService;
+import org.norma.finalproject.account.service.FacadeSavingAccountService;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class FacadeCumulativeAccountServiceImpl implements FacadeCumulativeAccountService {
+public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountService {
 
 
     @Override

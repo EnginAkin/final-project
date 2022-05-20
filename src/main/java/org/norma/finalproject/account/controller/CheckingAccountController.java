@@ -4,13 +4,11 @@ package org.norma.finalproject.account.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
-import org.norma.finalproject.account.core.exception.AccountNameAlreadyHaveException;
 import org.norma.finalproject.account.core.model.request.CreateDepositAcoountRequest;
-import org.norma.finalproject.account.service.FacadeDepositAccountService;
+import org.norma.finalproject.account.service.FacadeCheckinAccountService;
 import org.norma.finalproject.common.exception.BusinessException;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
-import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,21 +22,21 @@ import javax.validation.Valid;
 @RequestMapping("api/v1/accounts/deposits")
 @RequiredArgsConstructor
 @Validated
-public class DepositAccountController {
+public class CheckingAccountController {
 
-    private final FacadeDepositAccountService facadeDepositAccountService;
+    private final FacadeCheckinAccountService facadeCheckinAccountService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(tags = "Deposit Controller", description = "Create a deposit account By customer.")
     @PostMapping
     public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateDepositAcoountRequest createDepositAcoountRequest) throws BusinessException  {
-        return facadeDepositAccountService.create(userDetail.getCustomer(), createDepositAcoountRequest);
+        return facadeCheckinAccountService.create(userDetail.getCustomer(), createDepositAcoountRequest);
     }
 
     @Operation(tags = "Deposit Controller", description = "Delete a deposit account by Customer.")
     @DeleteMapping("/{accountName}")
     public GeneralResponse deleteByAccountName(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable String accountName) throws BusinessException {
-        return facadeDepositAccountService.delete(userDetail.getCustomer(),accountName);
+        return facadeCheckinAccountService.delete(userDetail.getCustomer(),accountName);
     }
 
 
@@ -46,7 +44,7 @@ public class DepositAccountController {
     @Operation(tags = "Deposit Controller", description = "Blocked a deposit account by ADMIN.")
     @PutMapping("/{accountId}/block")
     public GeneralResponse blockedAccount(@PathVariable long accountId) throws BusinessException {
-         return facadeDepositAccountService.blockAccount(accountId);
+         return facadeCheckinAccountService.blockAccount(accountId);
     }
 
 

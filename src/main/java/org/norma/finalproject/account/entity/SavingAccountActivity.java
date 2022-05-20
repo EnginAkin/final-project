@@ -10,9 +10,9 @@ import javax.persistence.ManyToOne;
 @Entity
 @Getter
 @Setter
-public class CumulativeAccountActivity extends AccountActivity {
+public class SavingAccountActivity extends AccountActivity {
 
     @ManyToOne
-    private CumulativeAccount cumulativeAccount;
+    private SavingAccount savingAccount;
 
 }

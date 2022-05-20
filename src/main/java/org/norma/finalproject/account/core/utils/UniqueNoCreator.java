@@ -3,21 +3,19 @@ package org.norma.finalproject.account.core.utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.norma.finalproject.account.service.DepositAccountService;
+import org.norma.finalproject.account.service.CheckingAccountService;
 import org.springframework.stereotype.Component;
-
-import java.util.Random;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
 public final class UniqueNoCreator {
-    private final DepositAccountService depositAccountService;
+    private final CheckingAccountService checkingAccountService;
 
 
     public String createDepositAccountNo() {
         String randomDepositAccountNo = RandomStringUtils.randomNumeric(12);
-        if (depositAccountService.checkIsAccountNoUnique(randomDepositAccountNo)) {
+        if (checkingAccountService.checkIsAccountNoUnique(randomDepositAccountNo)) {
             log.info("Deposit unique account no created : {}", randomDepositAccountNo);
             return randomDepositAccountNo;
         }
@@ -26,7 +24,7 @@ public final class UniqueNoCreator {
 
     public String createDepositIbanNo() {
         String randomDepositAccountNo = RandomStringUtils.randomNumeric(16);
-        if (depositAccountService.checkIsAccountNoUnique(randomDepositAccountNo)) {
+        if (checkingAccountService.checkIsAccountNoUnique(randomDepositAccountNo)) {
             log.info("Deposit unique iban no created : {}", randomDepositAccountNo);
             return toFormatIban(randomDepositAccountNo);
         }

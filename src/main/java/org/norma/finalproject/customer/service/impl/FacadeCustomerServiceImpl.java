@@ -2,8 +2,8 @@ package org.norma.finalproject.customer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.norma.finalproject.account.entity.DepositAccount;
-import org.norma.finalproject.account.service.DepositAccountService;
+import org.norma.finalproject.account.entity.CheckingAccount;
+import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.common.response.GeneralDataResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
     private final IdentityVerifier identityVerifier;
     private final CustomerMapper customerMapper;
     private final PasswordEncoder passwordEncoder;
-    private final DepositAccountService depositAccountService;
+    private final CheckingAccountService checkingAccountService;
 
     @Override
     public GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException {
@@ -71,7 +70,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         if (customer==null) {
             throw new CustomerNotFoundException();
         }
-        boolean checkHasMoneyInDepositAccounts = checkHasMoneyInDepositAccounts(customer.getDepositAccounts());
+        boolean checkHasMoneyInDepositAccounts = checkHasMoneyInDepositAccounts(customer.getCheckingAccounts());
         if (checkHasMoneyInDepositAccounts) {
             throw new CustomerDeleteException(CustomerConstant.DELETE_CUSTOMER_OPERATION_HAS_BALANCE_EXCEPTION);
         }
@@ -79,7 +78,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         return new GeneralSuccessfullResponse("Customer deleted.");
     }
 
-    public boolean checkHasMoneyInDepositAccounts(List<DepositAccount> depositAccountList){
-        return depositAccountList.stream().anyMatch(depositAccount -> depositAccount.getBalance().compareTo(BigDecimal.ZERO)>0);
+    public boolean checkHasMoneyInDepositAccounts(List<CheckingAccount> checkingAccountList){
+        return checkingAccountList.stream().anyMatch(depositAccount -> depositAccount.getBalance().compareTo(BigDecimal.ZERO)>0);
     }
 }

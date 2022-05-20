@@ -1,7 +1,6 @@
 package org.norma.finalproject.account.entity;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.common.entity.BaseModel;
 import org.norma.finalproject.customer.entity.Customer;
@@ -18,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
-public class DepositAccount extends BaseModel {
+public class CheckingAccount extends BaseModel {
 
     private String accountNo;
     private String ibanNo;
@@ -28,8 +27,8 @@ public class DepositAccount extends BaseModel {
     @Enumerated(value = EnumType.STRING)
     private CurrencyType currencyType;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "depositAccount")
-    private List<DepositAccountActivity> activities = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "checkingAccount")
+    private List<CheckingAccountActivity> activities = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
