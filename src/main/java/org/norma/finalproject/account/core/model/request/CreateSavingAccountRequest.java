@@ -6,14 +6,13 @@ import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.account.entity.enums.PurposeCumulative;
 import org.norma.finalproject.account.entity.enums.TermPeriod;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class CreateCumulativeAccountRequest {
+public class CreateSavingAccountRequest {
     @NotNull
     private String accountName;
 

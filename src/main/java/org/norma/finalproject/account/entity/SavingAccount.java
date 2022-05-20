@@ -5,6 +5,7 @@ import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.account.entity.enums.TermPeriod;
 import org.norma.finalproject.account.entity.enums.PurposeCumulative;
 import org.norma.finalproject.common.entity.BaseModel;
+import org.norma.finalproject.customer.entity.Customer;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -23,24 +24,27 @@ public class SavingAccount extends BaseModel {
 
     private String accountName;
     private String accountNo;
-    private String annualInterest; //?? değişebilir(yıllık faiz)
     private String customerNo;
     private String accountBalance;
-    @Enumerated(EnumType.STRING)
-    private CurrencyType currencyType;
     private String ibanNo;
-
-    @Enumerated(EnumType.STRING)
-    private PurposeCumulative purposeCumulative;
-
     private BigDecimal successRate = BigDecimal.ZERO;
     private BigDecimal targetAmount = BigDecimal.ZERO;
 
     @Enumerated(value = EnumType.ORDINAL)
     private TermPeriod termPeriod;
+    @Enumerated(EnumType.STRING)
+    private PurposeCumulative purposeCumulative;
+    @Enumerated(EnumType.STRING)
+    private CurrencyType currencyType;
+
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "savingAccount")
     List<SavingAccountActivity> activities = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;//TODO düşünülmesi gereken nokta mevduat hesabından da kullanıcıya erişilebilirken burdan neden erişelim.
+
 
     public void addActivities(SavingAccountActivity activity) {
         activities.add(activity);

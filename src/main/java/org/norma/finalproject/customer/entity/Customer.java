@@ -2,6 +2,7 @@ package org.norma.finalproject.customer.entity;
 
 import lombok.*;
 import org.norma.finalproject.account.entity.CheckingAccount;
+import org.norma.finalproject.account.entity.SavingAccount;
 import org.norma.finalproject.common.entity.BaseExtendedModel;
 
 import javax.persistence.*;
@@ -30,9 +31,11 @@ public class Customer extends BaseExtendedModel {
     @Temporal(TemporalType.DATE)
     private Date birthDay;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
     private List<CheckingAccount> checkingAccounts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
+    private List<SavingAccount> savingAccounts = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer")
     private Set<Address> addresses = new HashSet<>();

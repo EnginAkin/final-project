@@ -19,7 +19,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("api/v1/accounts/deposits")
+@RequestMapping("api/v1/accounts/checking")
 @RequiredArgsConstructor
 @Validated
 public class CheckingAccountController {
