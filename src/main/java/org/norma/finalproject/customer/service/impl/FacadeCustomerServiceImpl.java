@@ -53,6 +53,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         customer.setCreatedBy("ENGIN AKIN");
         customer.setCreatedAt(new Date());
         customer.setPassword(passwordEncoder.encode(createCustomerRequest.getPassword()));
+        customer.setCustomerNo(createCustomerRequest.getIdentityNumber());
         Customer savedCustomer = customerService.save(customer);
         return new GeneralDataResponse<>(savedCustomer.getId(), CustomerConstant.SIGNUP_SUCESSFULL);
     }

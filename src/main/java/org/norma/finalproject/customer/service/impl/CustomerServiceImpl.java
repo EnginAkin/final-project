@@ -3,8 +3,6 @@ package org.norma.finalproject.customer.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.customer.core.exception.CustomerAlreadyRegisterException;
-import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
-import org.norma.finalproject.customer.core.exception.RoleNotFoundException;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.entity.Role;
@@ -13,7 +11,6 @@ import org.norma.finalproject.customer.service.CustomerService;
 import org.norma.finalproject.customer.service.RoleService;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 

@@ -26,7 +26,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public GeneralResponse login(@RequestBody @Valid LoginFormRequest loginFormRequest) throws LoginFailedException {
-        return authService.login(loginFormRequest.getIdentity(), loginFormRequest.getPassword());
+        return authService.login(loginFormRequest.getUserNumber(), loginFormRequest.getPassword());
     }
 
     @PostMapping("/logout")

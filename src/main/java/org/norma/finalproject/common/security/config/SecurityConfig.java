@@ -24,7 +24,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService userDetailsService;
-    private final JWTHelper jwtHelper;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthenticationFilter authenticationFilter;
     private static final String[] AUTH_WHITELIST_FOR_SWAGGER = {

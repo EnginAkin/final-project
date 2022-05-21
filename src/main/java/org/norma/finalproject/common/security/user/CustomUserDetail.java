@@ -3,6 +3,7 @@ package org.norma.finalproject.common.security.user;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.norma.finalproject.common.entity.User;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.entity.Role;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,22 +18,22 @@ import java.util.stream.Collectors;
 @Setter
 public class CustomUserDetail implements UserDetails {
 
-    private final Customer customer;
+    private final User user;
 
     private String token;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return customer.getRoles().stream().map(this::createSimpleGrantedAuthorities).collect(Collectors.toList());
+        return user.getRoles().stream().map(this::createSimpleGrantedAuthorities).collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        return customer.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return customer.getIdentityNumber();
+        return user.getUserNumber();
     }
 
     @Override

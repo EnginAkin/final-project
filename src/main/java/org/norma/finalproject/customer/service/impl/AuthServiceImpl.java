@@ -31,13 +31,13 @@ public class AuthServiceImpl implements AuthService {
     private final JWTHelper jwtHelper;
 
     @Override
-    public GeneralResponse login(String identity, String password) throws LoginFailedException {
+    public GeneralResponse login(String userNumber, String password) throws LoginFailedException {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(identity, password));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userNumber, password));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             CustomUserDetail customUserDetail = (CustomUserDetail) authentication.getPrincipal();
             List<String> roles = Utils.SimpleGrantedAuthorityToListString((Collection<GrantedAuthority>) customUserDetail.getAuthorities());
-            String token = jwtHelper.generate(identity, roles);
+            String token = jwtHelper.generate(userNumber, roles);
             customUserDetail.setToken(token);
             LoginResponse loginResponse = new LoginResponse(token);
             return GeneralDataResponse.builder().data(loginResponse).build();

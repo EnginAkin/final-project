@@ -42,14 +42,17 @@ public class CustomerController {
     @Operation(tags = "Customer Controller", description = "Update Customer By Customer")
     @PutMapping(path = "/update")
     public GeneralResponse update(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody UpdateCustomerRequest updateCustomerRequest) throws UpdateCustomerSamePasswordException, CustomerNotFoundException {
-        return facadeCustomerService.update(userDetail.getCustomer(), updateCustomerRequest);
+        //return facadeCustomerService.update(userDetail.getCustomer(), updateCustomerRequest);
+        return null;
     }
 
 
     @Operation(tags = "Customer Controller", description = "Delete customer By Customer")
     @PutMapping(path = "/delete")
     public GeneralResponse delete(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws CustomerNotFoundException, CustomerDeleteException {
-        return facadeCustomerService.delete(userDetail.getCustomer());
+       // return facadeCustomerService.delete(userDetail.getCustomer());
+        return null;
+
     }
 
 
