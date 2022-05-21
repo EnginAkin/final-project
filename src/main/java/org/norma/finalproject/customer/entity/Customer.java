@@ -24,13 +24,11 @@ public class Customer extends User {
     private Long id;
 
     private String identityNumber;
-    private String customerNo;
     private String name;
     private String surname;
-    private String password;
     private String telephone;
     private BigDecimal income;
-
+    private String email;
 
 
     @Temporal(TemporalType.DATE)
@@ -42,8 +40,9 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
     private List<SavingAccount> savingAccounts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "customer")
-    private Set<Address> addresses = new HashSet<>();
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
+    private Set<Address> addresses ;
+
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdAt;
     @Temporal(value = TemporalType.TIMESTAMP)
@@ -61,6 +60,10 @@ public class Customer extends User {
     private boolean isDeleted;
 
     public void addAddress(Address address) {
+
+        if(addresses==null){
+            addresses=new HashSet<>();
+        }
         addresses.add(address);
     }
 

@@ -4,7 +4,7 @@ package org.norma.finalproject.account.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
-import org.norma.finalproject.account.core.model.request.CreateDepositAcoountRequest;
+import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
 import org.norma.finalproject.account.service.FacadeCheckinAccountService;
 import org.norma.finalproject.common.exception.BusinessException;
 import org.norma.finalproject.common.response.GeneralResponse;
@@ -29,9 +29,9 @@ public class CheckingAccountController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(tags = "Deposit Controller", description = "Create a deposit account By customer.")
     @PostMapping
-    public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateDepositAcoountRequest createDepositAcoountRequest) throws BusinessException  {
+    public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateCheckingAccountRequest createCheckingAccountRequest) throws BusinessException  {
        // return facadeCheckinAccountService.create(userDetail.getCustomer(), createDepositAcoountRequest);
-        return null;
+        return facadeCheckinAccountService.create(userDetail.getUser().getId(), createCheckingAccountRequest);
     }
 
     @Operation(tags = "Deposit Controller", description = "Delete a deposit account by Customer.")

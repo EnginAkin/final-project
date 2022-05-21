@@ -32,7 +32,5 @@ public class RoleServiceImpl implements RoleService {
         repository.saveAll(List.of(roleAdmin,roleUser));
     }
 
-
-
  */
 }

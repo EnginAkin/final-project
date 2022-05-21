@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.core.exception.*;
 import org.norma.finalproject.account.core.mapper.CheckingAccountMapper;
-import org.norma.finalproject.account.core.model.request.CreateDepositAcoountRequest;
+import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.service.CheckingAccountService;
@@ -34,13 +34,16 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
     private final CheckingAccountMapper mapper;
 
     @Override
-    public GeneralResponse create(Customer customer, CreateDepositAcoountRequest createDepositAcoountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
-        CheckingAccount checkingAccount = mapper.ToEntity(createDepositAcoountRequest);
-
-        Optional<CheckingAccount> optionalDepositAccount = existsCustomerCheckingtAccountByAccountName(customer.getCheckingAccounts(), createDepositAcoountRequest.getAccountName());
-        if (optionalDepositAccount.isPresent()) {
-            throw new AccountNameAlreadyHaveException(createDepositAcoountRequest.getAccountName() + " name already have account in your accounts.");
+    public GeneralResponse create(Long customerId, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
+        Optional<Customer> optionalCustomer=customerService.getCustomerById(customerId);
+        if(optionalCustomer.isEmpty()){
+            throw new CustomerNotFoundException();
         }
+        Optional<CheckingAccount> optionalDepositAccount = existsCheckingAccountByAccountName(optionalCustomer.get().getCheckingAccounts(), createCheckingAccountRequest.getAccountName());
+        if (optionalDepositAccount.isPresent()) {
+            throw new AccountNameAlreadyHaveException(createCheckingAccountRequest.getAccountName() + " name already have account in your accounts.");
+        }
+        CheckingAccount checkingAccount = mapper.ToEntity(createCheckingAccountRequest);
 
         String AccountNo = uniqueNoCreator.createDepositAccountNo();
         checkingAccount.setAccountNo(AccountNo);
@@ -49,7 +52,7 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
         checkingAccount.setBalance(BigDecimal.ZERO);
         checkingAccount.setCreatedAt(new Date());
         checkingAccount.setCreatedBy("ENGIN AKIN");
-        checkingAccount.setCustomer(customer);
+        checkingAccount.setCustomer(optionalCustomer.get());
         CheckingAccount savedCheckingAccount = checkingAccountService.save(checkingAccount);
         return new GeneralDataResponse<>(mapper.toDto(savedCheckingAccount));
     }
@@ -72,7 +75,7 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
         if (customer == null) {
             throw new CustomerNotFoundException();
         }
-        Optional<CheckingAccount> depositAccount = existsCustomerCheckingtAccountByAccountName(customer.getCheckingAccounts(), accountName);
+        Optional<CheckingAccount> depositAccount = existsCheckingAccountByAccountName(customer.getCheckingAccounts(), accountName);
         if (depositAccount.isEmpty()) {
             throw new CustomerAccountNotFoundException("Account : " + accountName + " not found");
         }
@@ -87,8 +90,12 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
         return new GeneralSuccessfullResponse("Deleted successfully Customer Deposit account.");
     }
 
-    public Optional<CheckingAccount> existsCustomerCheckingtAccountByAccountName(List<CheckingAccount> checkingAccountList, String accountName) {
+    public Optional<CheckingAccount> existsCheckingAccountByAccountName(List<CheckingAccount> checkingAccountList, String accountName) {
+        if( checkingAccountList==null  ){
+            return Optional.empty();
+        }
         return checkingAccountList.stream().filter(depositAccount -> depositAccount.getAccountName().equals(accountName)).findFirst();
+
     }
 
 

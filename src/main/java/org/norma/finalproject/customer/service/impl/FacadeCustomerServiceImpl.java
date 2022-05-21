@@ -2,30 +2,32 @@ package org.norma.finalproject.customer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.norma.finalproject.account.core.exception.AccountNameAlreadyHaveException;
 import org.norma.finalproject.account.entity.CheckingAccount;
-import org.norma.finalproject.account.service.CheckingAccountService;
+import org.norma.finalproject.account.service.FacadeCheckinAccountService;
 import org.norma.finalproject.common.response.GeneralDataResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
 import org.norma.finalproject.customer.core.exception.*;
+import org.norma.finalproject.customer.core.mapper.AddressMapper;
 import org.norma.finalproject.customer.core.mapper.CustomerMapper;
 import org.norma.finalproject.customer.core.model.request.CreateCustomerRequest;
 import org.norma.finalproject.customer.core.model.request.UpdateCustomerRequest;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.core.utilities.Utils;
+import org.norma.finalproject.customer.entity.Address;
 import org.norma.finalproject.customer.entity.Customer;
-import org.norma.finalproject.customer.entity.Role;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.norma.finalproject.customer.service.FacadeCustomerService;
 import org.norma.finalproject.customer.service.IdentityVerifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,13 +36,16 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
 
     private final CustomerService customerService;
     private final IdentityVerifier identityVerifier;
-    private final CustomerMapper customerMapper;
     private final PasswordEncoder passwordEncoder;
-    private final CheckingAccountService checkingAccountService;
+    private final CustomerMapper customerMapper;
+    private final AddressMapper addressMapper;
+    private final FacadeCheckinAccountService facadeCheckinAccountService;
 
+
+    @Transactional(value = Transactional.TxType.REQUIRED,rollbackOn = Exception.class)
     @Override
-    public GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException {
-        Customer customer = customerMapper.customerDtoToCustomer(createCustomerRequest);
+    public GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException, CustomerNotFoundException, AccountNameAlreadyHaveException {
+        Customer customer = customerMapper.customerInfoDtoToCustomer(createCustomerRequest.getCustomerInfo());
 
         boolean verifyIdentityNumber = identityVerifier.verify(customer.getIdentityNumber());
         if (!verifyIdentityNumber) {
@@ -50,41 +55,47 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         if (!isOver18YearsOld) {
             throw new NotAcceptableAgeException();
         }
+        Address address = addressMapper.toEntity(createCustomerRequest.getAddress());
+        address.setCustomer(customer);
+        customer.addAddress(address);
         customer.setCreatedBy("ENGIN AKIN");
         customer.setCreatedAt(new Date());
-        customer.setPassword(passwordEncoder.encode(createCustomerRequest.getPassword()));
-        customer.setCustomerNo(createCustomerRequest.getIdentityNumber());
+        customer.setPassword(passwordEncoder.encode(createCustomerRequest.getCustomerInfo().getPassword()));
+        customer.setUserNumber(customer.getIdentityNumber());
         Customer savedCustomer = customerService.save(customer);
+        facadeCheckinAccountService.create(savedCustomer.getId(),createCustomerRequest.getCheckingAccount());
         return new GeneralDataResponse<>(savedCustomer.getId(), CustomerConstant.SIGNUP_SUCESSFULL);
     }
 
     @Override
-    public GeneralResponse update(Customer customer, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException {
-        if (customer==null) {
+    public GeneralResponse update(Long customerId, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException {
+        Optional<Customer> customer = customerService.getCustomerById(customerId);
+        if (customer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        if (passwordEncoder.matches(updateCustomerRequest.getPassword(), customer.getPassword())) {
+        if (passwordEncoder.matches(updateCustomerRequest.getPassword(), customer.get().getPassword())) {
             throw new UpdateCustomerSamePasswordException();
         }
         if(updateCustomerRequest.getTelephone()!=null){
-            customer.setTelephone(updateCustomerRequest.getTelephone());
+            customer.get().setTelephone(updateCustomerRequest.getTelephone());
         }
-        customer.setPassword(passwordEncoder.encode(updateCustomerRequest.getPassword()));
+        customer.get().setPassword(passwordEncoder.encode(updateCustomerRequest.getPassword()));
 
-        customerService.update(customer);
+        customerService.update(customer.get());
         return new GeneralSuccessfullResponse(CustomerConstant.UPDATE_SUCESSFULL);
     }
 
     @Override
-    public GeneralResponse delete(Customer customer) throws CustomerNotFoundException, CustomerDeleteException {
-        if (customer==null) {
+    public GeneralResponse delete(Long customerId) throws CustomerNotFoundException, CustomerDeleteException {
+        Optional<Customer> customer = customerService.getCustomerById(customerId);
+        if (customer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        boolean checkHasMoneyInDepositAccounts = checkHasMoneyInDepositAccounts(customer.getCheckingAccounts());
+        boolean checkHasMoneyInDepositAccounts = checkHasMoneyInDepositAccounts(customer.get().getCheckingAccounts());
         if (checkHasMoneyInDepositAccounts) {
             throw new CustomerDeleteException(CustomerConstant.DELETE_CUSTOMER_OPERATION_HAS_BALANCE_EXCEPTION);
         }
-        customerService.delete(customer);
+        customerService.delete(customer.get());
         return new GeneralSuccessfullResponse("Customer deleted.");
     }
 

@@ -2,7 +2,7 @@ package org.norma.finalproject.account.core.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import org.norma.finalproject.account.core.model.request.CreateDepositAcoountRequest;
+import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
 import org.norma.finalproject.account.core.model.response.CreateDepositAccountResponse;
 import org.norma.finalproject.account.entity.CheckingAccount;
 
@@ -11,7 +11,7 @@ public interface CheckingAccountMapper {
 
     CheckingAccountMapper INSTANCE = Mappers.getMapper(CheckingAccountMapper.class);
 
-    CheckingAccount ToEntity(CreateDepositAcoountRequest createDepositAcoountRequest);
+    CheckingAccount ToEntity(CreateCheckingAccountRequest createCheckingAccountRequest);
 
     CreateDepositAccountResponse toDto(CheckingAccount checkingAccount);
 

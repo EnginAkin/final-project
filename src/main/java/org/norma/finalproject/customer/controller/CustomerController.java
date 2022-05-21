@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.norma.finalproject.account.core.exception.AccountNameAlreadyHaveException;
 import org.norma.finalproject.common.exception.BusinessException;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
@@ -35,23 +36,21 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(tags = "Customer Controller", description = "Create a new Customer")
     @PostMapping(path = "/sing-up")
-    public GeneralResponse create(@RequestBody @Valid CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, CustomerAlreadyRegisterException, IdentityNotValidException {
+    public GeneralResponse create(@RequestBody @Valid CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, CustomerAlreadyRegisterException, IdentityNotValidException, CustomerNotFoundException, AccountNameAlreadyHaveException {
         return facadeCustomerService.signup(createCustomerRequest);
     }
 
     @Operation(tags = "Customer Controller", description = "Update Customer By Customer")
     @PutMapping(path = "/update")
     public GeneralResponse update(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody UpdateCustomerRequest updateCustomerRequest) throws UpdateCustomerSamePasswordException, CustomerNotFoundException {
-        //return facadeCustomerService.update(userDetail.getCustomer(), updateCustomerRequest);
-        return null;
+        return facadeCustomerService.update(userDetail.getUser().getId(),updateCustomerRequest);
     }
 
 
     @Operation(tags = "Customer Controller", description = "Delete customer By Customer")
     @PutMapping(path = "/delete")
     public GeneralResponse delete(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws CustomerNotFoundException, CustomerDeleteException {
-       // return facadeCustomerService.delete(userDetail.getCustomer());
-        return null;
+        return facadeCustomerService.delete(userDetail.getUser().getId());
 
     }
 
