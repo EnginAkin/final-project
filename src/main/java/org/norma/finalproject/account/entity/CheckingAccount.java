@@ -22,6 +22,7 @@ public class CheckingAccount extends BaseModel {
     private String accountNo;
     private String ibanNo;
     private String accountName;
+    private String bankCode;
     private String branchCode;
     private String branchName;
     private BigDecimal balance = BigDecimal.ZERO;

@@ -13,6 +13,8 @@ public class CheckingAccountMapperImpl implements CheckingAccountMapper {
         return CheckingAccount.builder()
                 .accountName(createCheckingAccountRequest.getBranchName()+"-"+createCheckingAccountRequest.getBranchCode())
                 .branchCode(createCheckingAccountRequest.getBranchCode())
+                .branchCode(createCheckingAccountRequest.getBranchCode())
+                .bankCode(createCheckingAccountRequest.getBankCode())
                 .branchName(createCheckingAccountRequest.getBranchName())
                 .currencyType(createCheckingAccountRequest.getCurrencyType()).build();
     }
