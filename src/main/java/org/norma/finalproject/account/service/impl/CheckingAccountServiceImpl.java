@@ -7,6 +7,7 @@ import org.norma.finalproject.account.repository.CheckingAccountRepository;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,6 +36,16 @@ public class CheckingAccountServiceImpl implements CheckingAccountService {
     public void deleteCustomerCheckingAccount(CheckingAccount checkingAccount) {
         checkingAccountRepository.delete(checkingAccount);
 
+    }
+
+    @Override
+    public List<CheckingAccount> getUnBlockedAccounts(long customerId) {
+        return checkingAccountRepository.findAllByCustomer_IdAndBlocked(customerId,false);
+    }
+
+    @Override
+    public Optional<CheckingAccount> getAccountByAccountNumber(String parentAccountNumber) {
+        return checkingAccountRepository.findByAccountNo(parentAccountNumber);
     }
 
 

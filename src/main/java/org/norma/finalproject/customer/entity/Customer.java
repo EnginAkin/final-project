@@ -34,10 +34,10 @@ public class Customer extends User {
     @Temporal(TemporalType.DATE)
     private Date birthDay;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<CheckingAccount> checkingAccounts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<SavingAccount> savingAccounts = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)

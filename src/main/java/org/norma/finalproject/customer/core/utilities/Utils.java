@@ -3,6 +3,7 @@ package org.norma.finalproject.customer.core.utilities;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,10 @@ public class Utils {
         Calendar cal = Calendar.getInstance(Locale.US);
         cal.setTime(date);
         return cal;
+    }
+
+    public static BigDecimal calculateSuccessRate(BigDecimal amount, BigDecimal target){
+        return amount.multiply(BigDecimal.valueOf(100)).divide(target);
     }
 
 }

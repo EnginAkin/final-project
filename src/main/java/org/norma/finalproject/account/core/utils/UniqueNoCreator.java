@@ -3,12 +3,11 @@ package org.norma.finalproject.account.core.utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.iban4j.CountryCode;
-import org.iban4j.Iban;
-import org.modelmapper.internal.util.Strings;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 
 @RequiredArgsConstructor
 @Component
@@ -17,16 +16,16 @@ public final class UniqueNoCreator {
     private final CheckingAccountService checkingAccountService;
 
 
-    public String createDepositAccountNo() {
+    public String creatAccountNo() {
         String randomDepositAccountNo = RandomStringUtils.randomNumeric(16);
         if (checkingAccountService.checkIsAccountNoUnique(randomDepositAccountNo)) {
             log.info("Deposit unique account no created : {}", randomDepositAccountNo);
             return randomDepositAccountNo;
         }
-        return createDepositAccountNo();
+        return creatAccountNo();
     }
 
-    public String createDepositIbanNo(String accountNo,String bankCode) {
+    public String createIbanNo(String accountNo, String bankCode) {
             String reservedField="0";
             String iBANCheckDigits="33";
 
@@ -36,9 +35,9 @@ public final class UniqueNoCreator {
                 log.info("Deposit unique iban no created : {}", ibanNumber);
                 return ibanNumber;
             }
-            return createDepositAccountNo();
-
+            return creatAccountNo();
     }
+
 
 
 

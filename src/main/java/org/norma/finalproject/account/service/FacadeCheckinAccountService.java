@@ -13,4 +13,6 @@ public interface FacadeCheckinAccountService {
     GeneralResponse create(long customerId, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException;
 
     GeneralResponse blockAccount(long accountId) throws DepositAccountNotFoundException;
+
+    GeneralResponse getAccounts(long id) throws CustomerNotFoundException;
 }

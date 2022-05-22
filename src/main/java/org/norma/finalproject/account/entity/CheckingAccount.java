@@ -33,6 +33,7 @@ public class CheckingAccount extends BaseModel {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "checkingAccount")
     private List<CheckingAccountActivity> activities = new ArrayList<>();
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;

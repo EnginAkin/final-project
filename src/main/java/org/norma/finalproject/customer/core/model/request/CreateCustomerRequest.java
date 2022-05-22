@@ -6,14 +6,19 @@ import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRe
 import org.norma.finalproject.customer.core.model.AddressDto;
 import org.norma.finalproject.customer.core.model.CustomerInfoDto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 public class CreateCustomerRequest {
 
+    @Valid
     private CustomerInfoDto customerInfo;
 
+    @Valid
     private AddressDto address;
-
+    @Valid
     private CreateCheckingAccountRequest checkingAccount;
 
 }

@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.core.exception.*;
 import org.norma.finalproject.account.core.mapper.CheckingAccountMapper;
 import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
+import org.norma.finalproject.account.core.model.response.CheckingAccountResponse;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.account.service.FacadeCheckinAccountService;
+import org.norma.finalproject.common.iban.service.IbanService;
 import org.norma.finalproject.common.response.GeneralDataResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
@@ -18,7 +20,6 @@ import org.norma.finalproject.customer.service.CustomerService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,7 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
 
     private final UniqueNoCreator uniqueNoCreator;
     private final CheckingAccountMapper mapper;
+    private final IbanService ibanService;
 
     @Override
     public GeneralResponse create(long customerId, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
@@ -40,6 +42,7 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
             throw new CustomerNotFoundException();
         }
         String accountName=createCheckingAccountRequest.getBranchName()+"-"+createCheckingAccountRequest.getBranchCode();
+
         Optional<CheckingAccount> optionalDepositAccount = existsCheckingAccountByAccountName(optionalCustomer.get().getCheckingAccounts(),accountName);
 
         if (optionalDepositAccount.isPresent()) {
@@ -48,17 +51,16 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
         CheckingAccount checkingAccount = mapper.ToEntity(createCheckingAccountRequest);
 
 
-        // TODO
-        String AccountNo = uniqueNoCreator.createDepositAccountNo();
-        checkingAccount.setAccountNo(AccountNo);
-        String IbanNo = uniqueNoCreator.createDepositIbanNo(AccountNo,createCheckingAccountRequest.getBankCode());
-        checkingAccount.setIbanNo(IbanNo);
+        String accountNo = uniqueNoCreator.creatAccountNo();
+        checkingAccount.setAccountNo(accountNo);
+        String ibanNo = uniqueNoCreator.createIbanNo(accountNo,createCheckingAccountRequest.getBankCode());
+        checkingAccount.setIbanNo(ibanNo);
         checkingAccount.setBalance(BigDecimal.ZERO);
-        checkingAccount.setCreatedAt(new Date());
-        checkingAccount.setCreatedBy("ENGIN AKIN");
+
         checkingAccount.setCustomer(optionalCustomer.get());
         CheckingAccount savedCheckingAccount = checkingAccountService.save(checkingAccount);
-        return new GeneralDataResponse<>(mapper.toDto(savedCheckingAccount));
+        ibanService.save(ibanNo,optionalCustomer.get());
+        return new GeneralDataResponse<>(mapper.toCreateCheckingAccountDto(savedCheckingAccount));
     }
 
     @Override
@@ -71,6 +73,17 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
         checkingAccountService.save(depositAccount.get());
         log.info("Customer blocked.transfer authorization removed");
         return new GeneralSuccessfullResponse("Customer Blocked successfull. Customer cannot transfer anymore.");
+    }
+
+    @Override
+    public GeneralResponse getAccounts(long customerId) throws CustomerNotFoundException {
+        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerId);
+        if(optionalCustomer.isEmpty()){
+            throw new CustomerNotFoundException();
+        }
+        List<CheckingAccount> checkingAccounts = checkingAccountService.getUnBlockedAccounts(customerId);
+        List<CheckingAccountResponse> accountResponses=checkingAccounts.stream().map(mapper::toAccountResponses).toList();
+        return new GeneralDataResponse<>(accountResponses);
     }
 
     // TODO by name iptal

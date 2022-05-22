@@ -9,6 +9,7 @@ import org.norma.finalproject.account.service.FacadeCheckinAccountService;
 import org.norma.finalproject.common.exception.BusinessException;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
+import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,6 +39,10 @@ public class CheckingAccountController {
     public GeneralResponse deleteByAccountName(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable String accountName) throws BusinessException {
         return facadeCheckinAccountService.delete(userDetail.getUser().getId(),accountName);
 
+    }
+    @GetMapping
+    public GeneralResponse getAllCheckingAccounts(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws BusinessException {
+        return facadeCheckinAccountService.getAccounts(userDetail.getUser().getId());
     }
 
 

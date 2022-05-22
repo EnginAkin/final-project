@@ -17,11 +17,11 @@ public class AccountActivity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String crossAccount;
-    private BigDecimal amount = BigDecimal.ZERO;
+    private BigDecimal amount;
     @Temporal(TemporalType.DATE)
     private Date date;
     private String description;
-    private BigDecimal availableBalance = BigDecimal.ZERO;
+    private BigDecimal availableBalance;
     @Enumerated(value = EnumType.STRING)
     private ActionStatus actionStatus;
 

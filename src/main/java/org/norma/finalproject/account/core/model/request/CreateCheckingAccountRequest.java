@@ -5,23 +5,21 @@ import lombok.Getter;
 import lombok.Setter;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 @Getter
 @Setter
 public class CreateCheckingAccountRequest {
 
-
-    @NotNull
     @JsonProperty(defaultValue = "00061") // example bank code
+    @Size(max = 6,min = 6)
     private String bankCode;
-
-    @NotNull
+    @JsonProperty(defaultValue = "FATIH")
     private String branchName;
-    @NotNull
+    @JsonProperty(defaultValue = "50")
+    @Min(2)
     private String branchCode;
-    @NotNull
+    @JsonProperty(defaultValue ="TRY")
     private CurrencyType currencyType;
 
 
