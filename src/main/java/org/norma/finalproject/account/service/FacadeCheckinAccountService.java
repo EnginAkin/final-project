@@ -8,9 +8,9 @@ import org.norma.finalproject.customer.entity.Customer;
 
 public interface FacadeCheckinAccountService {
 
-    GeneralResponse delete(Customer customer, String accountName) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException;
+    GeneralResponse delete(long customerId, String accountName) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException;
 
-    GeneralResponse create(Long customerId, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException;
+    GeneralResponse create(long customerId, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException;
 
     GeneralResponse blockAccount(long accountId) throws DepositAccountNotFoundException;
 }

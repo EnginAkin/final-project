@@ -34,7 +34,7 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
     private final CheckingAccountMapper mapper;
 
     @Override
-    public GeneralResponse create(Long customerId, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
+    public GeneralResponse create(long customerId, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
         Optional<Customer> optionalCustomer=customerService.getCustomerById(customerId);
         if(optionalCustomer.isEmpty()){
             throw new CustomerNotFoundException();
@@ -71,11 +71,12 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
 
     // TODO by name iptal
     @Override
-    public GeneralResponse delete(Customer customer, String accountName) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException {
-        if (customer == null) {
+    public GeneralResponse delete(long customerId, String accountName) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException {
+        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerId);
+        if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        Optional<CheckingAccount> depositAccount = existsCheckingAccountByAccountName(customer.getCheckingAccounts(), accountName);
+        Optional<CheckingAccount> depositAccount = existsCheckingAccountByAccountName(optionalCustomer.get().getCheckingAccounts(), accountName);
         if (depositAccount.isEmpty()) {
             throw new CustomerAccountNotFoundException("Account : " + accountName + " not found");
         }
@@ -85,7 +86,7 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
         if (depositAccount.get().getBalance().compareTo(BigDecimal.ZERO) > 0) {
             throw new DeleteAccountHasBalanceException("Balance greater than 0 in " + accountName + ".Cannot be deleted.");
         }
-        // TODO bir deposit hesap silindiğinde ona bağlı kart da silinir.
+        // TODO bir cehcking hesap silindiğinde ona bağlı kart da silinir.
         checkingAccountService.deleteCustomerCheckingAccount(depositAccount.get());
         return new GeneralSuccessfullResponse("Deleted successfully Customer Deposit account.");
     }

@@ -30,15 +30,13 @@ public class CheckingAccountController {
     @Operation(tags = "Deposit Controller", description = "Create a deposit account By customer.")
     @PostMapping
     public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateCheckingAccountRequest createCheckingAccountRequest) throws BusinessException  {
-       // return facadeCheckinAccountService.create(userDetail.getCustomer(), createDepositAcoountRequest);
         return facadeCheckinAccountService.create(userDetail.getUser().getId(), createCheckingAccountRequest);
     }
 
     @Operation(tags = "Deposit Controller", description = "Delete a deposit account by Customer.")
     @DeleteMapping("/{accountName}")
     public GeneralResponse deleteByAccountName(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable String accountName) throws BusinessException {
-//        return facadeCheckinAccountService.delete(userDetail.getCustomer(),accountName);
-        return null;
+        return facadeCheckinAccountService.delete(userDetail.getUser().getId(),accountName);
 
     }
 
