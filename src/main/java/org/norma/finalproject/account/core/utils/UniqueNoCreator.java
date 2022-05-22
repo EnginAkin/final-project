@@ -3,6 +3,10 @@ package org.norma.finalproject.account.core.utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.iban4j.CountryCode;
+import org.iban4j.Iban;
+import org.modelmapper.internal.util.Strings;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +18,7 @@ public final class UniqueNoCreator {
 
 
     public String createDepositAccountNo() {
-        String randomDepositAccountNo = RandomStringUtils.randomNumeric(12);
+        String randomDepositAccountNo = RandomStringUtils.randomNumeric(16);
         if (checkingAccountService.checkIsAccountNoUnique(randomDepositAccountNo)) {
             log.info("Deposit unique account no created : {}", randomDepositAccountNo);
             return randomDepositAccountNo;
@@ -22,23 +26,20 @@ public final class UniqueNoCreator {
         return createDepositAccountNo();
     }
 
-    public String createDepositIbanNo() {
-        String randomDepositAccountNo = RandomStringUtils.randomNumeric(16);
-        if (checkingAccountService.checkIsAccountNoUnique(randomDepositAccountNo)) {
-            log.info("Deposit unique iban no created : {}", randomDepositAccountNo);
-            return toFormatIban(randomDepositAccountNo);
-        }
-        return createDepositAccountNo();
+    public String createDepositIbanNo(String accountNo,String bankCode) {
+            String reservedField="0";
+            String iBANCheckDigits="33";
+
+            String ibanNumber=CountryCode.TR+iBANCheckDigits+bankCode+reservedField+accountNo;
+            // kontrol mekanizması değişecek.
+            if (checkingAccountService.checkIsAccountNoUnique(ibanNumber)) {
+                log.info("Deposit unique iban no created : {}", ibanNumber);
+                return ibanNumber;
+            }
+            return createDepositAccountNo();
+
     }
 
-    private String toFormatIban(String value) {
-        String formattedIban = "";
-        for (int i = 0; i < 4; i++) {
-            formattedIban += value.substring(i * 4, i * 4 + 4) + " ";
-        }
-
-        return formattedIban.substring(0, formattedIban.length() - 1); // remove last space index
-    }
 
 
 }

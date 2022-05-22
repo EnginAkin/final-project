@@ -1,10 +1,7 @@
 package org.norma.finalproject.common.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.norma.finalproject.customer.entity.Role;
 
 import javax.persistence.*;

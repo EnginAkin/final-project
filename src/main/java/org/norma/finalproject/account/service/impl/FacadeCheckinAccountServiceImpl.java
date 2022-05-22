@@ -39,15 +39,19 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
         if(optionalCustomer.isEmpty()){
             throw new CustomerNotFoundException();
         }
-        Optional<CheckingAccount> optionalDepositAccount = existsCheckingAccountByAccountName(optionalCustomer.get().getCheckingAccounts(), createCheckingAccountRequest.getAccountName());
+        String accountName=createCheckingAccountRequest.getBranchName()+"-"+createCheckingAccountRequest.getBranchCode();
+        Optional<CheckingAccount> optionalDepositAccount = existsCheckingAccountByAccountName(optionalCustomer.get().getCheckingAccounts(),accountName);
+
         if (optionalDepositAccount.isPresent()) {
-            throw new AccountNameAlreadyHaveException(createCheckingAccountRequest.getAccountName() + " name already have account in your accounts.");
+            throw new AccountNameAlreadyHaveException(accountName + " name already have account in your accounts.");
         }
         CheckingAccount checkingAccount = mapper.ToEntity(createCheckingAccountRequest);
 
+
+        // TODO
         String AccountNo = uniqueNoCreator.createDepositAccountNo();
         checkingAccount.setAccountNo(AccountNo);
-        String IbanNo = uniqueNoCreator.createDepositIbanNo();
+        String IbanNo = uniqueNoCreator.createDepositIbanNo(AccountNo,createCheckingAccountRequest.getBankCode());
         checkingAccount.setIbanNo(IbanNo);
         checkingAccount.setBalance(BigDecimal.ZERO);
         checkingAccount.setCreatedAt(new Date());

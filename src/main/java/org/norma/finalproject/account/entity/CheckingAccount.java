@@ -12,16 +12,18 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
+@Builder
 public class CheckingAccount extends BaseModel {
 
     private String accountNo;
     private String ibanNo;
     private String accountName;
+    private String branchCode;
+    private String branchName;
     private BigDecimal balance = BigDecimal.ZERO;
 
     @Enumerated(value = EnumType.STRING)

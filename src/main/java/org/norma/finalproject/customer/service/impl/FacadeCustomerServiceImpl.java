@@ -5,17 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.core.exception.AccountNameAlreadyHaveException;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.service.FacadeCheckinAccountService;
-import org.norma.finalproject.common.response.GeneralDataResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
 import org.norma.finalproject.customer.core.exception.*;
-import org.norma.finalproject.customer.core.mapper.AddressMapper;
 import org.norma.finalproject.customer.core.mapper.CustomerMapper;
 import org.norma.finalproject.customer.core.model.request.CreateCustomerRequest;
 import org.norma.finalproject.customer.core.model.request.UpdateCustomerRequest;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.core.utilities.Utils;
-import org.norma.finalproject.customer.entity.Address;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.norma.finalproject.customer.service.FacadeCustomerService;
@@ -38,15 +35,13 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
     private final IdentityVerifier identityVerifier;
     private final PasswordEncoder passwordEncoder;
     private final CustomerMapper customerMapper;
-    private final AddressMapper addressMapper;
     private final FacadeCheckinAccountService facadeCheckinAccountService;
 
 
     @Transactional(value = Transactional.TxType.REQUIRED,rollbackOn = Exception.class)
     @Override
     public GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException, CustomerNotFoundException, AccountNameAlreadyHaveException {
-        Customer customer = customerMapper.customerInfoDtoToCustomer(createCustomerRequest.getCustomerInfo());
-
+        Customer customer = customerMapper.customerInfoDtoToCustomer(createCustomerRequest);
         boolean verifyIdentityNumber = identityVerifier.verify(customer.getIdentityNumber());
         if (!verifyIdentityNumber) {
             throw new IdentityNotValidException();
@@ -55,16 +50,9 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         if (!isOver18YearsOld) {
             throw new NotAcceptableAgeException();
         }
-        Address address = addressMapper.toEntity(createCustomerRequest.getAddress());
-        address.setCustomer(customer);
-        customer.addAddress(address);
-        customer.setCreatedBy("ENGIN AKIN");
-        customer.setCreatedAt(new Date());
-        customer.setPassword(passwordEncoder.encode(createCustomerRequest.getCustomerInfo().getPassword()));
-        customer.setUserNumber(customer.getIdentityNumber());
         Customer savedCustomer = customerService.save(customer);
         facadeCheckinAccountService.create(savedCustomer.getId(),createCustomerRequest.getCheckingAccount());
-        return new GeneralDataResponse<>(savedCustomer.getId(), CustomerConstant.SIGNUP_SUCESSFULL);
+        return new GeneralSuccessfullResponse(CustomerConstant.SIGNUP_SUCESSFULL);
     }
 
     @Override
