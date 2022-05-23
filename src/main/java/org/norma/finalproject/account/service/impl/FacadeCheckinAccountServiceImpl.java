@@ -3,11 +3,15 @@ package org.norma.finalproject.account.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.core.exception.*;
+import org.norma.finalproject.account.core.mapper.AccountActivityMapper;
 import org.norma.finalproject.account.core.mapper.CheckingAccountMapper;
 import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
+import org.norma.finalproject.account.core.model.response.AccountActivityResponse;
 import org.norma.finalproject.account.core.model.response.CheckingAccountResponse;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
+import org.norma.finalproject.account.entity.base.AccountActivity;
+import org.norma.finalproject.account.service.AccountActivityService;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.account.service.FacadeCheckinAccountService;
 import org.norma.finalproject.common.response.GeneralDataResponse;
@@ -30,8 +34,12 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
     private final CustomerService customerService;
     private final CheckingAccountService checkingAccountService;
 
+    private final AccountActivityService accountActivityService;
+
     private final UniqueNoCreator uniqueNoCreator;
-    private final CheckingAccountMapper mapper;
+    private final CheckingAccountMapper checkingAccountMapper;
+    private final AccountActivityMapper accountActivityMapper;
+
 
     @Override
     public GeneralResponse create(long customerId, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
@@ -46,7 +54,7 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
         if (optionalDepositAccount.isPresent()) {
             throw new AccountNameAlreadyHaveException(accountName + " name already have account in your accounts.");
         }
-        CheckingAccount checkingAccount = mapper.ToEntity(createCheckingAccountRequest);
+        CheckingAccount checkingAccount = checkingAccountMapper.ToEntity(createCheckingAccountRequest);
 
 
         String accountNo = uniqueNoCreator.creatAccountNo();
@@ -57,7 +65,7 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
 
         checkingAccount.setCustomer(optionalCustomer.get());
         CheckingAccount savedCheckingAccount = checkingAccountService.save(checkingAccount);
-        return new GeneralDataResponse<>(mapper.toCreateCheckingAccountDto(savedCheckingAccount));
+        return new GeneralDataResponse<>(checkingAccountMapper.toCreateCheckingAccountDto(savedCheckingAccount));
     }
 
     @Override
@@ -73,14 +81,25 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
     }
 
     @Override
-    public GeneralResponse getAccounts(long customerId) throws CustomerNotFoundException {
+    public GeneralResponse getCheckingAccounts(long customerId) throws CustomerNotFoundException {
         Optional<Customer> optionalCustomer = customerService.getCustomerById(customerId);
         if(optionalCustomer.isEmpty()){
             throw new CustomerNotFoundException();
         }
         List<CheckingAccount> checkingAccounts = checkingAccountService.getUnBlockedAccounts(customerId);
-        List<CheckingAccountResponse> accountResponses=checkingAccounts.stream().map(mapper::toAccountResponses).toList();
+        List<CheckingAccountResponse> accountResponses=checkingAccounts.stream().map(checkingAccountMapper::toAccountResponses).toList();
         return new GeneralDataResponse<>(accountResponses);
+    }
+
+    @Override
+    public GeneralResponse getCheckingAccountActivities(long id, String accountNumber) throws CustomerNotFoundException {
+        Optional<Customer> optionalCustomer = customerService.getCustomerById(id);
+        if(optionalCustomer.isEmpty()){
+            throw new CustomerNotFoundException();
+        }
+        List<AccountActivity> accountActivities = accountActivityService.getAccountActivityByAccountNumber(accountNumber);
+        List<AccountActivityResponse> responseList = accountActivities.stream().map(accountActivityMapper::toDto).toList();
+        return new GeneralDataResponse<>(responseList);
     }
 
     @Override

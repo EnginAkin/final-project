@@ -9,7 +9,6 @@ import org.norma.finalproject.account.service.FacadeCheckinAccountService;
 import org.norma.finalproject.common.exception.BusinessException;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
-import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,10 +41,15 @@ public class CheckingAccountController {
     }
     @GetMapping
     public GeneralResponse getAllCheckingAccounts(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws BusinessException {
-        return facadeCheckinAccountService.getAccounts(userDetail.getUser().getId());
+        return facadeCheckinAccountService.getCheckingAccounts(userDetail.getUser().getId());
     }
 
+    @GetMapping("/{accountNumber}/activities")
+    public GeneralResponse getCheckingAccountActivities(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable String accountNumber) throws BusinessException {
+        return facadeCheckinAccountService.getCheckingAccountActivities(userDetail.getUser().getId(),accountNumber);
+    }
 
+// ACTİVİTY GELİRKEN BİRAZ DAHA DÜZENLEME GEREK İKSİ İÇİN AYRI AYRI YAZMAK KÖTÜ BİR ÇÖMZÜM
     @RolesAllowed({CustomerConstant.ROLE_ADMIN})
     @Operation(tags = "Deposit Controller", description = "Blocked a deposit account by ADMIN.")
     @PutMapping("/{accountId}/block")

@@ -1,9 +1,8 @@
 package org.norma.finalproject.transfer.service;
 
-import org.norma.finalproject.common.response.GeneralResponse;
-import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
+import org.norma.finalproject.transfer.entity.Transfer;
 
-public interface TransferService <T>{
+public interface TransferService {
+    void save(Transfer transfer);
 
-    GeneralResponse transfer(long customerId,T data) throws CustomerNotFoundException;
 }

@@ -13,5 +13,6 @@ public interface CheckingAccountRepository extends JpaRepository<CheckingAccount
     List<CheckingAccount> findAllByCustomer_IdAndBlocked(long customerId, boolean blocked);
 
     Optional<CheckingAccount> findByAccountNo(String accountNo);
+
 }
 
