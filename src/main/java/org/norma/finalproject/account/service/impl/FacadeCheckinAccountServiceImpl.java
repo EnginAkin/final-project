@@ -10,7 +10,6 @@ import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.account.service.FacadeCheckinAccountService;
-import org.norma.finalproject.common.iban.service.IbanService;
 import org.norma.finalproject.common.response.GeneralDataResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
@@ -33,7 +32,6 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
 
     private final UniqueNoCreator uniqueNoCreator;
     private final CheckingAccountMapper mapper;
-    private final IbanService ibanService;
 
     @Override
     public GeneralResponse create(long customerId, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
@@ -43,7 +41,7 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
         }
         String accountName=createCheckingAccountRequest.getBranchName()+"-"+createCheckingAccountRequest.getBranchCode();
 
-        Optional<CheckingAccount> optionalDepositAccount = existsCheckingAccountByAccountName(optionalCustomer.get().getCheckingAccounts(),accountName);
+        Optional<CheckingAccount> optionalDepositAccount = existsCheckingAccountByAccountNumber(optionalCustomer.get().getCheckingAccounts(),accountName);
 
         if (optionalDepositAccount.isPresent()) {
             throw new AccountNameAlreadyHaveException(accountName + " name already have account in your accounts.");
@@ -59,7 +57,6 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
 
         checkingAccount.setCustomer(optionalCustomer.get());
         CheckingAccount savedCheckingAccount = checkingAccountService.save(checkingAccount);
-        ibanService.save(ibanNo,optionalCustomer.get());
         return new GeneralDataResponse<>(mapper.toCreateCheckingAccountDto(savedCheckingAccount));
     }
 
@@ -86,33 +83,34 @@ public class FacadeCheckinAccountServiceImpl implements FacadeCheckinAccountServ
         return new GeneralDataResponse<>(accountResponses);
     }
 
-    // TODO by name iptal
     @Override
-    public GeneralResponse delete(long customerId, String accountName) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException {
+    public GeneralResponse delete(long customerId, String accountNumber) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException {
+
         Optional<Customer> optionalCustomer = customerService.getCustomerById(customerId);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        Optional<CheckingAccount> depositAccount = existsCheckingAccountByAccountName(optionalCustomer.get().getCheckingAccounts(), accountName);
-        if (depositAccount.isEmpty()) {
-            throw new CustomerAccountNotFoundException("Account : " + accountName + " not found");
+        Optional<CheckingAccount> checkingAccount=checkingAccountService.getAccountByAccountNumber(accountNumber);
+        if (checkingAccount.isEmpty()) {
+            throw new CustomerAccountNotFoundException("Account : " + accountNumber + " account number not found");
         }
-        if(depositAccount.get().isBlocked()){
+        if(checkingAccount.get().isBlocked()){
             throw new CannotDeleteBlockedAccounException();
         }
-        if (depositAccount.get().getBalance().compareTo(BigDecimal.ZERO) > 0) {
-            throw new DeleteAccountHasBalanceException("Balance greater than 0 in " + accountName + ".Cannot be deleted.");
+        if (checkingAccount.get().getBalance().compareTo(BigDecimal.ZERO) > 0) {
+            throw new DeleteAccountHasBalanceException("Balance greater than 0 in " + accountNumber + " in account number.Cannot be deleted.");
         }
         // TODO bir cehcking hesap silindiğinde ona bağlı kart da silinir.
-        checkingAccountService.deleteCustomerCheckingAccount(depositAccount.get());
+        // TODO hesap silinmeden önce hesaba bağlı bir birikim hesabı var mı varsa içinde bakiye var mı
+        checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get().getId());
         return new GeneralSuccessfullResponse("Deleted successfully Customer Deposit account.");
     }
 
-    public Optional<CheckingAccount> existsCheckingAccountByAccountName(List<CheckingAccount> checkingAccountList, String accountName) {
+    public Optional<CheckingAccount> existsCheckingAccountByAccountNumber(List<CheckingAccount> checkingAccountList, String accountName) {
         if( checkingAccountList==null  ){
             return Optional.empty();
         }
-        return checkingAccountList.stream().filter(depositAccount -> depositAccount.getAccountName().equals(accountName)).findFirst();
+        return checkingAccountList.stream().filter(checkingAccount -> checkingAccount.getAccountNo().equals(accountName)).findFirst();
 
     }
 

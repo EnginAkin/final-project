@@ -20,11 +20,14 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SavingAccount extends BaseModel {
+@PrimaryKeyJoinColumn(name = "id",referencedColumnName = "id")
+@Inheritance(strategy = InheritanceType.JOINED)
+public class SavingAccount extends Account {
 
+    @Column(insertable = false,updatable = false)
+    private Long id;
 
     private String accountName;
-    private String accountNo;
     private BigDecimal balance;
     private BigDecimal successRate = BigDecimal.ZERO;
     private BigDecimal targetAmount = BigDecimal.ZERO;
@@ -38,7 +41,7 @@ public class SavingAccount extends BaseModel {
 
 
 
-    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     private CheckingAccount parentAccount;
 
 

@@ -17,10 +17,14 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-public class CheckingAccount extends BaseModel {
+@PrimaryKeyJoinColumn(name = "id",referencedColumnName = "id")
+@Inheritance(strategy = InheritanceType.JOINED)
+public class CheckingAccount extends Account {
 
-    private String accountNo;
-    private String ibanNo;
+
+    @Column(insertable = false,updatable = false)
+    private Long id;
+
     private String accountName;
     private String bankCode;
     private String branchCode;
@@ -30,8 +34,9 @@ public class CheckingAccount extends BaseModel {
     @Enumerated(value = EnumType.STRING)
     private CurrencyType currencyType;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "checkingAccount")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "checkingAccount",orphanRemoval = true)
     private List<CheckingAccountActivity> activities = new ArrayList<>();
+
 
 
     @ManyToOne(fetch = FetchType.LAZY)

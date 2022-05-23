@@ -59,6 +59,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         account.setCustomer(optionalCustomer.get());
         account.setParentAccount(parentCheckingAccount.get());
         account.setAccountNo(uniqueNoCreator.creatAccountNo());
+        account.setIbanNo(uniqueNoCreator.createIbanNo(account.getAccountNo(),account.getParentAccount().getBankCode()));
         // TODO transfer olması gerekiyor mevduatsız hesaptan birikim hesabına.
 
         SavingAccount savedAccount = savingAccountService.save(account);

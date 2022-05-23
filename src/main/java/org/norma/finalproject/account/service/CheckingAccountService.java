@@ -14,7 +14,7 @@ public interface CheckingAccountService {
 
     Optional<CheckingAccount> findById(long accountId);
 
-    void deleteCustomerCheckingAccount(CheckingAccount checkingAccount);
+    void deleteCustomerCheckingAccountById(long checkingAccountId);
 
     List<CheckingAccount> getUnBlockedAccounts(long customerId);
 
