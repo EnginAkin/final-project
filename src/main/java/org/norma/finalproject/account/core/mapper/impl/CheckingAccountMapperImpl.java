@@ -5,6 +5,7 @@ import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRe
 import org.norma.finalproject.account.core.model.response.CheckingAccountResponse;
 import org.norma.finalproject.account.core.model.response.CreateDepositAccountResponse;
 import org.norma.finalproject.account.entity.CheckingAccount;
+import org.norma.finalproject.account.entity.enums.AccountType;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -13,16 +14,18 @@ import java.util.Date;
 public class CheckingAccountMapperImpl implements CheckingAccountMapper {
     @Override
     public CheckingAccount ToEntity(CreateCheckingAccountRequest createCheckingAccountRequest) {
+        CheckingAccount checkingAccount=new CheckingAccount();
+        checkingAccount.setAccountName(createCheckingAccountRequest.getBranchName()+"-"+createCheckingAccountRequest.getBranchCode());
+        checkingAccount.setBranchCode(createCheckingAccountRequest.getBranchCode());
+        checkingAccount.setBankCode(createCheckingAccountRequest.getBankCode());
+        checkingAccount.setBranchName(createCheckingAccountRequest.getBranchName());
+        checkingAccount.setCreatedAt(new Date());
+        checkingAccount.setCreatedBy("ENGIN AKIN");
+        checkingAccount.setCurrencyType(createCheckingAccountRequest.getCurrencyType());
+        checkingAccount.setAccountType(AccountType.CHECKING);
+        return checkingAccount;
 
-        return CheckingAccount.builder()
-                .accountName(createCheckingAccountRequest.getBranchName()+"-"+createCheckingAccountRequest.getBranchCode())
-                .branchCode(createCheckingAccountRequest.getBranchCode())
-                .branchCode(createCheckingAccountRequest.getBranchCode())
-                .bankCode(createCheckingAccountRequest.getBankCode())
-                .branchName(createCheckingAccountRequest.getBranchName())
-                .createdAt(new Date())
-                .createdBy("ENGIN AKIN")
-                .currencyType(createCheckingAccountRequest.getCurrencyType()).build();
+
     }
     @Override
     public CreateDepositAccountResponse toCreateCheckingAccountDto(CheckingAccount checkingAccount) {

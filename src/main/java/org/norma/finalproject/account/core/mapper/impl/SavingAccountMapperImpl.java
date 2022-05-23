@@ -4,6 +4,7 @@ import org.norma.finalproject.account.core.mapper.SavingAccountMapper;
 import org.norma.finalproject.account.core.model.request.CreateSavingAccountRequest;
 import org.norma.finalproject.account.core.model.response.CreateSavingAccountResponse;
 import org.norma.finalproject.account.entity.SavingAccount;
+import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.customer.core.utilities.Utils;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +14,18 @@ import java.util.Date;
 public class SavingAccountMapperImpl implements SavingAccountMapper {
     @Override
     public SavingAccount createSavingAccountToEntity(CreateSavingAccountRequest createSavingAccountRequest) {
-        return SavingAccount.builder().
-                accountName(createSavingAccountRequest.getAccountName())
-                .targetAmount(createSavingAccountRequest.getTargetAmount())
-                .purposeCumulative(createSavingAccountRequest.getPurposeCumulative())
-                .maturity(createSavingAccountRequest.getMaturity())
-                .currencyType(createSavingAccountRequest.getCurrencyType())
-                .successRate(Utils.calculateSuccessRate(createSavingAccountRequest.getOpeningBalance(),createSavingAccountRequest.getTargetAmount()))
-                .createdAt(new Date())
-                .createdBy("ENGIN AKIN")
-                .balance(createSavingAccountRequest.getOpeningBalance()).build();
+        SavingAccount savingAccount =new SavingAccount();
+        savingAccount.setSuccessRate(Utils.calculateSuccessRate(createSavingAccountRequest.getOpeningBalance(), createSavingAccountRequest.getTargetAmount()));
+        savingAccount.setMaturity(createSavingAccountRequest.getMaturity());
+        savingAccount.setTargetAmount(createSavingAccountRequest.getTargetAmount());
+        savingAccount.setPurposeCumulative(createSavingAccountRequest.getPurposeCumulative());
+        savingAccount.setAccountName(createSavingAccountRequest.getAccountName());
+        savingAccount.setCurrencyType(createSavingAccountRequest.getCurrencyType());
+        savingAccount.setCreatedAt(new Date());
+        savingAccount.setCreatedBy("ENGIN AKIN");
+        savingAccount.setBalance(createSavingAccountRequest.getOpeningBalance());
+        savingAccount.setAccountType(AccountType.SAVING);
+        return savingAccount;
     }
 
     @Override
