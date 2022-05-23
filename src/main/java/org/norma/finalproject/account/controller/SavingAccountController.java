@@ -28,9 +28,6 @@ public class SavingAccountController {
 
     }
 
-
-
-
     @GetMapping
     public GeneralResponse getAllCheckingAccounts(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws BusinessException {
         return facadeSavingAccountService.getAccounts(userDetail.getUser().getId());

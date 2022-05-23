@@ -15,6 +15,3 @@ public class CreateIbanTransferRequest {
     private String description;
     private SendType sendType;
 }
-// 1. hesap iban no TR3300066107021978911206485 // 40 tl
-
-// 2. iban no TR3300066102871903576532348 // 10 tl

@@ -23,7 +23,6 @@ public class SavingAccountMapperImpl implements SavingAccountMapper {
         savingAccount.setCurrencyType(createSavingAccountRequest.getCurrencyType());
         savingAccount.setCreatedAt(new Date());
         savingAccount.setCreatedBy("ENGIN AKIN");
-        savingAccount.setBalance(createSavingAccountRequest.getOpeningBalance());
         savingAccount.setAccountType(AccountType.SAVING);
         return savingAccount;
     }

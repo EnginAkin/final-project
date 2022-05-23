@@ -2,6 +2,7 @@ package org.norma.finalproject.transfer.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.common.entity.BaseModel;
 import org.norma.finalproject.transfer.entity.enums.SendType;
 
@@ -17,12 +18,14 @@ public class Transfer extends BaseModel {
     private String fromIban;
     private String toIban;
     private BigDecimal balance;
-    @Enumerated(value = EnumType.STRING)
-    private SendType sendType;
-
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date processTime;
+
+    @Enumerated(value = EnumType.STRING)
+    private SendType sendType;
+    @Enumerated(value = EnumType.STRING)
+    private CurrencyType currencyType;
 
 }

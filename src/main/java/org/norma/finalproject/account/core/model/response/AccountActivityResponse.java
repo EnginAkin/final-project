@@ -19,7 +19,7 @@ public class AccountActivityResponse {
     private String receiverName;
 
     private BigDecimal amount;
-
+    @JsonInclude(JsonInclude.Include. NON_NULL)
     private String description;
 
     private BigDecimal availableBalance;

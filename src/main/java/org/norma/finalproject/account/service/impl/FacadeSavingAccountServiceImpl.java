@@ -18,7 +18,13 @@ import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
+import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
+import org.norma.finalproject.transfer.core.exception.TransferOperationException;
+import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
+import org.norma.finalproject.transfer.entity.enums.SendType;
+import org.norma.finalproject.transfer.service.impl.IbanTransferBase;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +41,11 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
     private final SavingAccountMapper savingAccountMapper;
     private final UniqueNoCreator uniqueNoCreator;
 
+    private final IbanTransferBase ibanTransferBase;
+
     @Override
-    public GeneralResponse create(Long customerId, CreateSavingAccountRequest createSavingAccountRequest) throws CustomerNotFoundException, CheckingAccountNotFoundException, SavingAccountOperationException {
+    @Transactional
+    public GeneralResponse create(Long customerId, CreateSavingAccountRequest createSavingAccountRequest) throws CustomerNotFoundException, CheckingAccountNotFoundException, SavingAccountOperationException, AmountNotValidException, TransferOperationException {
         Optional<Customer> optionalCustomer = customerService.getCustomerById(customerId);
         if(optionalCustomer.isEmpty()){
             throw new CustomerNotFoundException();
@@ -55,14 +64,20 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         if(createSavingAccountRequest.getOpeningBalance().compareTo(parentCheckingAccount.get().getBalance())>0){
             throw new SavingAccountOperationException("Parent account balance not enough for saving balance.");
         }
-        SavingAccount account=savingAccountMapper.createSavingAccountToEntity(createSavingAccountRequest);
-        account.setCustomer(optionalCustomer.get());
-        account.setParentAccount(parentCheckingAccount.get());
-        account.setAccountNo(uniqueNoCreator.creatAccountNo());
-        account.setIbanNo(uniqueNoCreator.createIbanNo(account.getAccountNo(),account.getParentAccount().getBankCode()));
-        // TODO transfer olması gerekiyor mevduatsız hesaptan birikim hesabına.
-
-        SavingAccount savedAccount = savingAccountService.save(account);
+        SavingAccount savingAccount=savingAccountMapper.createSavingAccountToEntity(createSavingAccountRequest);
+        savingAccount.setCustomer(optionalCustomer.get());
+        savingAccount.setParentAccount(parentCheckingAccount.get());
+        savingAccount.setAccountNo(uniqueNoCreator.creatAccountNo());
+        savingAccount.setIbanNo(uniqueNoCreator.createIbanNo(savingAccount.getAccountNo(),savingAccount.getParentAccount().getBankCode()));
+        SavingAccount savedAccount = savingAccountService.save(savingAccount);
+        // Transfer to save acccount from checking account
+        CreateIbanTransferRequest transferRequest=new CreateIbanTransferRequest();
+        transferRequest.setAmount(createSavingAccountRequest.getOpeningBalance());
+        transferRequest.setDescription("Opening balance");
+        transferRequest.setFromIban(parentCheckingAccount.get().getIbanNo());
+        transferRequest.setSendType(SendType.OTHER);
+        transferRequest.setToIban(savingAccount.getIbanNo());
+        ibanTransferBase.transfer(customerId,transferRequest);
         return new GeneralDataResponse<>(savingAccountMapper.toCreateSavingAccountDto(savedAccount));
     }
 

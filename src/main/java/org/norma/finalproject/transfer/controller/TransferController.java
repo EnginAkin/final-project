@@ -6,8 +6,7 @@ import org.norma.finalproject.common.exception.BusinessException;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
-import org.norma.finalproject.transfer.service.TransferAdapter;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.norma.finalproject.transfer.service.TransferBase;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class TransferController {
 
-    @Qualifier("iban")
-    private final TransferAdapter transferAdapter;
+    private final TransferBase transferBase;
     @PostMapping
     public GeneralResponse transfer(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody CreateIbanTransferRequest createIbanTransferRequest) throws BusinessException {
-        return transferAdapter.transfer(userDetail.getUser().getId(), createIbanTransferRequest);
+        return transferBase.transfer(userDetail.getUser().getId(), createIbanTransferRequest);
     }
 
 
