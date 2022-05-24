@@ -14,9 +14,6 @@ public class AccountActivityMapperImpl implements AccountActivityMapper {
     public AccountActivityResponse toDto(AccountActivity accountActivity) {
         AccountActivityResponse response=new AccountActivityResponse();
         response.setCrossAccount(accountActivity.getCrossAccount());
-        if(accountActivity.getActionStatus()== ActionStatus.INCOMING){
-            response.setSenderName(accountActivity.getAccount().getCustomer().getName());
-        }
         response.setAmount(accountActivity.getAmount().multiply(BigDecimal.valueOf(accountActivity.getActionStatus().getValue())));
         response.setDescription(accountActivity.getDescription());
         response.setAvailableBalance(accountActivity.getAvailableBalance());

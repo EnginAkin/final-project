@@ -16,6 +16,7 @@ public class AccountActivityServiceImpl implements AccountActivityService {
 
     @Override
     public List<AccountActivity> getAccountActivitiesByAccountIdAndCustomerID(long accountId, long customerID, AccountType accountType) {
-        return repository.findAllByAccount_IdAndAccount_Customer_IdAndAccount_AccountType(accountId,customerID,accountType);
+        //return repository.findAllByAccount_IdAndAccount_Customer_IdAndAccount_AccountType(accountId,customerID,accountType);
+        return null;
     }
 }

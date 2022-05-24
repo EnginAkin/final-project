@@ -29,8 +29,9 @@ public class SavingAccount extends Account {
     @OneToOne(cascade = CascadeType.ALL)
     private CheckingAccount parentAccount;
 
-
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
 
 

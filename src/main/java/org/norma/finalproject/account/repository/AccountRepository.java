@@ -12,7 +12,7 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
     boolean existsAccountByAccountNo(String accountNo);
     boolean existsAccountByIbanNo(String ibanNo);
 
-    Optional<Account> findByIbanNoAndCustomer_Id(String ibanNo, long customerId);
+    //Optional<Account> findByIbanNoAndCustomer_Id(String ibanNo, long customerId);
     Optional<Account> findByIbanNo(String ibanNo);
-    Optional<Account> findByCustomer_Email(String email);
+    //Optional<Account> findByCustomer_Email(String email);
 }

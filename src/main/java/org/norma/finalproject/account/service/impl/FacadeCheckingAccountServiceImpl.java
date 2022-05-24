@@ -93,6 +93,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         // gelen account id ile hesabı var mı
 
         List<AccountActivity> accountActivities = accountActivityService.getAccountActivitiesByAccountIdAndCustomerID(accountID,customerID, AccountType.CHECKING);
+
         if(accountActivities.isEmpty()){
             throw new CheckingAccountNotFoundException("account no found by id : "+accountID);
         }
@@ -120,7 +121,6 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
     }
 
     @Override
-    @Transactional
     public GeneralResponse deleteById(long customerID, long accountID) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException {
         Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
@@ -140,7 +140,11 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         // TODO bir cehcking hesap silindiğinde ona bağlı kart da silinir.
         // TODO hesap silinmeden önce hesaba bağlı bir birikim hesabı var mı varsa içinde bakiye var mı
 
-        checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get());
+        try {
+            checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return new GeneralSuccessfullResponse("Deleted successfully Customer Deposit account.");
     }
 

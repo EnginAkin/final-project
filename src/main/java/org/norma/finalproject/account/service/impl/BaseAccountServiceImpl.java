@@ -35,7 +35,8 @@ public class BaseAccountServiceImpl implements BaseAccountService {
         if(StringUtils.isEmpty(iban)){
             throw new IllegalArgumentException("Iban cannot bu null");
         }
-        return repository.findByIbanNoAndCustomer_Id(iban,customerId);
+       // return repository.findByIbanNoAndCustomer_Id(iban,customerId);
+        return null;
     }
 
     @Override
@@ -53,6 +54,8 @@ public class BaseAccountServiceImpl implements BaseAccountService {
 
     @Override
     public Optional<Account> findAccountByEmail(String email) {
-        return repository.findByCustomer_Email(email);
+        //return repository.findByCustomer_Email(email);
+        return null;
     }
+
 }
