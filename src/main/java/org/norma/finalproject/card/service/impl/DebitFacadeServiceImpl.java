@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.service.CheckingAccountService;
-import org.norma.finalproject.card.controller.DebitCardController;
 import org.norma.finalproject.card.core.exception.DebitOperationException;
 import org.norma.finalproject.card.core.mapper.DebitCardMapper;
 import org.norma.finalproject.card.core.model.request.CreateDebitCardRequest;
@@ -19,15 +18,11 @@ import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +37,7 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
 
     @Override
     public GeneralDataResponse create(long customerID, CreateDebitCardRequest createDebitCardRequest) throws CustomerNotFoundException, DebitOperationException {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -71,7 +66,7 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
 
     @Override
     public GeneralDataResponse getByID(Long customerID, long debitID) throws CustomerNotFoundException, DebitOperationException {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -85,7 +80,7 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
 
     @Override
     public GeneralDataResponse getAllCustomersDebitCards(Long customerID) throws CustomerNotFoundException, DebitOperationException {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -101,7 +96,7 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
 
     @Override
     public GeneralResponse update(Long customerID, long debitCardID, UpdateDebitCardRequest updateDebitCardRequest) throws CustomerNotFoundException, DebitOperationException {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }

@@ -46,7 +46,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
     @Override
     @Transactional
     public GeneralResponse create(Long customerID, CreateSavingAccountRequest createSavingAccountRequest) throws CustomerNotFoundException, CheckingAccountNotFoundException, SavingAccountOperationException, AmountNotValidException, TransferOperationException {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -83,7 +83,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
 
     @Override
     public GeneralResponse getAccounts(Long customerID) throws CustomerNotFoundException {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }

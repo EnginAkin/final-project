@@ -28,8 +28,8 @@ import javax.validation.constraints.Min;
 @RestController
 @RequestMapping("api/v1/customers")
 @RequiredArgsConstructor
-@Validated
 @Slf4j
+@Validated
 public class CustomerController {
     private final FacadeCustomerService facadeCustomerService;
 

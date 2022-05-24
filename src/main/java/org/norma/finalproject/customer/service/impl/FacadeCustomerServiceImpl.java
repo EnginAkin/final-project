@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +56,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
 
     @Override
     public GeneralResponse update(Long customerId, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException {
-        Optional<Customer> customer = customerService.getCustomerById(customerId);
+        Optional<Customer> customer = customerService.findCustomerById(customerId);
         if (customer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -75,7 +74,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
 
     @Override
     public GeneralResponse delete(Long customerId) throws CustomerNotFoundException, CustomerDeleteException {
-        Optional<Customer> customer = customerService.getCustomerById(customerId);
+        Optional<Customer> customer = customerService.findCustomerById(customerId);
         if (customer.isEmpty()) {
             throw new CustomerNotFoundException();
         }

@@ -8,7 +8,7 @@ import org.norma.finalproject.transfer.core.exception.TransferOperationException
 import org.norma.finalproject.transfer.core.model.request.EmailTransferRequest;
 import org.norma.finalproject.transfer.service.TransferBase;
 import org.springframework.stereotype.Service;
-
+/*
 @Service
 public class EmailTransfer extends TransferBase<EmailTransferRequest> {
 
@@ -22,3 +22,6 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
         return null;
     }
 }
+
+
+ */

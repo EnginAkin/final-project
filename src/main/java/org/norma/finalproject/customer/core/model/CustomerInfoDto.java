@@ -2,6 +2,8 @@ package org.norma.finalproject.customer.core.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.norma.finalproject.customer.core.validator.UniqueEmail;
+import org.norma.finalproject.customer.core.validator.UniqueIdentity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
@@ -14,6 +16,7 @@ public class CustomerInfoDto {
 
     @NotNull(message = "Identity number cannot be null.")
     @Size(min = 11, max = 11,message = "Identity size must be 11 digit.")
+    @UniqueIdentity
     private String identityNumber;
 
     @NotNull(message = "name cannot be null.")
@@ -22,8 +25,9 @@ public class CustomerInfoDto {
     @NotNull(message = "Surname cannot be null.")
     private String surname;
 
-    @NotNull(message = "eamil cannot be null.")
+    @NotNull
     @Email(message = "Email format not valid.")
+    @UniqueEmail
     private String email;
 
     @NotNull(message = "Password cannot be null")

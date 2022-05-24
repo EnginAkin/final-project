@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -33,19 +32,21 @@ public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
     private final TransferService transferService;
 
     private final TransferMapper transferMapper;
+    private final FacadeExchangeService exchangeService;
 
-    public IbanTransferBase(CustomerService customerService,BaseAccountService accountService,TransferService transferService,TransferMapper transferMapper) {
-        super(accountService);
+    public IbanTransferBase(CustomerService customerService, BaseAccountService accountService, TransferService transferService, TransferMapper transferMapper, FacadeExchangeService exchangeService) {
+        super(accountService,exchangeService);
         this.customerService=customerService;
         this.accountService=accountService;
         this.transferService=transferService;
         this.transferMapper=transferMapper;
+        this.exchangeService = exchangeService;
     }
 
     @Override
     @Transactional
     public GeneralResponse transfer(long customerId, CreateIbanTransferRequest transferRequest) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerId);
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerId);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -66,10 +67,11 @@ public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
         }
         // birikimli hesaptan başka hesaba transfer yapamaz.
         if (optionalFromAccount.get().getAccountType().equals(AccountType.SAVING)){
-            if(optionalCustomer.get().getSavingAccounts().stream().noneMatch(savingAccount -> savingAccount.getIbanNo().equals(optionalToAccount.get().getIbanNo()))){
-                throw new TransferOperationException("You can transfer only saving parent account.");
+            if(optionalCustomer.get().getCheckingAccounts().stream().noneMatch(checkingAccount -> checkingAccount.getIbanNo().equals(optionalToAccount.get().getIbanNo()))){
+                throw new TransferOperationException("You can transfer only parent checking account account.");
             }
         }
+        // transfer
         sendTransfer(optionalFromAccount.get(), optionalToAccount.get(), transferRequest.getAmount(),transferRequest.getDescription());
 
 

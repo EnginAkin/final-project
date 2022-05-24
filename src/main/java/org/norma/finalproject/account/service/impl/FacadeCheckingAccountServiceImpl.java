@@ -41,7 +41,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
 
     @Override
     public GeneralResponse create(long customerID, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -141,7 +141,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
 
     }
     private void checkCustomerFound(long customerID) throws CustomerNotFoundException {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }

@@ -25,10 +25,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer save(Customer customer) throws CustomerAlreadyRegisterException {
-        Optional<Customer> optionalCustomer = getCustomerByIdentity(customer.getIdentityNumber());
-        if (optionalCustomer.isPresent()) {
-            throw new CustomerAlreadyRegisterException();
-        }
         Role roleUser = roleService.getRoleByName(CustomerConstant.ROLE_USER);
         customer.setRoles(Set.of(roleUser));
         log.info("Customer successfull register  :{}", customer.getName());
@@ -36,27 +32,23 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> getCustomerByIdentity(String identity) {
+    public Optional<Customer> findCustomerByIdentity(String identity) {
         return customerRepository.findByIdentityNumber(identity);
     }
 
     @Override
-    public Optional<Customer> getCustomerById(Long id) {
+    public Optional<Customer> findCustomerById(Long id) {
         return customerRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Customer> findCustomerByEmail(String email) {
+        return customerRepository.findByEmail(email);
     }
 
     @Override
     public void update(Customer customer) {
         customerRepository.save(customer);
-    }
-
-    @Override
-    public boolean existCustomerById(long id) {
-        Optional<Customer> customer = customerRepository.findById(id);
-        if (customer.isEmpty()) {
-            return false;
-        }
-        return true;
     }
 
     @Override
