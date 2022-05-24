@@ -6,7 +6,7 @@ import org.norma.finalproject.common.exception.BusinessException;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
-import org.norma.finalproject.transfer.service.TransferBase;
+import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

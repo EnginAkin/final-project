@@ -1,4 +1,4 @@
-package org.norma.finalproject.transfer.service;
+package org.norma.finalproject.transfer.service.base;
 
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.account.entity.base.Account;
@@ -27,9 +27,6 @@ public abstract class TransferBase<T> {
     public void sendTransfer(Account fromAccount, Account toAccount, BigDecimal amount, String description) throws AmountNotValidException {
         fromAccount.setLockedBalance(amount);
         accountService.update(fromAccount); // lock balance for security
-//TODO lock balancedan küçükse isolation seviyesi değişecek
-
-
         AccountActivity fromAccountActivity = new AccountActivity();
         fromAccountActivity.setAccount(fromAccount);
         fromAccountActivity.setCrossAccount(toAccount.getIbanNo());

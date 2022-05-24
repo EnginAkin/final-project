@@ -14,7 +14,7 @@ import org.norma.finalproject.transfer.core.exception.TransferOperationException
 import org.norma.finalproject.transfer.core.mapper.TransferMapper;
 import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
 import org.norma.finalproject.transfer.entity.Transfer;
-import org.norma.finalproject.transfer.service.TransferBase;
+import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.norma.finalproject.transfer.service.TransferService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

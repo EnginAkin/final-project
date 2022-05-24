@@ -45,4 +45,14 @@ public class BaseAccountServiceImpl implements BaseAccountService {
         }
         return repository.findByIbanNo(iban);
     }
+
+    @Override
+    public Optional<Account> findById(long id) {
+        return repository.findById(id);
+    }
+
+    @Override
+    public Optional<Account> findAccountByEmail(String email) {
+        return repository.findByCustomer_Email(email);
+    }
 }
