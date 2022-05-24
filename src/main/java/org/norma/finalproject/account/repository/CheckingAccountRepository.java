@@ -7,12 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CheckingAccountRepository extends JpaRepository<CheckingAccount, Long> {
-
-    boolean existsCheckingAccountByAccountNo(String accountNo);
-
     List<CheckingAccount> findAllByCustomer_IdAndBlocked(long customerId, boolean blocked);
 
     Optional<CheckingAccount> findByAccountNo(String accountNo);
+
 
 }
 

@@ -9,13 +9,11 @@ import org.norma.finalproject.account.service.FacadeCheckinAccountService;
 import org.norma.finalproject.common.exception.BusinessException;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
-import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 @RestController
@@ -29,35 +27,37 @@ public class CheckingAccountController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(tags = "Deposit Controller", description = "Create a deposit account By customer.")
     @PostMapping
-    public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateCheckingAccountRequest createCheckingAccountRequest) throws BusinessException  {
+    public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateCheckingAccountRequest createCheckingAccountRequest) throws BusinessException {
         return facadeCheckinAccountService.create(userDetail.getUser().getId(), createCheckingAccountRequest);
     }
 
     @Operation(tags = "Deposit Controller", description = "Delete a deposit account by Customer.")
-    @DeleteMapping("/{accountNumber}")
-    public GeneralResponse deleteByAccountName(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable String accountNumber) throws BusinessException {
-        return facadeCheckinAccountService.delete(userDetail.getUser().getId(),accountNumber);
+    @DeleteMapping("/{accountID}")
+    public GeneralResponse deleteByAccountName(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long accountID) throws BusinessException {
+        return facadeCheckinAccountService.deleteById(userDetail.getUser().getId(), accountID);
 
     }
+
     @GetMapping
     public GeneralResponse getAllCheckingAccounts(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws BusinessException {
         return facadeCheckinAccountService.getCheckingAccounts(userDetail.getUser().getId());
     }
-
-    @GetMapping("/{accountNumber}/activities")
-    public GeneralResponse getCheckingAccountActivities(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable String accountNumber) throws BusinessException {
-        return facadeCheckinAccountService.getCheckingAccountActivities(userDetail.getUser().getId(),accountNumber);
+    @GetMapping("{accountID}")
+    public GeneralResponse getById(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,long accountID) throws BusinessException {
+        return facadeCheckinAccountService.getCheckingAccountById(userDetail.getUser().getId(),accountID);
     }
 
-// ACTİVİTY GELİRKEN BİRAZ DAHA DÜZENLEME GEREK İKSİ İÇİN AYRI AYRI YAZMAK KÖTÜ BİR ÇÖMZÜM
-    @RolesAllowed({CustomerConstant.ROLE_ADMIN})
+    @GetMapping("/{accountID}/activities")
+    public GeneralResponse getCheckingAccountActivities(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long accountID) throws BusinessException {
+        return facadeCheckinAccountService.getCheckingAccountActivities(userDetail.getUser().getId(), accountID);
+    }
+
     @Operation(tags = "Deposit Controller", description = "Blocked a deposit account by ADMIN.")
     @PutMapping("/{accountId}/block")
     public GeneralResponse blockedAccount(@PathVariable long accountId) throws BusinessException {
-         return facadeCheckinAccountService.blockAccount(accountId);
+        return facadeCheckinAccountService.blockAccount(accountId);
 
     }
-
 
 
 }

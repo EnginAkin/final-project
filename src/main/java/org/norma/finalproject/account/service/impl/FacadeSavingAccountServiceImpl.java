@@ -45,50 +45,50 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
 
     @Override
     @Transactional
-    public GeneralResponse create(Long customerId, CreateSavingAccountRequest createSavingAccountRequest) throws CustomerNotFoundException, CheckingAccountNotFoundException, SavingAccountOperationException, AmountNotValidException, TransferOperationException {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerId);
-        if(optionalCustomer.isEmpty()){
+    public GeneralResponse create(Long customerID, CreateSavingAccountRequest createSavingAccountRequest) throws CustomerNotFoundException, CheckingAccountNotFoundException, SavingAccountOperationException, AmountNotValidException, TransferOperationException {
+        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerID);
+        if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
         Optional<CheckingAccount> parentCheckingAccount = checkingAccountService.getAccountByAccountNumber(createSavingAccountRequest.getParentAccountNumber());
-        if(parentCheckingAccount.isEmpty()){
-            throw new CheckingAccountNotFoundException("Checking account not fount by : "+createSavingAccountRequest.getParentAccountNumber());
+        if (parentCheckingAccount.isEmpty()) {
+            throw new CheckingAccountNotFoundException("Checking account not fount by : " + createSavingAccountRequest.getParentAccountNumber());
         }
-        if(parentCheckingAccount.get().getCurrencyType()!=createSavingAccountRequest.getCurrencyType()){
-            throw new SavingAccountOperationException("Parent currency type not matched for saving account,Please create checking Account currency type :"+createSavingAccountRequest.getCurrencyType());
+        if (parentCheckingAccount.get().getCurrencyType() != createSavingAccountRequest.getCurrencyType()) {
+            throw new SavingAccountOperationException("Parent currency type not matched for saving account,Please create checking Account currency type :" + createSavingAccountRequest.getCurrencyType());
         }
         boolean usedParentAccountForSavingAccount = savingAccountService.isUsedParentAccountForSavingAccount(optionalCustomer.get().getId(), parentCheckingAccount.get().getId());
-        if(usedParentAccountForSavingAccount){
+        if (usedParentAccountForSavingAccount) {
             throw new SavingAccountOperationException("Parent Used for saving account , change parent checking account.");
         }
-        if(createSavingAccountRequest.getOpeningBalance().compareTo(parentCheckingAccount.get().getBalance())>0){
+        if (createSavingAccountRequest.getOpeningBalance().compareTo(parentCheckingAccount.get().getBalance()) > 0) {
             throw new SavingAccountOperationException("Parent account balance not enough for saving balance.");
         }
-        SavingAccount savingAccount=savingAccountMapper.createSavingAccountToEntity(createSavingAccountRequest);
+        SavingAccount savingAccount = savingAccountMapper.createSavingAccountToEntity(createSavingAccountRequest);
         savingAccount.setCustomer(optionalCustomer.get());
         savingAccount.setParentAccount(parentCheckingAccount.get());
         savingAccount.setAccountNo(uniqueNoCreator.creatAccountNo());
-        savingAccount.setIbanNo(uniqueNoCreator.createIbanNo(savingAccount.getAccountNo(),savingAccount.getParentAccount().getBankCode()));
+        savingAccount.setIbanNo(uniqueNoCreator.createIbanNo(savingAccount.getAccountNo(), savingAccount.getParentAccount().getBankCode()));
         SavingAccount savedAccount = savingAccountService.save(savingAccount);
         // Transfer to save acccount from checking account
-        CreateIbanTransferRequest transferRequest=new CreateIbanTransferRequest();
+        CreateIbanTransferRequest transferRequest = new CreateIbanTransferRequest();
         transferRequest.setAmount(createSavingAccountRequest.getOpeningBalance());
         transferRequest.setDescription("Opening balance");
         transferRequest.setFromIban(parentCheckingAccount.get().getIbanNo());
         transferRequest.setSendType(SendType.OTHER);
         transferRequest.setToIban(savingAccount.getIbanNo());
-        ibanTransferBase.transfer(customerId,transferRequest);
+        ibanTransferBase.transfer(customerID, transferRequest);
         return new GeneralDataResponse<>(savingAccountMapper.toCreateSavingAccountDto(savedAccount));
     }
 
     @Override
-    public GeneralResponse getAccounts(Long customerId) throws CustomerNotFoundException {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerId);
-        if(optionalCustomer.isEmpty()){
+    public GeneralResponse getAccounts(Long customerID) throws CustomerNotFoundException {
+        Optional<Customer> optionalCustomer = customerService.getCustomerById(customerID);
+        if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        List<SavingAccount> savingAccountList=savingAccountService.getAllAccountsByCustomerId(customerId);
-        List<CreateSavingAccountResponse> response=savingAccountList.stream().map(savingAccountMapper::toCreateSavingAccountDto).collect(Collectors.toList());
+        List<SavingAccount> savingAccountList = savingAccountService.getAllAccountsByCustomerId(customerID);
+        List<CreateSavingAccountResponse> response = savingAccountList.stream().map(savingAccountMapper::toCreateSavingAccountDto).collect(Collectors.toList());
         return new GeneralDataResponse<>(response);
     }
 }

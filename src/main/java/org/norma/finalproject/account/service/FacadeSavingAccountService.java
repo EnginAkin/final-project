@@ -9,8 +9,7 @@ import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
 
 public interface FacadeSavingAccountService {
+    GeneralResponse create(Long customerID, CreateSavingAccountRequest createSavingAccountRequest) throws CustomerNotFoundException, CheckingAccountNotFoundException, SavingAccountOperationException, AmountNotValidException, TransferOperationException;
 
-    GeneralResponse create(Long customerId, CreateSavingAccountRequest createSavingAccountRequest) throws CustomerNotFoundException, CheckingAccountNotFoundException, SavingAccountOperationException, AmountNotValidException, TransferOperationException;
-
-    GeneralResponse getAccounts(Long id) throws CustomerNotFoundException;
+    GeneralResponse getAccounts(Long customerID) throws CustomerNotFoundException;
 }

@@ -17,10 +17,6 @@ public class CheckingAccountServiceImpl implements CheckingAccountService {
 
     private final CheckingAccountRepository checkingAccountRepository;
 
-    @Override
-    public boolean checkIsAccountNoUnique(String accountNo) {
-        return !checkingAccountRepository.existsCheckingAccountByAccountNo(accountNo);
-    }
 
     @Override
     public CheckingAccount save(CheckingAccount checkingAccount) {
@@ -47,6 +43,7 @@ public class CheckingAccountServiceImpl implements CheckingAccountService {
     public Optional<CheckingAccount> getAccountByAccountNumber(String parentAccountNumber) {
         return checkingAccountRepository.findByAccountNo(parentAccountNumber);
     }
+
 
 
 }

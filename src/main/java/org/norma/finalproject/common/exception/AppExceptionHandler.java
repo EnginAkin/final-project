@@ -36,6 +36,12 @@ public class AppExceptionHandler {
         return new GeneralErrorResponse(httpClientErrorException.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public GeneralResponse handleNotFoundException(NotFoundException notFoundException) {
+        return new GeneralErrorResponse(notFoundException.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BusinessException.class)
     public GeneralResponse handleBusinessException(BusinessException businessException) {

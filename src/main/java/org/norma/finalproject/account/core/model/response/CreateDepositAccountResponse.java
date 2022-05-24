@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 @Getter
 public class CreateDepositAccountResponse {
 
-
     private String accountName;
     private String accountNo;
     private String ibanNo;

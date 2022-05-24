@@ -26,6 +26,7 @@ public abstract class TransferBase<T>{
         accountService.update(fromAccount); // lock balance for security
         BigDecimal exchangedAmount = BigDecimal.ZERO;
 /*
+//TODO lock balancedan küçükse isolation seviyesi değişecek
         if(fromAccount.getCurrencyType()!=toAccount.getCurrencyType()){
             exchangedAmount= exchangeService.getExchangedAmount(toAccount.getCurrencyType(), fromAccount.getCurrencyType(), amount);
 

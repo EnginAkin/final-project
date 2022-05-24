@@ -7,16 +7,10 @@ import java.util.Optional;
 
 public interface CheckingAccountService {
 
-    boolean checkIsAccountNoUnique(String accountNo);
-
     CheckingAccount save(CheckingAccount checkingAccount);
-
-
     Optional<CheckingAccount> findById(long accountId);
-
     void deleteCustomerCheckingAccountById(long checkingAccountId);
-
     List<CheckingAccount> getUnBlockedAccounts(long customerId);
-
     Optional<CheckingAccount> getAccountByAccountNumber(String parentAccountNumber);
+
 }

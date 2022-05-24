@@ -7,13 +7,15 @@ import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 
 public interface FacadeCheckinAccountService {
 
-    GeneralResponse delete(long customerId, String accountName) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException;
+    GeneralResponse deleteById(long customerID, long accountID) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException;
 
-    GeneralResponse create(long customerId, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException;
+    GeneralResponse create(long customerID, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException;
 
-    GeneralResponse blockAccount(long accountId) throws DepositAccountNotFoundException;
+    GeneralResponse blockAccount(long accountID) throws DepositAccountNotFoundException;
 
-    GeneralResponse getCheckingAccounts(long id) throws CustomerNotFoundException;
+    GeneralResponse getCheckingAccounts(long customerID) throws CustomerNotFoundException;
 
-    GeneralResponse getCheckingAccountActivities(long id, String accountNumber) throws CustomerNotFoundException;
+    GeneralResponse getCheckingAccountActivities(long id, long accountID) throws CustomerNotFoundException;
+
+    GeneralResponse getCheckingAccountById(Long customerID, long accountID) throws CustomerNotFoundException, CustomerAccountNotFoundException, CheckingAccountNotFoundException;
 }

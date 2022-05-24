@@ -5,6 +5,5 @@ import org.norma.finalproject.account.entity.base.AccountActivity;
 import java.util.List;
 
 public interface AccountActivityService {
-
-    List<AccountActivity> getAccountActivityByAccountNumber(String accountNo);
+    List<AccountActivity> getAccountActivitiesByAccountId(long accountNo);
 }

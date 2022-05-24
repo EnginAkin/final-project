@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface AccountActiviyRepository extends JpaRepository<AccountActivity,Long> {
-
-    List<AccountActivity> findAllByAccount_AccountNo(String accountNumber);
+public interface AccountActivityRepository extends JpaRepository<AccountActivity,Long> {
+    List<AccountActivity> findAllByAccount_Id(long accountId);
 }
