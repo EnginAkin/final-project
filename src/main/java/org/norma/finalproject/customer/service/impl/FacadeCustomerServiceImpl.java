@@ -19,8 +19,9 @@ import org.norma.finalproject.customer.service.FacadeCustomerService;
 import org.norma.finalproject.customer.service.IdentityVerifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
     private final FacadeCheckinAccountService facadeCheckinAccountService;
 
 
-    @Transactional(value = Transactional.TxType.REQUIRED,rollbackOn = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException, CustomerNotFoundException, AccountNameAlreadyHaveException {
         Customer customer = customerMapper.customerInfoDtoToCustomer(createCustomerRequest);

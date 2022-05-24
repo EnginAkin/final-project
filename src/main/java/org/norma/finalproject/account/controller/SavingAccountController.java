@@ -33,4 +33,9 @@ public class SavingAccountController {
         return facadeSavingAccountService.getAccounts(userDetail.getUser().getId());
     }
 
+    @GetMapping("{accountID}/activities")
+    public GeneralResponse getAccountActivity(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable long accountID) throws BusinessException {
+        return facadeSavingAccountService.getAccountActivities(userDetail.getUser().getId(),accountID);
+    }
+
 }

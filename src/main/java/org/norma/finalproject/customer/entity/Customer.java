@@ -40,6 +40,8 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<SavingAccount> savingAccounts = new ArrayList<>();
 
+
+
     @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
     private Set<Address> addresses ;
 
@@ -59,6 +61,12 @@ public class Customer extends User {
 
     private boolean isDeleted;
 
+    public void addCheckingAccount(CheckingAccount account){
+        if(checkingAccounts==null){
+            checkingAccounts=new ArrayList<>();
+        }
+        checkingAccounts.add(account);
+    }
     public void addAddress(Address address) {
 
         if(addresses==null){

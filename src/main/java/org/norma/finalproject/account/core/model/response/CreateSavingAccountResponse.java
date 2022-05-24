@@ -10,10 +10,13 @@ import java.math.BigDecimal;
 @Setter
 public class CreateSavingAccountResponse {
 
+    private long id;
+    private String iban;
     private String accountName;
     private String accountNo;
     private CurrencyType currencyType;
     private BigDecimal balance;
     private String parentAccountNumber;
+
 
 }

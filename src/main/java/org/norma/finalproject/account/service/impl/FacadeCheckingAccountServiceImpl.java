@@ -11,6 +11,7 @@ import org.norma.finalproject.account.core.model.response.CheckingAccountRespons
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.base.AccountActivity;
+import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.account.service.AccountActivityService;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.account.service.FacadeCheckinAccountService;
@@ -21,6 +22,7 @@ import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -59,9 +61,9 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         String ibanNo = uniqueNoCreator.createIbanNo(accountNo, createCheckingAccountRequest.getBankCode());
         checkingAccount.setIbanNo(ibanNo);
         checkingAccount.setBalance(BigDecimal.ZERO);
-
         checkingAccount.setCustomer(optionalCustomer.get());
         CheckingAccount savedCheckingAccount = checkingAccountService.save(checkingAccount);
+
         return new GeneralDataResponse<>(checkingAccountMapper.toCreateCheckingAccountDto(savedCheckingAccount));
     }
 
@@ -90,7 +92,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         checkCustomerFound(customerID);
         // gelen account id ile hesabı var mı
 
-        List<AccountActivity> accountActivities = accountActivityService.getAccountActivitiesByAccountIdAndCustomerID(accountID,customerID);
+        List<AccountActivity> accountActivities = accountActivityService.getAccountActivitiesByAccountIdAndCustomerID(accountID,customerID, AccountType.CHECKING);
         if(accountActivities.isEmpty()){
             throw new CheckingAccountNotFoundException("account no found by id : "+accountID);
         }
@@ -118,8 +120,12 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
     }
 
     @Override
+    @Transactional
     public GeneralResponse deleteById(long customerID, long accountID) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException {
-        checkCustomerFound(customerID);
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
+        if (optionalCustomer.isEmpty()) {
+            throw new CustomerNotFoundException();
+        }
 
         Optional<CheckingAccount> checkingAccount = checkingAccountService.findById(accountID);
         if (checkingAccount.isEmpty()) {
@@ -133,7 +139,8 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         }
         // TODO bir cehcking hesap silindiğinde ona bağlı kart da silinir.
         // TODO hesap silinmeden önce hesaba bağlı bir birikim hesabı var mı varsa içinde bakiye var mı
-        checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get().getId());
+
+        checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get());
         return new GeneralSuccessfullResponse("Deleted successfully Customer Deposit account.");
     }
 

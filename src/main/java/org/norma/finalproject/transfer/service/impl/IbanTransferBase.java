@@ -35,11 +35,11 @@ public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
     private final FacadeExchangeService exchangeService;
 
     public IbanTransferBase(CustomerService customerService, BaseAccountService accountService, TransferService transferService, TransferMapper transferMapper, FacadeExchangeService exchangeService) {
-        super(accountService,exchangeService);
-        this.customerService=customerService;
-        this.accountService=accountService;
-        this.transferService=transferService;
-        this.transferMapper=transferMapper;
+        super(accountService, exchangeService);
+        this.customerService = customerService;
+        this.accountService = accountService;
+        this.transferService = transferService;
+        this.transferMapper = transferMapper;
         this.exchangeService = exchangeService;
     }
 
@@ -50,41 +50,30 @@ public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        // check from iban owners
         Optional<Account> optionalFromAccount = accountService.findAccountByIbanNumberAndCustomerId(transferRequest.getFromIban(), customerId);
         if (optionalFromAccount.isEmpty()) {
             throw new TransferOperationException("Customer dont have " + transferRequest.getFromIban() + " Account ");
         }
-        // gondericinin hesabında yeterli para var mı ?
         if (optionalFromAccount.get().getBalance().compareTo(transferRequest.getAmount()) < 0) {
             throw new TransferOperationException("There is not enough money in the account");
 
         }
-        // to iban var mı
         Optional<Account> optionalToAccount = accountService.findAccountByIbanNumber(transferRequest.getToIban());
         if (optionalToAccount.isEmpty()) {
             throw new TransferOperationException("Cross account not found");
         }
-        // birikimli hesaptan başka hesaba transfer yapamaz.
-        if (optionalFromAccount.get().getAccountType().equals(AccountType.SAVING)){
-            if(optionalCustomer.get().getCheckingAccounts().stream().noneMatch(checkingAccount -> checkingAccount.getIbanNo().equals(optionalToAccount.get().getIbanNo()))){
-                throw new TransferOperationException("You can transfer only parent checking account account.");
+        // allowed saving -> checking  --- saving-saving not allowed
+        if (optionalFromAccount.get().getAccountType().equals(AccountType.SAVING)) {
+            if (!(optionalToAccount.get().getAccountType().equals(AccountType.CHECKING))) {
+                throw new TransferOperationException("You can transfer only parent checking account.");
             }
         }
-        // transfer
-        sendTransfer(optionalFromAccount.get(), optionalToAccount.get(), transferRequest.getAmount(),transferRequest.getDescription());
-
-
+        sendTransfer(optionalFromAccount.get(), optionalToAccount.get(), transferRequest.getAmount(), transferRequest.getDescription());
         Transfer transfer = transferMapper.toEntity(transferRequest);
         transfer.setCurrencyType(optionalFromAccount.get().getCurrencyType());
         transferService.save(transfer);
         return new GeneralSuccessfullResponse("Transfer successfull.");
     }
-
-
-
-
-
 
 
 }

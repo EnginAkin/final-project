@@ -40,7 +40,7 @@ public class Account {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true,mappedBy = "account")
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true,mappedBy = "account")
     private List<AccountActivity> activities=new ArrayList<>();
 
     public void addActivity(AccountActivity accountActivity){

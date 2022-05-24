@@ -33,7 +33,7 @@ public class CheckingAccountController {
 
     @Operation(tags = "Deposit Controller", description = "Delete a deposit account by Customer.")
     @DeleteMapping("/{accountID}")
-    public GeneralResponse deleteByAccountName(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long accountID) throws BusinessException {
+    public GeneralResponse deleteByAccountId(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long accountID) throws BusinessException {
         return facadeCheckinAccountService.deleteById(userDetail.getUser().getId(), accountID);
 
     }

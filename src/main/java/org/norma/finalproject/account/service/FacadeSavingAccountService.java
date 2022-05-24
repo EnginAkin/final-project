@@ -12,4 +12,7 @@ public interface FacadeSavingAccountService {
     GeneralResponse create(Long customerID, CreateSavingAccountRequest createSavingAccountRequest) throws CustomerNotFoundException, CheckingAccountNotFoundException, SavingAccountOperationException, AmountNotValidException, TransferOperationException;
 
     GeneralResponse getAccounts(Long customerID) throws CustomerNotFoundException;
+
+    GeneralResponse getAccountActivities(Long customerID, long accountID) throws CustomerNotFoundException, CheckingAccountNotFoundException;
+
 }

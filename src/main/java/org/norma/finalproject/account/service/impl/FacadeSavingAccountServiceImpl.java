@@ -4,12 +4,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.core.exception.CheckingAccountNotFoundException;
 import org.norma.finalproject.account.core.exception.SavingAccountOperationException;
+import org.norma.finalproject.account.core.mapper.AccountActivityMapper;
 import org.norma.finalproject.account.core.mapper.SavingAccountMapper;
 import org.norma.finalproject.account.core.model.request.CreateSavingAccountRequest;
+import org.norma.finalproject.account.core.model.response.AccountActivityResponse;
 import org.norma.finalproject.account.core.model.response.CreateSavingAccountResponse;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.SavingAccount;
+import org.norma.finalproject.account.entity.base.AccountActivity;
+import org.norma.finalproject.account.entity.enums.AccountType;
+import org.norma.finalproject.account.service.AccountActivityService;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.account.service.FacadeSavingAccountService;
 import org.norma.finalproject.account.service.SavingAccountService;
@@ -42,6 +47,8 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
     private final UniqueNoCreator uniqueNoCreator;
 
     private final IbanTransferBase ibanTransferBase;
+    private final AccountActivityService accountActivityService;
+    private final AccountActivityMapper accountActivityMapper;
 
     @Override
     @Transactional
@@ -90,5 +97,20 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         List<SavingAccount> savingAccountList = savingAccountService.getAllAccountsByCustomerId(customerID);
         List<CreateSavingAccountResponse> response = savingAccountList.stream().map(savingAccountMapper::toCreateSavingAccountDto).collect(Collectors.toList());
         return new GeneralDataResponse<>(response);
+    }
+
+    @Override
+    public GeneralResponse getAccountActivities(Long customerID, long accountID) throws CustomerNotFoundException, CheckingAccountNotFoundException {
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
+        if (optionalCustomer.isEmpty()) {
+            throw new CustomerNotFoundException();
+        }
+        List<AccountActivity> accountActivities = accountActivityService.getAccountActivitiesByAccountIdAndCustomerID(accountID,customerID, AccountType.SAVING);
+        if(accountActivities.isEmpty()){
+            throw new CheckingAccountNotFoundException("account no found by id : "+accountID);
+        }
+        List<AccountActivityResponse> responseList = accountActivities.stream().map(accountActivityMapper::toDto).toList();
+        return new GeneralDataResponse<>(responseList);
+
     }
 }
