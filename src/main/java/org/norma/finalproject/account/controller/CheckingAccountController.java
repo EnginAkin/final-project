@@ -42,9 +42,10 @@ public class CheckingAccountController {
     public GeneralResponse getAllCheckingAccounts(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws BusinessException {
         return facadeCheckinAccountService.getCheckingAccounts(userDetail.getUser().getId());
     }
+
     @GetMapping("{accountID}")
-    public GeneralResponse getById(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,long accountID) throws BusinessException {
-        return facadeCheckinAccountService.getCheckingAccountById(userDetail.getUser().getId(),accountID);
+    public GeneralResponse getById(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, long accountID) throws BusinessException {
+        return facadeCheckinAccountService.getCheckingAccountById(userDetail.getUser().getId(), accountID);
     }
 
     @GetMapping("/{accountID}/activities")

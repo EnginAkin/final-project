@@ -28,4 +28,14 @@ public class DebitCardServiceImpl implements DebitCardService {
     public List<DebitCard> getAllCustomersDebitCards(long customerID) {
         return debitCardRepository.findAllByCheckingAccount_Customer_Id(customerID);
     }
+
+    @Override
+    public Optional<DebitCard> getDebitCardWithCustomerIDAndCardID(long customerID, long debitCardId) {
+        return debitCardRepository.findDebitCardByCheckingAccount_Customer_IdAndId(customerID,debitCardId);
+    }
+
+    @Override
+    public boolean existsDebitCardByCheckingAccountId(long checkingAccountID) {
+        return debitCardRepository.existsByCheckingAccount_Id(checkingAccountID);
+    }
 }

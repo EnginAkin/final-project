@@ -15,7 +15,7 @@ public interface FacadeCheckinAccountService {
 
     GeneralResponse getCheckingAccounts(long customerID) throws CustomerNotFoundException;
 
-    GeneralResponse getCheckingAccountActivities(long id, long accountID) throws CustomerNotFoundException;
+    GeneralResponse getCheckingAccountActivities(long id, long accountID) throws CustomerNotFoundException, CheckingAccountNotFoundException;
 
     GeneralResponse getCheckingAccountById(Long customerID, long accountID) throws CustomerNotFoundException, CustomerAccountNotFoundException, CheckingAccountNotFoundException;
 }

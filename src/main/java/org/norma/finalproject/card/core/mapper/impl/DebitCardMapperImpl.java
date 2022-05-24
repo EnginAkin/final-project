@@ -12,7 +12,7 @@ public class DebitCardMapperImpl implements DebitCardMapper {
         DebitCardResponse response=new DebitCardResponse();
         response.setCardNumber(debitCard.getCardNumber());
         response.setCvv(debitCard.getCvv());
-        response.setDailyLimit(debitCard.getDailyLimit());
+        response.setBalance(debitCard.getBalance());
         response.setExpiryDate(debitCard.getExpiryDate());
         response.setPassword(debitCard.getPassword());
         response.setId(debitCard.getId());

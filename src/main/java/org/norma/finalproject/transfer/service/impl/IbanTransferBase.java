@@ -17,13 +17,13 @@ import org.norma.finalproject.transfer.entity.Transfer;
 import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.norma.finalproject.transfer.service.TransferService;
 import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Service
-@Primary
+@Component("transfer-iban")
 public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
 
     private final CustomerService customerService;

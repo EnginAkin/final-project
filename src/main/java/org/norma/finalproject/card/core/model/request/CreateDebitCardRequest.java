@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 public class CreateDebitCardRequest {
 
     @NotNull
-    private long parentCardId;
+    private long parentCheckingAccountId;
 
     private String password;
 

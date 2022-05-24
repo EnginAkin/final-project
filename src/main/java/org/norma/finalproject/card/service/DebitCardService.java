@@ -12,4 +12,7 @@ public interface DebitCardService {
     Optional<DebitCard> findById(long debitCardID);
 
     List<DebitCard> getAllCustomersDebitCards(long customerID);
+    Optional<DebitCard> getDebitCardWithCustomerIDAndCardID(long customerID,long debitCardId);
+
+    boolean existsDebitCardByCheckingAccountId(long parentCheckingAccountID);
 }

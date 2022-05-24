@@ -86,10 +86,14 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
     }
 
     @Override
-    public GeneralResponse getCheckingAccountActivities(long customerID, long accountID) throws CustomerNotFoundException {
+    public GeneralResponse getCheckingAccountActivities(long customerID, long accountID) throws CustomerNotFoundException, CheckingAccountNotFoundException {
         checkCustomerFound(customerID);
+        // gelen account id ile hesabı var mı
 
-        List<AccountActivity> accountActivities = accountActivityService.getAccountActivitiesByAccountId(accountID);
+        List<AccountActivity> accountActivities = accountActivityService.getAccountActivitiesByAccountIdAndCustomerID(accountID,customerID);
+        if(accountActivities.isEmpty()){
+            throw new CheckingAccountNotFoundException("account no found by id : "+accountID);
+        }
         List<AccountActivityResponse> responseList = accountActivities.stream().map(accountActivityMapper::toDto).toList();
         return new GeneralDataResponse<>(responseList);
     }

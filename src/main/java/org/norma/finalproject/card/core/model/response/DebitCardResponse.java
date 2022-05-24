@@ -1,5 +1,6 @@
 package org.norma.finalproject.card.core.model.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,8 @@ public class DebitCardResponse {
     private String cardNumber;
     private String password;
     private String cvv;
+    private BigDecimal balance;
+    @JsonInclude(JsonInclude.Include. NON_NULL)
     private BigDecimal dailyLimit;
     private Date expiryDate;
 }

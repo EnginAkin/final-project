@@ -1,9 +1,11 @@
 package org.norma.finalproject.card.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.norma.finalproject.account.core.exception.CheckingAccountNotFoundException;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.service.CheckingAccountService;
+import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.card.core.exception.DebitOperationException;
 import org.norma.finalproject.card.core.mapper.DebitCardMapper;
 import org.norma.finalproject.card.core.model.request.CreateDebitCardRequest;
@@ -36,15 +38,21 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
 
 
     @Override
-    public GeneralDataResponse create(long customerID, CreateDebitCardRequest createDebitCardRequest) throws CustomerNotFoundException, DebitOperationException {
+    public GeneralDataResponse create(long customerID,CreateDebitCardRequest createDebitCardRequest) throws DebitOperationException, CheckingAccountNotFoundException, CustomerNotFoundException {
+
         Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
-        if (optionalCustomer.isEmpty()) {
+        if(optionalCustomer.isEmpty()){
             throw new CustomerNotFoundException();
         }
-        Optional<CheckingAccount> optionalCheckingAccount = checkingAccountService.findById(createDebitCardRequest.getParentCardId());
-        if (optionalCheckingAccount.isEmpty()) {
-            throw new DebitOperationException("Parent checking account not found.");
+        Optional<CheckingAccount> optionalCheckingAccount = checkingAccountService.findById(createDebitCardRequest.getParentCheckingAccountId());
+        if(optionalCheckingAccount.isEmpty() || !(optionalCheckingAccount.get().getCustomer().getId().equals(customerID))){
+            throw new CheckingAccountNotFoundException("parent checking account not found.");
         }
+        boolean existsDebitCardByCheckingAccountId = debitCardService.existsDebitCardByCheckingAccountId(createDebitCardRequest.getParentCheckingAccountId());
+        if (existsDebitCardByCheckingAccountId){
+            throw new DebitOperationException("An account must have only one card.");
+        }
+
         DebitCard debitCard = new DebitCard();
         debitCard.setCardNumber(uniqueNoCreator.creatAccountNo());
         debitCard.setBalance(optionalCheckingAccount.get().getBalance());
@@ -52,7 +60,6 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
         int cvv = random.nextInt(900) + 100;
         debitCard.setCvv(String.valueOf(cvv));
         debitCard.setCheckingAccount(optionalCheckingAccount.get());
-        debitCard.setDailyLimit(optionalCheckingAccount.get().getBalance());
         debitCard.setPassword(createDebitCardRequest.getPassword());
         Calendar expiry = Calendar.getInstance();
         expiry.add(Calendar.YEAR, 3); // 3 year expiry date
@@ -65,14 +72,10 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
     }
 
     @Override
-    public GeneralDataResponse getByID(Long customerID, long debitID) throws CustomerNotFoundException, DebitOperationException {
-        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
-        if (optionalCustomer.isEmpty()) {
-            throw new CustomerNotFoundException();
-        }
-        Optional<DebitCard> optionalDebitCard = debitCardService.findById(debitID);
-        if (optionalDebitCard.isEmpty()) {
-            throw new DebitOperationException("Debit card Not found");
+    public GeneralDataResponse getByID(Long customerID, long debitID) throws DebitCardNotFoundException {
+        Optional<DebitCard> optionalDebitCard = debitCardService.getDebitCardWithCustomerIDAndCardID(customerID, debitID);
+        if(optionalDebitCard.isEmpty()){
+            throw new DebitCardNotFoundException("Not found.");
         }
         DebitCardResponse debitCardResponse = debitCardMapper.toDto(optionalDebitCard.get());
         return new GeneralDataResponse(debitCardResponse);
@@ -88,8 +91,8 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
         if (debitCards.isEmpty()) {
             throw new DebitOperationException("Debit cards not found");
         }
-        List<DebitCardResponse> orders = debitCards.stream() //
-                .map(debitCardMapper::toDto) //
+        List<DebitCardResponse> orders = debitCards.stream()
+                .map(debitCardMapper::toDto)
                 .toList();
         return new GeneralDataResponse<>(orders);
     }
@@ -105,7 +108,6 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
             throw new DebitOperationException("debit card not found.");
         }
         optionalDebitCard.get().setPassword(updateDebitCardRequest.getPassword());
-        optionalDebitCard.get().setDailyLimit(updateDebitCardRequest.getDailyLimit());
         debitCardService.save(optionalDebitCard.get());
         return new GeneralSuccessfullResponse("Update successfull");
     }

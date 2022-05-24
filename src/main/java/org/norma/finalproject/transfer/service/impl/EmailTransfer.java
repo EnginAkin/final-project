@@ -12,11 +12,12 @@ import org.norma.finalproject.exchange.service.FacadeExchangeService;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
 import org.norma.finalproject.transfer.core.model.request.EmailTransferRequest;
 import org.norma.finalproject.transfer.service.base.TransferBase;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
+@Component("transfer-email")
 public class EmailTransfer extends TransferBase<EmailTransferRequest> {
     private final BaseAccountService accountService;
     private final CustomerService customerService;

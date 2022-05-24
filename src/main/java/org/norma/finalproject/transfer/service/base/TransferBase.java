@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @RequiredArgsConstructor
-public abstract class TransferBase<T> {
+public abstract class TransferBase<T>  {
     private final BaseAccountService accountService;
     private final FacadeExchangeService exchangeService;
 

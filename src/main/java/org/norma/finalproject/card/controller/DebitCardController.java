@@ -3,6 +3,8 @@ package org.norma.finalproject.card.controller;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.norma.finalproject.account.core.exception.CheckingAccountNotFoundException;
+import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.card.core.exception.DebitOperationException;
 import org.norma.finalproject.card.core.model.request.CreateDebitCardRequest;
 import org.norma.finalproject.card.core.model.request.UpdateDebitCardRequest;
@@ -32,12 +34,12 @@ public class DebitCardController {
     private final DebitFacadeService debitFacadeService;
 
     @PostMapping
-    public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateDebitCardRequest createDebitCardRequest) throws CustomerNotFoundException, DebitOperationException {
-        return debitFacadeService.create(userDetail.getUser().getId(), createDebitCardRequest);
+    public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@RequestBody @Valid CreateDebitCardRequest createDebitCardRequest) throws DebitOperationException, DebitCardNotFoundException, CheckingAccountNotFoundException, CustomerNotFoundException {
+        return debitFacadeService.create(userDetail.getUser().getId(),createDebitCardRequest);
     }
 
     @GetMapping("/{debitID}")
-    public GeneralResponse getOne(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long debitID) throws CustomerNotFoundException, DebitOperationException {
+    public GeneralResponse getOne(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long debitID) throws CustomerNotFoundException, DebitOperationException, DebitCardNotFoundException {
         return debitFacadeService.getByID(userDetail.getUser().getId(),debitID);
     }
 

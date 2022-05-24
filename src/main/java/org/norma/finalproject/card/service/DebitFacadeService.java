@@ -1,5 +1,7 @@
 package org.norma.finalproject.card.service;
 
+import org.norma.finalproject.account.core.exception.CheckingAccountNotFoundException;
+import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.card.core.exception.DebitOperationException;
 import org.norma.finalproject.card.core.model.request.CreateDebitCardRequest;
 import org.norma.finalproject.card.core.model.request.UpdateDebitCardRequest;
@@ -13,9 +15,9 @@ import org.springframework.hateoas.EntityModel;
 
 public interface DebitFacadeService {
 
-   GeneralDataResponse create(long customerID, CreateDebitCardRequest createDebitCardRequest) throws CustomerNotFoundException, DebitOperationException;
+   GeneralDataResponse create(long customerID,CreateDebitCardRequest createDebitCardRequest) throws DebitOperationException, DebitCardNotFoundException, CheckingAccountNotFoundException, CustomerNotFoundException;
 
-   GeneralDataResponse getByID(Long id, long debitID) throws CustomerNotFoundException, DebitOperationException;
+   GeneralDataResponse getByID(Long id, long debitID) throws CustomerNotFoundException, DebitCardNotFoundException;
 
    GeneralDataResponse getAllCustomersDebitCards(Long customerID) throws CustomerNotFoundException, DebitOperationException;
 
