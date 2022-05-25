@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public abstract class TransferBase<T>  {
@@ -24,7 +25,11 @@ public abstract class TransferBase<T>  {
     public abstract GeneralResponse transfer(long customerId, T request) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException;
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public void sendTransfer(Account fromAccount, Account toAccount, BigDecimal amount, String description) throws AmountNotValidException {
+    public void sendTransferWithIban(String fromAccountIban, String toAccountIban, BigDecimal amount, String description) throws AmountNotValidException {
+
+        Account fromAccount = accountService.findAccountByIbanNumber(fromAccountIban).get();
+        Account toAccount = accountService.findAccountByIbanNumber(toAccountIban).get();
+
         fromAccount.setLockedBalance(amount);
         accountService.update(fromAccount); // lock balance for security
         AccountActivity fromAccountActivity = new AccountActivity();
@@ -60,4 +65,49 @@ public abstract class TransferBase<T>  {
 
     }
 
+
+    /// TODO Burası sorulacak
+
+    /*
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void sendTransfer(Account fromAccount, Account toAccount, BigDecimal amount, String description) throws AmountNotValidException {
+
+
+        fromAccount.setLockedBalance(amount);
+        accountService.update(fromAccount); // lock balance for security
+        AccountActivity fromAccountActivity = new AccountActivity();
+        fromAccountActivity.setAccount(fromAccount);
+        fromAccountActivity.setCrossAccount(toAccount.getIbanNo());
+        fromAccountActivity.setActionStatus(ActionStatus.OUTGOING);
+        fromAccountActivity.setAmount(amount);
+        fromAccountActivity.setDate(new Date());
+
+        amount = exchangeService.getExchangedAmount(toAccount.getCurrencyType(), fromAccount.getCurrencyType(), amount); // get exchange
+
+        AccountActivity toAccountActivity = new AccountActivity();
+        toAccountActivity.setAccount(toAccount);
+        toAccountActivity.setCrossAccount(fromAccount.getIbanNo());
+        toAccountActivity.setActionStatus(ActionStatus.INCOMING);
+        toAccountActivity.setDate(new Date());
+        toAccountActivity.setDescription(description);
+        toAccountActivity.setAmount(amount);
+        toAccount.setBalance(toAccount.getBalance().add(amount));
+
+        fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
+
+        toAccountActivity.setAvailableBalance(toAccount.getBalance());
+        fromAccountActivity.setAvailableBalance(fromAccount.getBalance());
+
+        // add activity account
+        toAccount.addActivity(toAccountActivity);
+        fromAccount.addActivity(fromAccountActivity);
+
+        fromAccount.setLockedBalance(BigDecimal.ZERO);
+        accountService.update(toAccount);
+        accountService.update(fromAccount);
+
+    }
+
+
+ */
 }

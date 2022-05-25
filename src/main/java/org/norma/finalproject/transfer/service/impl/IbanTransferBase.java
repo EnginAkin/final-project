@@ -69,7 +69,9 @@ public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
                 throw new TransferOperationException("You can transfer only parent checking account.");
             }
         }
-        sendTransfer(optionalFromAccount.get(), optionalToAccount.get(), transferRequest.getAmount(), transferRequest.getDescription());
+
+        //sendTransfer(optionalFromAccount.get(), optionalToAccount.get(), transferRequest.getAmount(), transferRequest.getDescription());
+        sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), transferRequest.getAmount(), transferRequest.getDescription());
         Transfer transfer = transferMapper.toEntity(transferRequest);
         transfer.setCurrencyType(optionalFromAccount.get().getCurrencyType());
         transferService.save(transfer);
@@ -78,3 +80,10 @@ public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
 
 
 }
+//
+
+/*
+    transfer deneme
+    2.kişi   10 id   engin3@gmail.com 100 tl  TR3300006101133939763635453          eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMiIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM0OTY1NzksImlhdCI6MTY1MzQ2NjU3OX0.Y7tyV88t0Tt1fCzd0ax535PL6GUCZt7tKVDyTnQYQI4AQnZixEB5d2-AO5Io9YjnAU4S8dBtVp50vz1XIOjMlg
+    1. kişi 9 id TR3300006102444125751110611  engin2@gmail.com
+ */

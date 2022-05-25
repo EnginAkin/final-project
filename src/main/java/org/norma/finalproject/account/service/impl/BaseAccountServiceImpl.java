@@ -44,10 +44,6 @@ public class BaseAccountServiceImpl implements BaseAccountService {
         return repository.findById(id);
     }
 
-    @Override
-    public Optional<Account> findAccountByEmail(String email) {
-        //return repository.findByCustomer_Email(email);
-        return null;
-    }
+
 
 }

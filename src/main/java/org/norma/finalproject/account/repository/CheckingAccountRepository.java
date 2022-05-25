@@ -11,6 +11,7 @@ public interface CheckingAccountRepository extends JpaRepository<CheckingAccount
 
 
     Optional<CheckingAccount> findByAccountNo(String accountNo);
+    Optional<CheckingAccount> findFirstByCustomer_Email(String email);
 
 
 }

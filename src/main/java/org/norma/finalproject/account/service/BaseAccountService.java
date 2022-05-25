@@ -11,6 +11,4 @@ public interface BaseAccountService {
     Optional<Account> findAccountByIbanNumber(String iban);
     Optional<Account> findById(long id);
 
-
-    Optional<Account> findAccountByEmail(String toEmail);
 }
