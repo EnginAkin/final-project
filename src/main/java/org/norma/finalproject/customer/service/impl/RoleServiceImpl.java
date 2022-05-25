@@ -31,7 +31,7 @@ public class RoleServiceImpl implements RoleService {
         Role roleAdmin=new Role(CustomerConstant.ROLE_ADMIN);
         repository.saveAll(List.of(roleAdmin,roleUser));
     }
-
      */
 
 }
+

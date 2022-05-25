@@ -3,6 +3,7 @@ package org.norma.finalproject.transfer.core.model.request;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.norma.finalproject.transfer.entity.enums.SendType;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -18,5 +19,6 @@ public class EmailTransferRequest {
     @NotNull
     private BigDecimal amount;
     private String description;
+    private SendType sendType;
 
 }

@@ -1,11 +1,15 @@
 package org.norma.finalproject.transfer.core.model.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.norma.finalproject.transfer.entity.enums.SendType;
 
 import java.math.BigDecimal;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class CreateIbanTransferRequest {

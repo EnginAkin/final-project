@@ -16,9 +16,7 @@ import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequ
 import org.norma.finalproject.transfer.entity.Transfer;
 import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.norma.finalproject.transfer.service.TransferService;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -51,9 +49,12 @@ public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
             throw new CustomerNotFoundException();
         }
         Optional<Account> optionalFromAccount = accountService.findAccountByIbanNumber(transferRequest.getFromIban());
-
         if (optionalFromAccount.isEmpty()) {
             throw new TransferOperationException("Customer dont have " + transferRequest.getFromIban() + " Account ");
+        }
+        boolean checkIbanNumberOwnerIsCustomer= checkIbanNumberOwnerIsCustomer(optionalCustomer.get(),optionalFromAccount.get().getIbanNo());
+        if(!checkIbanNumberOwnerIsCustomer){
+            throw new TransferOperationException("Customer not owner " + transferRequest.getFromIban() + " Account ");
         }
         if (optionalFromAccount.get().getBalance().compareTo(transferRequest.getAmount()) < 0) {
             throw new TransferOperationException("There is not enough money in the account");
@@ -72,12 +73,18 @@ public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
 
         //sendTransfer(optionalFromAccount.get(), optionalToAccount.get(), transferRequest.getAmount(), transferRequest.getDescription());
         sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), transferRequest.getAmount(), transferRequest.getDescription());
-        Transfer transfer = transferMapper.toEntity(transferRequest);
-        transfer.setCurrencyType(optionalFromAccount.get().getCurrencyType());
-        transferService.save(transfer);
         return new GeneralSuccessfullResponse("Transfer successfull.");
     }
 
+
+
+
+    private boolean checkIbanNumberOwnerIsCustomer(Customer customer, String ibanNumber) {
+        return customer.getSavingAccounts().stream()
+                .anyMatch(savingAccount -> savingAccount.getIbanNo().equals(ibanNumber)) ||
+                customer.getCheckingAccounts().stream().
+                        anyMatch(checkingAccount -> checkingAccount.getIbanNo().equals(ibanNumber));
+    }
 
 }
 //

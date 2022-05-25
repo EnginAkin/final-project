@@ -12,7 +12,11 @@ import org.norma.finalproject.customer.service.CustomerService;
 import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.exchange.service.FacadeExchangeService;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
+import org.norma.finalproject.transfer.core.mapper.TransferMapper;
+import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
 import org.norma.finalproject.transfer.core.model.request.EmailTransferRequest;
+import org.norma.finalproject.transfer.entity.Transfer;
+import org.norma.finalproject.transfer.service.TransferService;
 import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.stereotype.Component;
 
@@ -24,37 +28,53 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
     private final CustomerService customerService;
     private final FacadeExchangeService exchangeService;
     private final CheckingAccountService checkingAccountService;
+    private final TransferMapper transferMapper;
+    private final TransferService transferService;
 
-    public EmailTransfer(BaseAccountService accountService, CustomerService customerService, FacadeExchangeService exchangeService, CheckingAccountService checkingAccountService) {
-        super(accountService,exchangeService);
+    public EmailTransfer(BaseAccountService accountService, CustomerService customerService, FacadeExchangeService exchangeService, CheckingAccountService checkingAccountService, TransferMapper transferMapper, TransferService transferService) {
+        super(accountService, exchangeService);
         this.accountService = accountService;
         this.customerService = customerService;
         this.exchangeService = exchangeService;
         this.checkingAccountService = checkingAccountService;
+        this.transferMapper = transferMapper;
+        this.transferService = transferService;
     }
 
     @Override
     public GeneralResponse transfer(long customerId, EmailTransferRequest emailTransferRequest) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException {
         Optional<Customer> optionalCustomer = customerService.findCustomerById(customerId);
-        if(optionalCustomer.isEmpty()){
+        if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
         Optional<Account> optionalFromAccount = accountService.findById(emailTransferRequest.getFromAccountId());
-        if(optionalFromAccount.isEmpty()){
-            throw new TransferOperationException("Account not found with : "+emailTransferRequest.getFromAccountId());
+        boolean fromAccountIDOwnerIsCustomer = checkAccountIDOwnerIsCustomer(optionalCustomer.get(), emailTransferRequest.getFromAccountId());
+        if (optionalFromAccount.isEmpty() || !fromAccountIDOwnerIsCustomer) {
+            throw new TransferOperationException("Account not found with : " + emailTransferRequest.getFromAccountId());
         }
         Optional<CheckingAccount> optionalToAccount = checkingAccountService.findCheckingAccountByEmail(emailTransferRequest.getToEmail());
-        if(optionalToAccount.isEmpty()){
-            throw new TransferOperationException(emailTransferRequest.getToEmail()+" Not found.");
+        if (optionalToAccount.isEmpty()) {
+            throw new TransferOperationException(emailTransferRequest.getToEmail() + " Not found.");
         }
 
-        if(optionalFromAccount.get().getBalance().compareTo(emailTransferRequest.getAmount())<0){
+        if (optionalFromAccount.get().getBalance().compareTo(emailTransferRequest.getAmount()) < 0) {
             throw new TransferOperationException("Account balance not enough for transfer");
         }
-        //sendTransfer(optionalFromAccount.get(),optionalToAccount.get(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription());
-        sendTransferWithIban(optionalFromAccount.get().getIbanNo(),optionalToAccount.get().getIbanNo(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription());
+        sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), emailTransferRequest.getAmount(), emailTransferRequest.getDescription());
+
+        Transfer transfer = transferMapper.toEntity(new CreateIbanTransferRequest(optionalFromAccount.get().getIbanNo(),optionalToAccount.get().getIbanNo(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription(),emailTransferRequest.getSendType()));
+        transferService.save(transfer);
         return null;
     }
+
+    private boolean checkAccountIDOwnerIsCustomer(Customer customer, long accountId) {
+        return customer.getSavingAccounts().stream()
+                        .anyMatch(savingAccount -> savingAccount.getId().equals(accountId)) ||
+                customer.getCheckingAccounts().stream()
+                        .anyMatch(checkingAccount -> checkingAccount.getId().equals(accountId));
+    }
+
+
 }
 
 

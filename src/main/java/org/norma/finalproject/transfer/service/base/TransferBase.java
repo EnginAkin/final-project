@@ -7,9 +7,12 @@ import org.norma.finalproject.account.service.BaseAccountService;
 import org.norma.finalproject.common.entity.enums.ActionStatus;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
+import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.exchange.service.FacadeExchangeService;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
+import org.norma.finalproject.transfer.core.mapper.TransferMapper;
+import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +32,9 @@ public abstract class TransferBase<T>  {
 
         Account fromAccount = accountService.findAccountByIbanNumber(fromAccountIban).get();
         Account toAccount = accountService.findAccountByIbanNumber(toAccountIban).get();
-
         fromAccount.setLockedBalance(amount);
+        fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
+
         accountService.update(fromAccount); // lock balance for security
         AccountActivity fromAccountActivity = new AccountActivity();
         fromAccountActivity.setAccount(fromAccount);
@@ -50,7 +54,7 @@ public abstract class TransferBase<T>  {
         toAccountActivity.setAmount(amount);
         toAccount.setBalance(toAccount.getBalance().add(amount));
 
-        fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
+
 
         toAccountActivity.setAvailableBalance(toAccount.getBalance());
         fromAccountActivity.setAvailableBalance(fromAccount.getBalance());
@@ -60,6 +64,8 @@ public abstract class TransferBase<T>  {
         fromAccount.addActivity(fromAccountActivity);
 
         fromAccount.setLockedBalance(BigDecimal.ZERO);
+
+
         accountService.update(toAccount);
         accountService.update(fromAccount);
 

@@ -79,12 +79,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         savingAccount.setIbanNo(uniqueNoCreator.createIbanNo(savingAccount.getAccountNo(), savingAccount.getParentAccount().getBankCode()));
         SavingAccount savedAccount = savingAccountService.save(savingAccount);
         // Transfer to save acccount from checking account
-        CreateIbanTransferRequest transferRequest = new CreateIbanTransferRequest();
-        transferRequest.setAmount(createSavingAccountRequest.getOpeningBalance());
-        transferRequest.setDescription("Opening balance");
-        transferRequest.setFromIban(parentCheckingAccount.get().getIbanNo());
-        transferRequest.setSendType(SendType.OTHER);
-        transferRequest.setToIban(savingAccount.getIbanNo());
+        CreateIbanTransferRequest transferRequest = new CreateIbanTransferRequest(parentCheckingAccount.get().getIbanNo(), savingAccount.getIbanNo(),createSavingAccountRequest.getOpeningBalance(),"Opening balance",SendType.OTHER);
         ibanTransferBase.transfer(customerID, transferRequest);
         return new GeneralDataResponse<>(savingAccountMapper.toCreateSavingAccountDto(savedAccount));
     }
