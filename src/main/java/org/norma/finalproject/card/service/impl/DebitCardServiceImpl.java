@@ -30,8 +30,13 @@ public class DebitCardServiceImpl implements DebitCardService {
     }
 
     @Override
-    public Optional<DebitCard> getDebitCardWithCustomerIDAndCardID(long customerID, long debitCardId) {
+    public Optional<DebitCard> findDebitCardWithCustomerIDAndCardID(long customerID, long debitCardId) {
         return debitCardRepository.findDebitCardByCheckingAccount_Customer_IdAndId(customerID,debitCardId);
+    }
+
+    @Override
+    public Optional<DebitCard> findDebitCardWithCustomerIDAndCardNumber(long customerID, String cardNumber) {
+        return debitCardRepository.findDebitCardByCheckingAccount_Customer_IdAndCardNumber(customerID,cardNumber);
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.card.core.exception.DebitOperationException;
 import org.norma.finalproject.card.core.mapper.DebitCardMapper;
 import org.norma.finalproject.card.core.model.request.CreateDebitCardRequest;
+import org.norma.finalproject.card.core.model.request.DoShoppingRequest;
 import org.norma.finalproject.card.core.model.request.UpdateDebitCardRequest;
 import org.norma.finalproject.card.core.model.response.DebitCardResponse;
 import org.norma.finalproject.card.entity.DebitCard;
@@ -22,6 +23,7 @@ import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -73,9 +75,9 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
 
     @Override
     public GeneralDataResponse getByID(Long customerID, long debitID) throws DebitCardNotFoundException {
-        Optional<DebitCard> optionalDebitCard = debitCardService.getDebitCardWithCustomerIDAndCardID(customerID, debitID);
+        Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardID(customerID, debitID);
         if(optionalDebitCard.isEmpty()){
-            throw new DebitCardNotFoundException("Not found.");
+            throw new DebitCardNotFoundException();
         }
         DebitCardResponse debitCardResponse = debitCardMapper.toDto(optionalDebitCard.get());
         return new GeneralDataResponse(debitCardResponse);
@@ -96,7 +98,6 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
                 .toList();
         return new GeneralDataResponse<>(orders);
     }
-
     @Override
     public GeneralResponse update(Long customerID, long debitCardID, UpdateDebitCardRequest updateDebitCardRequest) throws CustomerNotFoundException, DebitOperationException {
         Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
@@ -111,4 +112,20 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
         debitCardService.save(optionalDebitCard.get());
         return new GeneralSuccessfullResponse("Update successfull");
     }
+
+    @Override
+    public GeneralResponse shoppingWithCard(Long customerID, DoShoppingRequest doShoppingRequest) throws CustomerNotFoundException, DebitCardNotFoundException {
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
+        if(optionalCustomer.isEmpty()){
+            throw new CustomerNotFoundException();
+        }
+        Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardNumber(customerID, doShoppingRequest.getCardNumber());
+        if(optionalDebitCard.isEmpty()){
+            throw new DebitCardNotFoundException();
+        }
+// TODO Burası yapılacak.
+
+        return null;
+    }
+
 }

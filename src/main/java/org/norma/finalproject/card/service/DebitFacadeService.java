@@ -4,6 +4,7 @@ import org.norma.finalproject.account.core.exception.CheckingAccountNotFoundExce
 import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.card.core.exception.DebitOperationException;
 import org.norma.finalproject.card.core.model.request.CreateDebitCardRequest;
+import org.norma.finalproject.card.core.model.request.DoShoppingRequest;
 import org.norma.finalproject.card.core.model.request.UpdateDebitCardRequest;
 import org.norma.finalproject.card.core.model.response.DebitCardResponse;
 import org.norma.finalproject.card.entity.DebitCard;
@@ -22,4 +23,6 @@ public interface DebitFacadeService {
    GeneralDataResponse getAllCustomersDebitCards(Long customerID) throws CustomerNotFoundException, DebitOperationException;
 
    GeneralResponse update(Long CustomerID, long debitCardID, UpdateDebitCardRequest updateDebitCardRequest) throws CustomerNotFoundException, DebitOperationException;
+
+    GeneralResponse shoppingWithCard(Long CustomerID, DoShoppingRequest doShoppingRequest) throws CustomerNotFoundException, DebitCardNotFoundException;
 }
