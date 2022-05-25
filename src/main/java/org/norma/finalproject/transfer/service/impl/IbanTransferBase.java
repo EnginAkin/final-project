@@ -50,7 +50,8 @@ public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        Optional<Account> optionalFromAccount = accountService.findAccountByIbanNumberAndCustomerId(transferRequest.getFromIban(), customerId);
+        Optional<Account> optionalFromAccount = accountService.findAccountByIbanNumber(transferRequest.getFromIban());
+
         if (optionalFromAccount.isEmpty()) {
             throw new TransferOperationException("Customer dont have " + transferRequest.getFromIban() + " Account ");
         }

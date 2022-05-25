@@ -10,14 +10,15 @@ import org.norma.finalproject.account.core.model.response.AccountActivityRespons
 import org.norma.finalproject.account.core.model.response.CheckingAccountResponse;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
+import org.norma.finalproject.account.entity.SavingAccount;
 import org.norma.finalproject.account.entity.base.AccountActivity;
-import org.norma.finalproject.account.entity.enums.AccountType;
-import org.norma.finalproject.account.service.AccountActivityService;
-import org.norma.finalproject.account.service.CheckingAccountService;
-import org.norma.finalproject.account.service.FacadeCheckinAccountService;
+import org.norma.finalproject.account.entity.enums.CurrencyType;
+import org.norma.finalproject.account.service.*;
 import org.norma.finalproject.common.response.GeneralDataResponse;
+import org.norma.finalproject.common.response.GeneralErrorResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
+import org.norma.finalproject.customer.core.exception.ActivitiesNotFoundException;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
@@ -35,7 +36,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
 
     private final CustomerService customerService;
     private final CheckingAccountService checkingAccountService;
-    private final AccountActivityService accountActivityService;
+    private final FacadeSavingAccountService facadeSavingAccountService;
     private final UniqueNoCreator uniqueNoCreator;
     private final CheckingAccountMapper checkingAccountMapper;
     private final AccountActivityMapper accountActivityMapper;
@@ -49,9 +50,9 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         }
         String accountName = createCheckingAccountRequest.getBranchName() + "-" + createCheckingAccountRequest.getBranchCode();
 
-        Optional<CheckingAccount> optionalDepositAccount = existsCheckingAccountByAccountNumber(optionalCustomer.get().getCheckingAccounts(), accountName);
-        if (optionalDepositAccount.isPresent()) {
-            throw new AccountNameAlreadyHaveException(accountName + " name already have account in your accounts.");
+        Optional<CheckingAccount> optionalDepositAccount = getCheckingAccountByAccountNumber(optionalCustomer.get().getCheckingAccounts(), accountName,createCheckingAccountRequest.getCurrencyType());
+        if (optionalDepositAccount.isPresent() && optionalDepositAccount.get().getBankCode().equals(createCheckingAccountRequest.getBankCode())) {
+            throw new AccountNameAlreadyHaveException("You have a already bank account in this bank same currency and same branch .");
         }
         CheckingAccount checkingAccount = checkingAccountMapper.ToEntity(createCheckingAccountRequest);
 
@@ -63,7 +64,6 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         checkingAccount.setBalance(BigDecimal.ZERO);
         checkingAccount.setCustomer(optionalCustomer.get());
         CheckingAccount savedCheckingAccount = checkingAccountService.save(checkingAccount);
-
         return new GeneralDataResponse<>(checkingAccountMapper.toCreateCheckingAccountDto(savedCheckingAccount));
     }
 
@@ -88,18 +88,29 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
     }
 
     @Override
-    public GeneralResponse getCheckingAccountActivities(long customerID, long accountID) throws CustomerNotFoundException, CheckingAccountNotFoundException {
-        checkCustomerFound(customerID);
-        // gelen account id ile hesabı var mı
+    public GeneralResponse getCheckingAccountActivities(long customerID, long accountID) throws CustomerNotFoundException, ActivitiesNotFoundException {
+        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
+        if (optionalCustomer.isEmpty()) {
+            throw new CustomerNotFoundException();
+        }
 
-        List<AccountActivity> accountActivities = accountActivityService.getAccountActivitiesByAccountIdAndCustomerID(accountID,customerID, AccountType.CHECKING);
-
+        Optional<CheckingAccount> optionalCheckingAccount = checkingAccountService.findById(accountID);
+        if(optionalCheckingAccount.isEmpty()){
+            return new GeneralErrorResponse("boş");
+        }
+        boolean checkAccountOwnersIsCustomer=checkAccountOwnersIsCustomer(optionalCustomer.get().getCheckingAccounts(),accountID);
+        if(!checkAccountOwnersIsCustomer){
+            throw new ActivitiesNotFoundException();
+        }
+        List<AccountActivity> accountActivities =optionalCheckingAccount.get().getActivities().stream().toList();
         if(accountActivities.isEmpty()){
-            throw new CheckingAccountNotFoundException("account no found by id : "+accountID);
+            throw new ActivitiesNotFoundException();
         }
         List<AccountActivityResponse> responseList = accountActivities.stream().map(accountActivityMapper::toDto).toList();
         return new GeneralDataResponse<>(responseList);
     }
+
+
 
     @Override
     public GeneralResponse getCheckingAccountById(Long customerID, long accountID) throws CustomerNotFoundException, CustomerAccountNotFoundException, CheckingAccountNotFoundException {
@@ -121,6 +132,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
     }
 
     @Override
+    @Transactional
     public GeneralResponse deleteById(long customerID, long accountID) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException {
         Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
@@ -141,18 +153,19 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         // TODO hesap silinmeden önce hesaba bağlı bir birikim hesabı var mı varsa içinde bakiye var mı
 
         try {
+            facadeSavingAccountService.deleteByCheckingParentId(checkingAccount.get().getId());
             checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get());
         }catch (Exception e){
             e.printStackTrace();
         }
-        return new GeneralSuccessfullResponse("Deleted successfully Customer Deposit account.");
+        return new GeneralSuccessfullResponse("Deleted successfully Checking account.");
     }
 
-    public Optional<CheckingAccount> existsCheckingAccountByAccountNumber(List<CheckingAccount> checkingAccountList, String accountName) {
+    public Optional<CheckingAccount> getCheckingAccountByAccountNumber(List<CheckingAccount> checkingAccountList, String accountName, CurrencyType currencyType) {
         if (checkingAccountList == null) {
             return Optional.empty();
         }
-        return checkingAccountList.stream().filter(checkingAccount -> checkingAccount.getAccountNo().equals(accountName)).findFirst();
+        return checkingAccountList.stream().filter(checkingAccount -> checkingAccount.getAccountName().equals(accountName) && checkingAccount.getCurrencyType().equals(currencyType)).findFirst();
 
     }
     private void checkCustomerFound(long customerID) throws CustomerNotFoundException {
@@ -160,6 +173,9 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
+    }
+    private boolean checkAccountOwnersIsCustomer(List<CheckingAccount> checkingAccounts, long accountID) {
+        return checkingAccounts.stream().anyMatch(checkingAccount -> checkingAccount.getId().equals(accountID));
     }
 
 

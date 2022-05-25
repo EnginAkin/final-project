@@ -48,7 +48,7 @@ public class CustomerController {
 
 
     @Operation(tags = "Customer Controller", description = "Delete customer By Customer")
-    @PutMapping(path = "/delete")
+    @DeleteMapping(path = "/delete")
     public GeneralResponse delete(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws CustomerNotFoundException, CustomerDeleteException {
         return facadeCustomerService.delete(userDetail.getUser().getId());
 

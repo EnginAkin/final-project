@@ -34,10 +34,6 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
-
-
-
-
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "account")
     private List<AccountActivity> activities=new ArrayList<>();
 

@@ -6,5 +6,5 @@ import org.norma.finalproject.account.entity.enums.AccountType;
 import java.util.List;
 
 public interface AccountActivityService {
-    List<AccountActivity> getAccountActivitiesByAccountIdAndCustomerID(long accountNo, long customerId, AccountType accountType);
+    List<AccountActivity> getAccountActivitiesByAccountId(long accountId);
 }

@@ -12,7 +12,6 @@ import java.util.Optional;
 @Repository
 public interface SavingAccountRepository extends JpaRepository<SavingAccount,Long> {
     boolean existsByParentAccount_IdAndCustomer_Id(long checkingAccountId, long customerId);
-
     List<SavingAccount> findAllByCustomer_Id(long customerId);
-    //isUsedParentAccountForSavingAccount
+    Optional<SavingAccount> findSavingAccountByParentAccount_Id(long parentAccountId);
 }

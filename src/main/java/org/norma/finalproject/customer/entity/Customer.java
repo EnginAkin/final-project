@@ -16,11 +16,11 @@ import java.util.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@PrimaryKeyJoinColumn(name = "id",referencedColumnName = "id")
+@PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Customer extends User {
 
-    @Column(insertable = false,updatable = false)
+    @Column(insertable = false, updatable = false)
     private Long id;
 
     private String identityNumber;
@@ -34,16 +34,15 @@ public class Customer extends User {
     @Temporal(TemporalType.DATE)
     private Date birthDay;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CheckingAccount> checkingAccounts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SavingAccount> savingAccounts = new ArrayList<>();
 
 
-
-    @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
-    private Set<Address> addresses ;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private Set<Address> addresses;
 
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -61,16 +60,17 @@ public class Customer extends User {
 
     private boolean isDeleted;
 
-    public void addCheckingAccount(CheckingAccount account){
-        if(checkingAccounts==null){
-            checkingAccounts=new ArrayList<>();
+    public void addCheckingAccount(CheckingAccount account) {
+        if (checkingAccounts == null) {
+            checkingAccounts = new ArrayList<>();
         }
         checkingAccounts.add(account);
     }
+
     public void addAddress(Address address) {
 
-        if(addresses==null){
-            addresses=new HashSet<>();
+        if (addresses == null) {
+            addresses = new HashSet<>();
         }
         addresses.add(address);
     }

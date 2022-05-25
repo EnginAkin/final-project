@@ -1,10 +1,9 @@
 package org.norma.finalproject.account.service;
 
-import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.SavingAccount;
-import org.norma.finalproject.customer.entity.Customer;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SavingAccountService {
 
@@ -14,5 +13,6 @@ public interface SavingAccountService {
     boolean isUsedParentAccountForSavingAccount(long customerId, long parentCheckingAccountId);
 
     List<SavingAccount> getAllAccountsByCustomerId(Long customerId);
+    Optional<SavingAccount> getByParentId(Long parentAccountID);
 
 }

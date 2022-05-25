@@ -3,6 +3,7 @@ package org.norma.finalproject.account.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.core.exception.CheckingAccountNotFoundException;
+import org.norma.finalproject.account.core.exception.SavingAccountNotFound;
 import org.norma.finalproject.account.core.exception.SavingAccountOperationException;
 import org.norma.finalproject.account.core.mapper.AccountActivityMapper;
 import org.norma.finalproject.account.core.mapper.SavingAccountMapper;
@@ -13,13 +14,13 @@ import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.SavingAccount;
 import org.norma.finalproject.account.entity.base.AccountActivity;
-import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.account.service.AccountActivityService;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.account.service.FacadeSavingAccountService;
 import org.norma.finalproject.account.service.SavingAccountService;
 import org.norma.finalproject.common.response.GeneralDataResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
+import org.norma.finalproject.customer.core.exception.ActivitiesNotFoundException;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
@@ -27,7 +28,7 @@ import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
 import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
 import org.norma.finalproject.transfer.entity.enums.SendType;
-import org.norma.finalproject.transfer.service.impl.IbanTransferBase;
+import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +47,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
     private final SavingAccountMapper savingAccountMapper;
     private final UniqueNoCreator uniqueNoCreator;
 
-    private final IbanTransferBase ibanTransferBase;
+    private final TransferBase<CreateIbanTransferRequest> ibanTransferBase;
     private final AccountActivityService accountActivityService;
     private final AccountActivityMapper accountActivityMapper;
 
@@ -64,8 +65,8 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         if (parentCheckingAccount.get().getCurrencyType() != createSavingAccountRequest.getCurrencyType()) {
             throw new SavingAccountOperationException("Parent currency type not matched for saving account,Please create checking Account currency type :" + createSavingAccountRequest.getCurrencyType());
         }
-        boolean usedParentAccountForSavingAccount = savingAccountService.isUsedParentAccountForSavingAccount(optionalCustomer.get().getId(), parentCheckingAccount.get().getId());
-        if (usedParentAccountForSavingAccount) {
+        boolean checkUsedParentAccountForSavingAccount = savingAccountService.isUsedParentAccountForSavingAccount(optionalCustomer.get().getId(), parentCheckingAccount.get().getId());
+        if (checkUsedParentAccountForSavingAccount) {
             throw new SavingAccountOperationException("Parent Used for saving account , change parent checking account.");
         }
         if (createSavingAccountRequest.getOpeningBalance().compareTo(parentCheckingAccount.get().getBalance()) > 0) {
@@ -100,17 +101,38 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
     }
 
     @Override
-    public GeneralResponse getAccountActivities(Long customerID, long accountID) throws CustomerNotFoundException, CheckingAccountNotFoundException {
+    public GeneralResponse getAccountActivities(Long customerID, long accountID) throws CustomerNotFoundException, CheckingAccountNotFoundException, ActivitiesNotFoundException, SavingAccountOperationException {
         Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        List<AccountActivity> accountActivities = accountActivityService.getAccountActivitiesByAccountIdAndCustomerID(accountID,customerID, AccountType.SAVING);
-        if(accountActivities.isEmpty()){
-            throw new CheckingAccountNotFoundException("account no found by id : "+accountID);
+        boolean checkOwnersAccountIsCustomer = checkOwnersAccountIsCustomer(optionalCustomer.get(),accountID);
+        if(!checkOwnersAccountIsCustomer){
+            throw new SavingAccountOperationException("Saving account activities not found.");
+        }
+        List<AccountActivity> accountActivities = accountActivityService.getAccountActivitiesByAccountId(accountID);
+        if (accountActivities.isEmpty()) {
+            throw new ActivitiesNotFoundException();
         }
         List<AccountActivityResponse> responseList = accountActivities.stream().map(accountActivityMapper::toDto).toList();
         return new GeneralDataResponse<>(responseList);
 
     }
+
+    @Override
+    public void deleteByCheckingParentId(Long checkingId) throws SavingAccountNotFound {
+        Optional<SavingAccount> optionalSavingAccount = savingAccountService.getByParentId(checkingId);
+        if(optionalSavingAccount.isEmpty()){
+            throw new SavingAccountNotFound();
+        }
+    }
+
+    private boolean checkOwnersAccountIsCustomer(Customer customer, long accountId) {
+        return customer.getSavingAccounts().stream().anyMatch(savingAccount -> savingAccount.getId().equals(accountId));
+    }
+
+    // 1. vadesiz. hesap 80 tl TR3300006103170781464664297 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM0OTEyNDcsImlhdCI6MTY1MzQ2MTI0N30.O3NzpW6BIrCwnhnJgJLPbRAuFKASQek5uhJx6qvKSNH5WuznVPGDppm_V1RO5f0_awayfh5azyQTFY710U82FA
+    //1. hesap vadeli birikimli hesap 20 tl TR3300006108707433911638621
+    // 2. hesap 100 tl TR3300006104557638514004892  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMiIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM0OTMyMDksImlhdCI6MTY1MzQ2MzIwOX0.6Jn3XR3k8Rt6br_0cQi111oJR5WAvOcs-5kmlZyaDi9j_LMlrPNgCCRShEwAC3u_cgUeO2jJAaeOVMBb1oCggA
+
 }

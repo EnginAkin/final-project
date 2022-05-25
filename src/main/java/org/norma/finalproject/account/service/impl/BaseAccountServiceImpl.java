@@ -30,14 +30,6 @@ public class BaseAccountServiceImpl implements BaseAccountService {
         return repository.save(account);
     }
 
-    @Override
-    public Optional<Account> findAccountByIbanNumberAndCustomerId(String iban,long customerId) {
-        if(StringUtils.isEmpty(iban)){
-            throw new IllegalArgumentException("Iban cannot bu null");
-        }
-       // return repository.findByIbanNoAndCustomer_Id(iban,customerId);
-        return null;
-    }
 
     @Override
     public Optional<Account> findAccountByIbanNumber(String iban) {

@@ -51,7 +51,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
             throw new NotAcceptableAgeException();
         }
         Customer savedCustomer = customerService.save(customer);
-        facadeCheckinAccountService.create(savedCustomer.getId(),createCustomerRequest.getCheckingAccount());
+        facadeCheckinAccountService.create(savedCustomer.getId(), createCustomerRequest.getCheckingAccount());
         return new GeneralSuccessfullResponse(CustomerConstant.SIGNUP_SUCESSFULL);
     }
 
@@ -64,7 +64,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         if (passwordEncoder.matches(updateCustomerRequest.getPassword(), customer.get().getPassword())) {
             throw new UpdateCustomerSamePasswordException();
         }
-        if(updateCustomerRequest.getTelephone()!=null){
+        if (updateCustomerRequest.getTelephone() != null) {
             customer.get().setTelephone(updateCustomerRequest.getTelephone());
         }
         customer.get().setPassword(passwordEncoder.encode(updateCustomerRequest.getPassword()));
@@ -79,7 +79,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         if (customer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        boolean checkHasMoneyInDepositAccounts = checkHasMoneyInDepositAccounts(customer.get().getCheckingAccounts());
+        boolean checkHasMoneyInDepositAccounts = checkHasMoneyInDepositAccounts(customer.get());
         if (checkHasMoneyInDepositAccounts) {
             throw new CustomerDeleteException(CustomerConstant.DELETE_CUSTOMER_OPERATION_HAS_BALANCE_EXCEPTION);
         }
@@ -87,7 +87,10 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         return new GeneralSuccessfullResponse("Customer deleted.");
     }
 
-    public boolean checkHasMoneyInDepositAccounts(List<CheckingAccount> checkingAccountList){
-        return checkingAccountList.stream().anyMatch(depositAccount -> depositAccount.getBalance().compareTo(BigDecimal.ZERO)>0);
+    public boolean checkHasMoneyInDepositAccounts(Customer customer) {
+        return customer.getCheckingAccounts().stream().
+                anyMatch(checkingAccount -> checkingAccount.getBalance().compareTo(BigDecimal.ZERO) > 0)
+                || customer.getSavingAccounts().stream().
+                anyMatch(savingAccount -> savingAccount.getBalance().compareTo(BigDecimal.ZERO) > 0);
     }
 }

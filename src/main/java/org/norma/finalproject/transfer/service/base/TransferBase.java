@@ -33,7 +33,9 @@ public abstract class TransferBase<T>  {
         fromAccountActivity.setActionStatus(ActionStatus.OUTGOING);
         fromAccountActivity.setAmount(amount);
         fromAccountActivity.setDate(new Date());
-        amount = exchangeService.getExchangedAmount(toAccount.getCurrencyType(), fromAccount.getCurrencyType(), amount);
+
+        amount = exchangeService.getExchangedAmount(toAccount.getCurrencyType(), fromAccount.getCurrencyType(), amount); // get exchange
+
         AccountActivity toAccountActivity = new AccountActivity();
         toAccountActivity.setAccount(toAccount);
         toAccountActivity.setCrossAccount(fromAccount.getIbanNo());

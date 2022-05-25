@@ -3,6 +3,7 @@ package org.norma.finalproject.account.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.entity.CheckingAccount;
+import org.norma.finalproject.account.entity.base.AccountActivity;
 import org.norma.finalproject.account.repository.CheckingAccountRepository;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,7 @@ public class CheckingAccountServiceImpl implements CheckingAccountService {
     public Optional<CheckingAccount> getAccountByAccountNumber(String parentAccountNumber) {
         return checkingAccountRepository.findByAccountNo(parentAccountNumber);
     }
+
 
 
 

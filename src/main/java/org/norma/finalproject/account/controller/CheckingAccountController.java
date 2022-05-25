@@ -9,11 +9,13 @@ import org.norma.finalproject.account.service.FacadeCheckinAccountService;
 import org.norma.finalproject.common.exception.BusinessException;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
+import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 @RestController
@@ -43,8 +45,8 @@ public class CheckingAccountController {
         return facadeCheckinAccountService.getCheckingAccounts(userDetail.getUser().getId());
     }
 
-    @GetMapping("{accountID}")
-    public GeneralResponse getById(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, long accountID) throws BusinessException {
+    @GetMapping("/{accountID}")
+    public GeneralResponse getById(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long accountID) throws BusinessException {
         return facadeCheckinAccountService.getCheckingAccountById(userDetail.getUser().getId(), accountID);
     }
 
@@ -53,6 +55,7 @@ public class CheckingAccountController {
         return facadeCheckinAccountService.getCheckingAccountActivities(userDetail.getUser().getId(), accountID);
     }
 
+    @RolesAllowed(CustomerConstant.ROLE_ADMIN)
     @Operation(tags = "Deposit Controller", description = "Blocked a deposit account by ADMIN.")
     @PutMapping("/{accountId}/block")
     public GeneralResponse blockedAccount(@PathVariable long accountId) throws BusinessException {
