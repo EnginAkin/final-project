@@ -40,7 +40,7 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
     @Override
     public GeneralDataResponse create(long customerID,CreateDebitCardRequest createDebitCardRequest) throws DebitCardOperationException, CheckingAccountNotFoundException, CustomerNotFoundException {
 
-        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if(optionalCustomer.isEmpty()){
             throw new CustomerNotFoundException();
         }
@@ -83,7 +83,7 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
 
     @Override
     public GeneralDataResponse getAllCustomersDebitCards(Long customerID) throws CustomerNotFoundException, DebitCardOperationException {
-        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -98,7 +98,7 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
     }
     @Override
     public GeneralResponse update(Long customerID, long debitCardID, UpdateDebitCardRequest updateDebitCardRequest) throws CustomerNotFoundException, DebitCardOperationException {
-        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }

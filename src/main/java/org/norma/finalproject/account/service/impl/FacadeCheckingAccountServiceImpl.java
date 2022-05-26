@@ -10,7 +10,6 @@ import org.norma.finalproject.account.core.model.response.AccountActivityRespons
 import org.norma.finalproject.account.core.model.response.CheckingAccountResponse;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
-import org.norma.finalproject.account.entity.SavingAccount;
 import org.norma.finalproject.account.entity.base.AccountActivity;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.account.service.*;
@@ -44,7 +43,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
 
     @Override
     public GeneralResponse create(long customerID, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
-        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -89,7 +88,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
 
     @Override
     public GeneralResponse getCheckingAccountActivities(long customerID, long accountID) throws CustomerNotFoundException, ActivitiesNotFoundException {
-        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -134,7 +133,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
     @Override
     @Transactional
     public GeneralResponse deleteById(long customerID, long accountID) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException {
-        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -169,7 +168,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
 
     }
     private void checkCustomerFound(long customerID) throws CustomerNotFoundException {
-        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerID);
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }

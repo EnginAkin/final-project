@@ -43,7 +43,7 @@ public class IbanTransferBase extends TransferBase<IbanTransferRequest> {
     @Override
     @Transactional
     public GeneralResponse transfer(long customerId, IbanTransferRequest transferRequest) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException {
-        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerId);
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerId);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }

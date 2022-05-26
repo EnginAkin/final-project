@@ -65,10 +65,16 @@ public class JWTHelper {
         tokenService.delete(token);
     }
 
-    public void validate(String tokenValue) throws TokenNotFoundException, InvalidClaimException, TokenExpiredException, SignatureVerificationException, AlgorithmMismatchException {
-        JWTToken JWTTokenObject = tokenService.getToken(tokenValue);
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
-        jwtVerifier.verify(JWTTokenObject.getToken());
+    public void validate(String tokenValue) throws TokenNotFoundException, InvalidClaimException, SignatureVerificationException, AlgorithmMismatchException {
+        try {
+            JWTToken JWTTokenObject = tokenService.getToken(tokenValue);
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
+            jwtVerifier.verify(JWTTokenObject.getToken());
+        }catch (TokenExpiredException tokenExpiredException) {
+            deleteTokenForLogout(tokenValue);
+            log.error("JWT Token TokenExpiredException occurred!");
+            throw new TokenExpiredException("JWT Token expired");
+        }
     }
 
 

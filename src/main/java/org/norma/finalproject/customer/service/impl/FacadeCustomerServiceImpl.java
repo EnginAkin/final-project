@@ -3,7 +3,6 @@ package org.norma.finalproject.customer.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.core.exception.AccountNameAlreadyHaveException;
-import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.service.FacadeCheckinAccountService;
 import org.norma.finalproject.common.response.GeneralDataResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
@@ -24,7 +23,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -59,7 +57,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
 
     @Override
     public GeneralResponse update(Long customerId, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException {
-        Optional<Customer> customer = customerService.findCustomerById(customerId);
+        Optional<Customer> customer = customerService.findByCustomerById(customerId);
         if (customer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
@@ -77,7 +75,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
 
     @Override
     public GeneralResponse delete(Long customerId) throws CustomerNotFoundException, CustomerDeleteException {
-        Optional<Customer> customer = customerService.findCustomerById(customerId);
+        Optional<Customer> customer = customerService.findByCustomerById(customerId);
         if (customer.isEmpty()) {
             throw new CustomerNotFoundException();
         }

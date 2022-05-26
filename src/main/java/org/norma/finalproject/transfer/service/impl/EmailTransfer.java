@@ -43,7 +43,7 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
 
     @Override
     public GeneralResponse transfer(long customerId, EmailTransferRequest emailTransferRequest) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException {
-        Optional<Customer> optionalCustomer = customerService.findCustomerById(customerId);
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerId);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }

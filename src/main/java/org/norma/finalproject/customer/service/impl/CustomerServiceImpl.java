@@ -25,7 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final RoleService roleService;
 
     @Override
-    public Customer save(Customer customer) throws CustomerAlreadyRegisterException {
+    public Customer save(Customer customer)  {
         Role roleUser = roleService.getRoleByName(CustomerConstant.ROLE_USER);
         customer.setRoles(Set.of(roleUser));
         log.info("Customer successfull register  :{}", customer.getName());
@@ -38,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> findCustomerById(Long id) {
+    public Optional<Customer> findByCustomerById(Long id) {
         return customerRepository.findById(id);
     }
 
