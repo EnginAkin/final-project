@@ -3,6 +3,7 @@ package org.norma.finalproject.customer.entity;
 import lombok.*;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.SavingAccount;
+import org.norma.finalproject.card.entity.CreditCard;
 import org.norma.finalproject.common.entity.BaseExtendedModel;
 import org.norma.finalproject.common.entity.User;
 
@@ -40,6 +41,9 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SavingAccount> savingAccounts = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CreditCard>  creditCards = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<Address> addresses;

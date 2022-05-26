@@ -25,6 +25,15 @@ public final class UniqueNoCreator {
         }
         return creatAccountNo();
     }
+    public String creatCardNumber() {
+        String randomCardNumber = RandomStringUtils.randomNumeric(16);
+        if (!(accountService.checkIsAccountNoUnique(randomCardNumber))) {
+            log.info("card no created : {}", randomCardNumber);
+            return randomCardNumber;
+        }
+        return creatCardNumber();
+    }
+
 
     public String createIbanNo(String accountNo, String bankCode) {
             String reservedField="0";
