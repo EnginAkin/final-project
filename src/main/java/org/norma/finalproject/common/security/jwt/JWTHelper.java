@@ -7,11 +7,13 @@ import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.norma.finalproject.common.security.exception.TokenLockedException;
+import org.norma.finalproject.common.security.token.entity.JWTToken;
+import org.norma.finalproject.common.security.token.core.exception.TokenNotFoundException;
+import org.norma.finalproject.common.security.token.service.TokenService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,70 +24,54 @@ import java.util.*;
 @Service
 @Setter
 @Getter
+@RequiredArgsConstructor
 public class JWTHelper {
 
-
+    private final TokenService tokenService;
     @Value("${norma.final.project.jwt.secret-key}")
     private String secretKey;
     @Value("${norma.final.project.jwt.expires-in}")
     private long expiresIn;
 
-    private static List<String> blackJWTList = new ArrayList<>();
 
-    public static void addJWTBlackList(String token){
-        blackJWTList.add(token);
-    }
+
 
     public String generate(String identity, List<String> roles) {
         if (!StringUtils.hasLength(identity)) {
             throw new IllegalArgumentException("Identifier no cannot be null");
         }
-        return JWT.create()
+
+        String tokenValue = JWT.create()
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + expiresIn))
                 .withSubject(identity)
                 .withClaim("roles", roles)
                 .sign(Algorithm.HMAC512(secretKey));
+        JWTToken JWTTokenObject = new JWTToken();
+        JWTTokenObject.setToken(tokenValue);
+        JWTTokenObject.setExpiryDate(new Date(System.currentTimeMillis() + expiresIn));
+        tokenService.save(JWTTokenObject);
+        return tokenValue;
     }
 
-    public String findIdentity(String token) {
+    public String findIdentity(String token) throws TokenNotFoundException {
         if (!StringUtils.hasLength(token)) {
             throw new IllegalArgumentException("Token can not be null or empty");
         }
-        return JWT.decode(token).getSubject();
+        JWTToken JWTTokenObject = tokenService.getToken(token);
+        return JWT.decode(JWTTokenObject.getToken()).getSubject();
+    }
+    public void deleteTokenForLogout(String token) throws TokenNotFoundException {
+        tokenService.delete(token);
     }
 
-    public String[] getCustomerRoles(String token) {
-        if (!StringUtils.hasLength(token)) {
-            throw new IllegalArgumentException("Token can not be null or empty");
-        }
-        return JWT.decode(token).getClaim("roles").asArray(String.class);
+    public void validate(String tokenValue) throws TokenNotFoundException, InvalidClaimException, TokenExpiredException, SignatureVerificationException, AlgorithmMismatchException {
+        JWTToken JWTTokenObject = tokenService.getToken(tokenValue);
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
+        jwtVerifier.verify(JWTTokenObject.getToken());
     }
 
 
-    public void validate(String token) throws TokenLockedException {
-        try {
-            if (blackJWTList.contains(token)) {
-                log.error("JWT token locked. Please login again.");
-                throw new TokenLockedException();
-            }
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
-            jwtVerifier.verify(token);
-        } catch (AlgorithmMismatchException algorithmMismatchException) {
-            log.error("JWT Token AlgorithmMismatchException occurred!");
-            throw new AlgorithmMismatchException("JWT Token invalid algorithm occurred!");
-        } catch (SignatureVerificationException signatureVerificationException) {
-            log.error("JWT Token invalid signature occurred!");
-            throw new SignatureVerificationException(Algorithm.HMAC512(secretKey));
-        } catch (TokenExpiredException tokenExpiredException) {
-            log.error("JWT Token TokenExpiredException occurred!");
-            throw new TokenExpiredException("JWT Token expired");
-        } catch (InvalidClaimException invalidClaimException) {
-            log.error("JWT Token InvalidClaimException occurred!");
-            throw new InvalidClaimException("JWT Token invalid claims");
-
-        }
-    }
 
 
 }

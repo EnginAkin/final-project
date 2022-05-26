@@ -15,4 +15,7 @@ public interface FacadeCustomerService {
     GeneralResponse update(Long CustomerId, UpdateCustomerRequest updateCustomerRequest) throws CustomerNotFoundException, UpdateCustomerSamePasswordException;
 
     GeneralResponse delete(Long customerId) throws CustomerNotFoundException, CustomerDeleteException;
+
+    GeneralResponse getall();
+
 }

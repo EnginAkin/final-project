@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
 import org.norma.finalproject.common.security.jwt.JWTHelper;
+import org.norma.finalproject.common.security.token.core.exception.TokenNotFoundException;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.norma.finalproject.customer.core.exception.LoginFailedException;
 import org.norma.finalproject.customer.core.model.request.LoginFormRequest;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 public class AuthenticationController {
 
     private final AuthService authService;
+    private final JWTHelper jwtHelper;
 
     @PostMapping("/login")
     public GeneralResponse login(@RequestBody @Valid LoginFormRequest loginFormRequest) throws LoginFailedException {
@@ -30,8 +32,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public GeneralResponse logout(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) {
-        JWTHelper.addJWTBlackList(userDetail.getToken());
+    public GeneralResponse logout(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws TokenNotFoundException {
+        jwtHelper.deleteTokenForLogout(userDetail.getToken());
         return new GeneralSuccessfullResponse("logout success");
     }
 

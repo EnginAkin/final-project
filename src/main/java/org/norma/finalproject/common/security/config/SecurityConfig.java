@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
     private static final String[] AUTH_WHITELIST = {
             "/api/v1/customers/sing-up/**",
-            "/api/v1/authentications/login/**",
+            "/api/v1/authentication/login/**",
             "/api/v1/shopping/**",
     };
 
@@ -64,6 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-ui.html",
                 "/webjars/**");
     }
+
+
 
 
     @Autowired

@@ -1,4 +1,4 @@
-package org.norma.finalproject.common.entity;
+package org.norma.finalproject.common.security.token.entity;
 
 
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-public class Token {
+public class JWTToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
