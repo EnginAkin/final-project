@@ -42,6 +42,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
     @Override
     public GeneralResponse signup(CreateCustomerRequest createCustomerRequest) throws NotAcceptableAgeException, IdentityNotValidException, CustomerAlreadyRegisterException, CustomerNotFoundException, AccountNameAlreadyHaveException {
         Customer customer = customerMapper.customerInfoDtoToCustomer(createCustomerRequest);
+
         boolean verifyIdentityNumber = identityVerifier.verify(customer.getIdentityNumber());
         if (!verifyIdentityNumber) {
             throw new IdentityNotValidException();

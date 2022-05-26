@@ -20,6 +20,7 @@ public class CustomerInfoDto {
     private String identityNumber;
 
     @NotNull(message = "name cannot be null.")
+    @Pattern(regexp = "^[a-zA-Z]+$")
     private String name;
 
     @NotNull(message = "Surname cannot be null.")

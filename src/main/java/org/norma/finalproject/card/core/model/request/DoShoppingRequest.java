@@ -1,6 +1,7 @@
 package org.norma.finalproject.card.core.model.request;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,5 +19,8 @@ public class DoShoppingRequest {
     private String cardPassword;
     @Min(0)
     private BigDecimal shoppingAmount;
+
+    @JsonProperty(defaultValue = "TR00..")
+    private String ToIbanNumber;// this is a scenario
 
 }

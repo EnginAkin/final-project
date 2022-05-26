@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import org.norma.finalproject.common.exception.BusinessException;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
-import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
+import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
 import org.norma.finalproject.transfer.core.model.request.EmailTransferRequest;
 import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/transfers")
 public class TransferController {
 
-    private final TransferBase<CreateIbanTransferRequest> transferIban;
+    private final TransferBase<IbanTransferRequest> transferIban;
 
     private final TransferBase<EmailTransferRequest> emailTransfer;
 
-    public TransferController( @Qualifier("transfer-iban") TransferBase<CreateIbanTransferRequest> transferIban
+    public TransferController( @Qualifier("transfer-iban") TransferBase<IbanTransferRequest> transferIban
                               ,@Qualifier("transfer-email") TransferBase<EmailTransferRequest> emailTransfer) {
         this.transferIban = transferIban;
         this.emailTransfer = emailTransfer;
@@ -27,8 +27,8 @@ public class TransferController {
 
 
     @PostMapping("/iban")
-    public GeneralResponse transferByIban(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody CreateIbanTransferRequest createIbanTransferRequest) throws BusinessException {
-        return transferIban.transfer(userDetail.getUser().getId(), createIbanTransferRequest);
+    public GeneralResponse transferByIban(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody IbanTransferRequest ibanTransferRequest) throws BusinessException {
+        return transferIban.transfer(userDetail.getUser().getId(), ibanTransferRequest);
     }
 
     @PostMapping("/email")

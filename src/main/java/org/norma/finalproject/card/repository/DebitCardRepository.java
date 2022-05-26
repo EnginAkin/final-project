@@ -11,6 +11,7 @@ public interface DebitCardRepository extends JpaRepository<DebitCard,Long> {
     List<DebitCard> findAllByCheckingAccount_Customer_Id(long id);
     Optional<DebitCard> findDebitCardByCheckingAccount_Customer_IdAndId(long customerID, long debitCardId);
     Optional<DebitCard> findDebitCardByCheckingAccount_Customer_IdAndCardNumber(long customerID, String cardNumber);
+    Optional<DebitCard> findDebitCardByCardNumber(String cardNumber);
 
     boolean existsByCheckingAccount_Id(Long checkingAccountID);
 }

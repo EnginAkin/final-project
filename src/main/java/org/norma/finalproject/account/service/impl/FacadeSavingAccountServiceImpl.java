@@ -26,7 +26,7 @@ import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
-import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
+import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
 import org.norma.finalproject.transfer.entity.enums.SendType;
 import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
     private final SavingAccountMapper savingAccountMapper;
     private final UniqueNoCreator uniqueNoCreator;
 
-    private final TransferBase<CreateIbanTransferRequest> ibanTransferBase;
+    private final TransferBase<IbanTransferRequest> ibanTransferBase;
     private final AccountActivityService accountActivityService;
     private final AccountActivityMapper accountActivityMapper;
 
@@ -79,7 +79,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         savingAccount.setIbanNo(uniqueNoCreator.createIbanNo(savingAccount.getAccountNo(), savingAccount.getParentAccount().getBankCode()));
         SavingAccount savedAccount = savingAccountService.save(savingAccount);
         // Transfer to save acccount from checking account
-        CreateIbanTransferRequest transferRequest = new CreateIbanTransferRequest(parentCheckingAccount.get().getIbanNo(), savingAccount.getIbanNo(),createSavingAccountRequest.getOpeningBalance(),"Opening balance",SendType.OTHER);
+        IbanTransferRequest transferRequest = new IbanTransferRequest(parentCheckingAccount.get().getIbanNo(), savingAccount.getIbanNo(),createSavingAccountRequest.getOpeningBalance(),"Opening balance",SendType.OTHER);
         ibanTransferBase.transfer(customerID, transferRequest);
         return new GeneralDataResponse<>(savingAccountMapper.toCreateSavingAccountDto(savedAccount));
     }

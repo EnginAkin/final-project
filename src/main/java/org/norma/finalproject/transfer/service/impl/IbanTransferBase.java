@@ -12,8 +12,7 @@ import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.exchange.service.FacadeExchangeService;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
 import org.norma.finalproject.transfer.core.mapper.TransferMapper;
-import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
-import org.norma.finalproject.transfer.entity.Transfer;
+import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
 import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.norma.finalproject.transfer.service.TransferService;
 import org.springframework.stereotype.Component;
@@ -22,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Component("transfer-iban")
-public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
+public class IbanTransferBase extends TransferBase<IbanTransferRequest> {
 
     private final CustomerService customerService;
     private final BaseAccountService accountService;
@@ -43,7 +42,7 @@ public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
 
     @Override
     @Transactional
-    public GeneralResponse transfer(long customerId, CreateIbanTransferRequest transferRequest) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException {
+    public GeneralResponse transfer(long customerId, IbanTransferRequest transferRequest) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException {
         Optional<Customer> optionalCustomer = customerService.findCustomerById(customerId);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
@@ -73,6 +72,7 @@ public class IbanTransferBase extends TransferBase<CreateIbanTransferRequest> {
 
         //sendTransfer(optionalFromAccount.get(), optionalToAccount.get(), transferRequest.getAmount(), transferRequest.getDescription());
         sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), transferRequest.getAmount(), transferRequest.getDescription());
+
         return new GeneralSuccessfullResponse("Transfer successfull.");
     }
 

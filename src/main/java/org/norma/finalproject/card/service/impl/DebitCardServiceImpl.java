@@ -40,6 +40,11 @@ public class DebitCardServiceImpl implements DebitCardService {
     }
 
     @Override
+    public Optional<DebitCard> findDebitCardWithCardNumber(String cardNumber) {
+        return debitCardRepository.findDebitCardByCardNumber(cardNumber);
+    }
+
+    @Override
     public boolean existsDebitCardByCheckingAccountId(long checkingAccountID) {
         return debitCardRepository.existsByCheckingAccount_Id(checkingAccountID);
     }

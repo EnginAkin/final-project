@@ -33,5 +33,7 @@ public class DebitCard {
     private CheckingAccount checkingAccount;
 
 
-
+    public void refreshBalance() {
+        this.balance=checkingAccount.getBalance();
+    }
 }

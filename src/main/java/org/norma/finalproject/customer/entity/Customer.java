@@ -7,6 +7,7 @@ import org.norma.finalproject.common.entity.BaseExtendedModel;
 import org.norma.finalproject.common.entity.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -22,7 +23,6 @@ public class Customer extends User {
 
     @Column(insertable = false, updatable = false)
     private Long id;
-
     private String identityNumber;
     private String name;
     private String surname;

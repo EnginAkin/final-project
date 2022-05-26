@@ -1,7 +1,7 @@
 package org.norma.finalproject.transfer.core.mapper.impl;
 
 import org.norma.finalproject.transfer.core.mapper.TransferMapper;
-import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
+import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
 import org.norma.finalproject.transfer.entity.Transfer;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ import java.util.Date;
 public class TransferMapperImpl implements TransferMapper {
 
     @Override
-    public Transfer toEntity(CreateIbanTransferRequest transferRequest) {
+    public Transfer toEntity(IbanTransferRequest transferRequest) {
         Transfer transfer=new Transfer();
         transfer.setBalance(transferRequest.getAmount());
         transfer.setDescription(transferRequest.getDescription());

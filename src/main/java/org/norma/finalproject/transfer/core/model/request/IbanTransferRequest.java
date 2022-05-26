@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CreateIbanTransferRequest {
+public class IbanTransferRequest {
     private String fromIban;
     private String toIban;
     private BigDecimal amount;

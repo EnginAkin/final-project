@@ -13,7 +13,7 @@ import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.exchange.service.FacadeExchangeService;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
 import org.norma.finalproject.transfer.core.mapper.TransferMapper;
-import org.norma.finalproject.transfer.core.model.request.CreateIbanTransferRequest;
+import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
 import org.norma.finalproject.transfer.core.model.request.EmailTransferRequest;
 import org.norma.finalproject.transfer.entity.Transfer;
 import org.norma.finalproject.transfer.service.TransferService;
@@ -62,7 +62,7 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
         }
         sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), emailTransferRequest.getAmount(), emailTransferRequest.getDescription());
 
-        Transfer transfer = transferMapper.toEntity(new CreateIbanTransferRequest(optionalFromAccount.get().getIbanNo(),optionalToAccount.get().getIbanNo(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription(),emailTransferRequest.getSendType()));
+        Transfer transfer = transferMapper.toEntity(new IbanTransferRequest(optionalFromAccount.get().getIbanNo(),optionalToAccount.get().getIbanNo(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription(),emailTransferRequest.getSendType()));
         transferService.save(transfer);
         return null;
     }
