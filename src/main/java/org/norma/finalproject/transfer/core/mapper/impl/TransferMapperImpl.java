@@ -19,7 +19,7 @@ public class TransferMapperImpl implements TransferMapper {
 
         transfer.setToIban(transferRequest.getToIban());
         transfer.setProcessTime(new Date());
-        transfer.setSendType(transferRequest.getSendType());
+        transfer.setTransferType(transferRequest.getTransferType());
         return transfer;
     }
 }

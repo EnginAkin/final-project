@@ -30,6 +30,15 @@ public class SavingAccountServiceImpl implements SavingAccountService {
         return savingAccountRepository.findSavingAccountByParentAccount_Id(parentAccountID);
     }
 
+    @Override
+    public void deleteByParent(SavingAccount savingAccount) {
+        savingAccountRepository.delete(savingAccount);
+    }
+
+    @Override
+    public Optional<SavingAccount> findById(long accountID) {
+        return savingAccountRepository.findById(accountID);
+    }
 
 
     @Override

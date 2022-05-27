@@ -19,10 +19,7 @@ public class DebitCardServiceImpl implements DebitCardService {
         return debitCardRepository.save(card);
     }
 
-    @Override
-    public Optional<DebitCard> findById(long debitCardID) {
-        return debitCardRepository.findById(debitCardID);
-    }
+
 
     @Override
     public List<DebitCard> getAllCustomersDebitCards(long customerID) {
@@ -34,10 +31,7 @@ public class DebitCardServiceImpl implements DebitCardService {
         return debitCardRepository.findDebitCardByCheckingAccount_Customer_IdAndId(customerID,debitCardId);
     }
 
-    @Override
-    public Optional<DebitCard> findDebitCardWithCustomerIDAndCardNumber(long customerID, String cardNumber) {
-        return debitCardRepository.findDebitCardByCheckingAccount_Customer_IdAndCardNumber(customerID,cardNumber);
-    }
+
 
     @Override
     public Optional<DebitCard> findDebitCardWithCardNumber(String cardNumber) {
@@ -47,5 +41,15 @@ public class DebitCardServiceImpl implements DebitCardService {
     @Override
     public boolean existsDebitCardByCheckingAccountId(long checkingAccountID) {
         return debitCardRepository.existsByCheckingAccount_Id(checkingAccountID);
+    }
+
+    @Override
+    public Optional<DebitCard> findByParentCheckingAccount(long parentId){
+        return debitCardRepository.findDebitCardByCheckingAccount_Id(parentId);
+    }
+
+    @Override
+    public void delete(DebitCard debitCard) {
+        debitCardRepository.delete(debitCard);
     }
 }

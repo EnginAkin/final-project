@@ -22,7 +22,6 @@ import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -134,8 +133,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
     }
 
     @Override
-    @Transactional
-    public GeneralResponse deleteById(long customerID, long accountID) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException, SavingAccountNotFound {
+    public GeneralResponse deleteById(long customerID, long accountID) throws CustomerAccountNotFoundException, CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException, SavingAccountNotFound, AccountBalanceGreatherThenZeroException {
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
@@ -152,12 +150,16 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
             throw new DeleteAccountHasBalanceException("Balance greater than 0  in account.Cannot be deleted.");
         }
         // TODO bir cehcking hesap silindiğinde ona bağlı kart da silinir.
-        // TODO hesap silinmeden önce hesaba bağlı bir birikim hesabı var mı varsa içinde bakiye var mı
 
-        facadeSavingAccountService.deleteByCheckingParentId(checkingAccount.get().getId());
+        try{
+            facadeSavingAccountService.deleteSavingAccountByCheckingId(checkingAccount.get().getId());
+            checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get());
+            return new GeneralSuccessfullResponse("Deleted successfully Checking account.");
+        }catch (AccountBalanceGreatherThenZeroException balanceException){
+            log.info("Checking account has money in Saving account so you can't delete it.");
+            throw new AccountBalanceGreatherThenZeroException("Deposit account has money in time account so you can't delete it.");
+        }
 
-        checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get());
-        return new GeneralSuccessfullResponse("Deleted successfully Checking account.");
     }
 
     public Optional<CheckingAccount> findCheckingAccountByAccountName(List<CheckingAccount> checkingAccountList, String accountName, CurrencyType currencyType) {

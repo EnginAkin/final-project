@@ -2,6 +2,7 @@ package org.norma.finalproject.account.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.norma.finalproject.account.core.exception.AccountBalanceGreatherThenZeroException;
 import org.norma.finalproject.account.core.exception.CheckingAccountNotFoundException;
 import org.norma.finalproject.account.core.exception.SavingAccountNotFound;
 import org.norma.finalproject.account.core.exception.SavingAccountOperationException;
@@ -9,7 +10,7 @@ import org.norma.finalproject.account.core.mapper.AccountActivityMapper;
 import org.norma.finalproject.account.core.mapper.SavingAccountMapper;
 import org.norma.finalproject.account.core.model.request.CreateSavingAccountRequest;
 import org.norma.finalproject.account.core.model.response.AccountActivityResponse;
-import org.norma.finalproject.account.core.model.response.CreateSavingAccountResponse;
+import org.norma.finalproject.account.core.model.response.SavingAccountDto;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.SavingAccount;
@@ -18,8 +19,10 @@ import org.norma.finalproject.account.service.AccountActivityService;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.account.service.FacadeSavingAccountService;
 import org.norma.finalproject.account.service.SavingAccountService;
+import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.common.response.GeneralDataResponse;
 import org.norma.finalproject.common.response.GeneralResponse;
+import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
 import org.norma.finalproject.customer.core.exception.ActivitiesNotFoundException;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
@@ -27,11 +30,12 @@ import org.norma.finalproject.customer.service.CustomerService;
 import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
 import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
-import org.norma.finalproject.transfer.entity.enums.SendType;
+import org.norma.finalproject.transfer.entity.enums.TransferType;
 import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,14 +50,13 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
     private final CustomerService customerService;
     private final SavingAccountMapper savingAccountMapper;
     private final UniqueNoCreator uniqueNoCreator;
-
     private final TransferBase<IbanTransferRequest> ibanTransferBase;
     private final AccountActivityService accountActivityService;
     private final AccountActivityMapper accountActivityMapper;
 
     @Override
     @Transactional
-    public GeneralResponse create(Long customerID, CreateSavingAccountRequest createSavingAccountRequest) throws CustomerNotFoundException, CheckingAccountNotFoundException, SavingAccountOperationException, AmountNotValidException, TransferOperationException {
+    public GeneralResponse create(Long customerID, CreateSavingAccountRequest createSavingAccountRequest) throws CustomerNotFoundException, CheckingAccountNotFoundException, SavingAccountOperationException, AmountNotValidException, TransferOperationException, DebitCardNotFoundException {
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
@@ -79,9 +82,9 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         savingAccount.setIbanNo(uniqueNoCreator.createIbanNo(savingAccount.getAccountNo(), savingAccount.getParentAccount().getBankCode()));
         SavingAccount savedAccount = savingAccountService.save(savingAccount);
         // Transfer to save acccount from checking account
-        IbanTransferRequest transferRequest = new IbanTransferRequest(parentCheckingAccount.get().getIbanNo(), savingAccount.getIbanNo(),createSavingAccountRequest.getOpeningBalance(),"Opening balance",SendType.OTHER);
+        IbanTransferRequest transferRequest = new IbanTransferRequest(parentCheckingAccount.get().getIbanNo(), savingAccount.getIbanNo(),createSavingAccountRequest.getOpeningBalance(),"Opening balance", TransferType.OTHER);
         ibanTransferBase.transfer(customerID, transferRequest);
-        return new GeneralDataResponse<>(savingAccountMapper.toCreateSavingAccountDto(savedAccount));
+        return new GeneralDataResponse<>(savingAccountMapper.toDto(savedAccount));
     }
 
     @Override
@@ -91,7 +94,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
             throw new CustomerNotFoundException();
         }
         List<SavingAccount> savingAccountList = savingAccountService.getAllAccountsByCustomerId(customerID);
-        List<CreateSavingAccountResponse> response = savingAccountList.stream().map(savingAccountMapper::toCreateSavingAccountDto).collect(Collectors.toList());
+        List<SavingAccountDto> response = savingAccountList.stream().map(savingAccountMapper::toDto).collect(Collectors.toList());
         return new GeneralDataResponse<>(response);
     }
 
@@ -115,19 +118,50 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
     }
 
     @Override
-    public void deleteByCheckingParentId(Long checkingId) throws SavingAccountNotFound {
-        Optional<SavingAccount> optionalSavingAccount = savingAccountService.getByParentId(checkingId);
+    public void deleteSavingAccountByCheckingId(Long checkingID) throws SavingAccountNotFound, AccountBalanceGreatherThenZeroException {
+        Optional<SavingAccount> optionalSavingAccount = savingAccountService.getByParentId(checkingID);
         if(optionalSavingAccount.isEmpty()){
             throw new SavingAccountNotFound();
         }
+        if(optionalSavingAccount.get().getBalance().compareTo(BigDecimal.ZERO)>0){
+            throw new AccountBalanceGreatherThenZeroException("Saving account balance greather than zero");
+        }
+
+        savingAccountService.deleteByParent(optionalSavingAccount.get());
+
+    }
+
+    @Override
+    public GeneralResponse deleteById(Long customerID, long accountID) throws SavingAccountNotFound, AccountBalanceGreatherThenZeroException {
+        Optional<SavingAccount> optionalSavingAccount = savingAccountService.findById(accountID);
+        if(optionalSavingAccount.isEmpty()){
+            throw new SavingAccountNotFound();
+        }
+        if(optionalSavingAccount.get().getBalance().compareTo(BigDecimal.ZERO)>0){
+            throw new AccountBalanceGreatherThenZeroException("Saving account balance greather than zero");
+        }
+        savingAccountService.deleteByParent(optionalSavingAccount.get());
+        return new GeneralSuccessfullResponse("Successfully deleted");
+    }
+
+    @Override
+    public GeneralResponse getAccountByAccountID(Long customerID, long accountID) throws CustomerNotFoundException, SavingAccountNotFound {
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
+        if (optionalCustomer.isEmpty()) {
+            throw new CustomerNotFoundException();
+        }
+
+        Optional<SavingAccount> optionalSavingAccount = savingAccountService.findById(accountID);
+        if(optionalSavingAccount.isEmpty()){
+            throw new SavingAccountNotFound();
+        }
+        SavingAccountDto dto = savingAccountMapper.toDto(optionalSavingAccount.get());
+        return new GeneralDataResponse<>(dto);
+
     }
 
     private boolean checkOwnersAccountIsCustomer(Customer customer, long accountId) {
         return customer.getSavingAccounts().stream().anyMatch(savingAccount -> savingAccount.getId().equals(accountId));
     }
-
-    // 1. vadesiz. hesap 80 tl TR3300006103170781464664297 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM0OTEyNDcsImlhdCI6MTY1MzQ2MTI0N30.O3NzpW6BIrCwnhnJgJLPbRAuFKASQek5uhJx6qvKSNH5WuznVPGDppm_V1RO5f0_awayfh5azyQTFY710U82FA
-    //1. hesap vadeli birikimli hesap 20 tl TR3300006108707433911638621
-    // 2. hesap 100 tl TR3300006104557638514004892  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMiIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM0OTMyMDksImlhdCI6MTY1MzQ2MzIwOX0.6Jn3XR3k8Rt6br_0cQi111oJR5WAvOcs-5kmlZyaDi9j_LMlrPNgCCRShEwAC3u_cgUeO2jJAaeOVMBb1oCggA
 
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.account.entity.base.AccountActivity;
 import org.norma.finalproject.account.service.BaseAccountService;
+import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.common.entity.enums.ActionStatus;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
@@ -21,7 +22,7 @@ public abstract class TransferBase<T>  {
     private final BaseAccountService accountService;
     private final FacadeExchangeService exchangeService;
 
-    public abstract GeneralResponse transfer(long customerId, T request) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException;
+    public abstract GeneralResponse transfer(long customerId, T request) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException, DebitCardNotFoundException;
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void sendTransferWithIban(String fromAccountIban, String toAccountIban, BigDecimal amount, String description) throws AmountNotValidException {

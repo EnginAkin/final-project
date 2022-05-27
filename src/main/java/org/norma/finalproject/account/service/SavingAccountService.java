@@ -8,11 +8,13 @@ import java.util.Optional;
 public interface SavingAccountService {
 
     SavingAccount save(SavingAccount savingAccount);
-
-
     boolean isUsedParentAccountForSavingAccount(long customerId, long parentCheckingAccountId);
 
     List<SavingAccount> getAllAccountsByCustomerId(Long customerId);
     Optional<SavingAccount> getByParentId(Long parentAccountID);
+
+    void deleteByParent(SavingAccount savingAccount);
+
+    Optional<SavingAccount> findById(long accountID);
 
 }

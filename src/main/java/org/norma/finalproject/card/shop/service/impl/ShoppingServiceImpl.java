@@ -14,7 +14,7 @@ import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
 import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
-import org.norma.finalproject.transfer.entity.enums.SendType;
+import org.norma.finalproject.transfer.entity.enums.TransferType;
 import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -50,7 +50,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         ibanTransferRequest.setFromIban(optionalDebitCard.get().getCheckingAccount().getIbanNo());
         ibanTransferRequest.setDescription("Shopping scenario");
         ibanTransferRequest.setAmount(doShoppingRequest.getShoppingAmount());
-        ibanTransferRequest.setSendType(SendType.SHOPPING);
+        ibanTransferRequest.setTransferType(TransferType.SHOPPING);
         long customerID=optionalDebitCard.get().getCheckingAccount().getCustomer().getId();
 
         ibanTransferService.transfer(customerID,ibanTransferRequest);

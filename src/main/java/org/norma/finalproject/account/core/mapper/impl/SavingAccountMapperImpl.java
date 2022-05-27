@@ -2,7 +2,7 @@ package org.norma.finalproject.account.core.mapper.impl;
 
 import org.norma.finalproject.account.core.mapper.SavingAccountMapper;
 import org.norma.finalproject.account.core.model.request.CreateSavingAccountRequest;
-import org.norma.finalproject.account.core.model.response.CreateSavingAccountResponse;
+import org.norma.finalproject.account.core.model.response.SavingAccountDto;
 import org.norma.finalproject.account.entity.SavingAccount;
 import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.customer.core.utilities.Utils;
@@ -28,15 +28,19 @@ public class SavingAccountMapperImpl implements SavingAccountMapper {
     }
 
     @Override
-    public CreateSavingAccountResponse toCreateSavingAccountDto(SavingAccount savingAccount) {
-        CreateSavingAccountResponse response=new CreateSavingAccountResponse();
+    public SavingAccountDto toDto(SavingAccount savingAccount) {
+        SavingAccountDto response=new SavingAccountDto();
         response.setIban(savingAccount.getIbanNo());
         response.setId(savingAccount.getId());
         response.setAccountNo(savingAccount.getAccountNo());
-        response.setAccountName(savingAccount.getAccountName());
         response.setCurrencyType(savingAccount.getCurrencyType());
         response.setBalance(savingAccount.getBalance());
+        response.setTargetAmount(savingAccount.getTargetAmount());
+        response.setSuccessRate(savingAccount.getSuccessRate());
+        response.setPurposeCumulative(savingAccount.getPurposeCumulative());
         response.setParentAccountNumber(savingAccount.getParentAccount().getAccountNo());
         return response;
     }
+
+
 }

@@ -62,7 +62,7 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
         }
         sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), emailTransferRequest.getAmount(), emailTransferRequest.getDescription());
 
-        Transfer transfer = transferMapper.toEntity(new IbanTransferRequest(optionalFromAccount.get().getIbanNo(),optionalToAccount.get().getIbanNo(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription(),emailTransferRequest.getSendType()));
+        Transfer transfer = transferMapper.toEntity(new IbanTransferRequest(optionalFromAccount.get().getIbanNo(),optionalToAccount.get().getIbanNo(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription(),emailTransferRequest.getTransferType()));
         transferService.save(transfer);
         return null;
     }

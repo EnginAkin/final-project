@@ -28,14 +28,24 @@ public class SavingAccountController {
 
     }
 
+    @GetMapping("/{accountID}")
+    public GeneralResponse getSavingAccountByID(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable long accountID) throws BusinessException {
+        return facadeSavingAccountService.getAccountByAccountID(userDetail.getUser().getId(),accountID);
+    }
+
     @GetMapping
-    public GeneralResponse getAllCheckingAccounts(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws BusinessException {
+    public GeneralResponse getCustomersAllSavingAccounts(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws BusinessException {
         return facadeSavingAccountService.getAccounts(userDetail.getUser().getId());
     }
 
     @GetMapping("{accountID}/activities")
     public GeneralResponse getAccountActivity(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable long accountID) throws BusinessException {
         return facadeSavingAccountService.getAccountActivities(userDetail.getUser().getId(),accountID);
+    }
+
+    @DeleteMapping("/{accountID}")
+    public GeneralResponse deleteSavingAccount(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable long accountID) throws BusinessException {
+        return facadeSavingAccountService.deleteById(userDetail.getUser().getId(),accountID);
     }
 
 }

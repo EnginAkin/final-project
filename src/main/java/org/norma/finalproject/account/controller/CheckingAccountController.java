@@ -57,7 +57,7 @@ public class CheckingAccountController {
 
     @RolesAllowed(CustomerConstant.ROLE_ADMIN)
     @Operation(tags = "Deposit Controller", description = "Blocked a deposit account by ADMIN.")
-    @PutMapping("/{accountId}/block")
+    @PatchMapping("/{accountId}/block")
     public GeneralResponse blockedAccount(@PathVariable long accountId) throws BusinessException {
         return facadeCheckinAccountService.blockAccount(accountId);
 

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.norma.finalproject.transfer.entity.enums.SendType;
+import org.norma.finalproject.transfer.entity.enums.TransferType;
 
 import java.math.BigDecimal;
 
@@ -17,5 +17,5 @@ public class IbanTransferRequest {
     private String toIban;
     private BigDecimal amount;
     private String description;
-    private SendType sendType;
+    private TransferType transferType;
 }

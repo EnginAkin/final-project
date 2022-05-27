@@ -1,5 +1,5 @@
 package org.norma.finalproject.transfer.entity.enums;
 
-public enum SendType {
+public enum TransferType {
     HOUSING,WORKPLACE,SHOPPING,RENT,OTHER
 }

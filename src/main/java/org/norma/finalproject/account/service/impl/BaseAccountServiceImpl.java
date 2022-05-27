@@ -2,9 +2,15 @@ package org.norma.finalproject.account.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.base.Account;
+import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.account.repository.AccountRepository;
 import org.norma.finalproject.account.service.BaseAccountService;
+import org.norma.finalproject.account.service.CheckingAccountService;
+import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
+import org.norma.finalproject.card.entity.DebitCard;
+import org.norma.finalproject.card.service.DebitCardService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BaseAccountServiceImpl implements BaseAccountService {
     private final AccountRepository repository;
+    private final DebitCardService debitCardService;
 
 
     @Override
@@ -33,7 +40,7 @@ public class BaseAccountServiceImpl implements BaseAccountService {
 
     @Override
     public Optional<Account> findAccountByIbanNumber(String iban) {
-        if(StringUtils.isEmpty(iban)){
+        if (StringUtils.isEmpty(iban)) {
             throw new IllegalArgumentException("Iban cannot bu null");
         }
         return repository.findByIbanNo(iban);
@@ -44,6 +51,18 @@ public class BaseAccountServiceImpl implements BaseAccountService {
         return repository.findById(id);
     }
 
+    @Override
+    public void refresh(Account account)  {
+        if (account.getAccountType().equals(AccountType.CHECKING)) {
+
+            Optional<DebitCard> optionalDebitCard = debitCardService.findByParentCheckingAccount(account.getId());
+            if(optionalDebitCard.isPresent()){
+                optionalDebitCard.get().setBalance(account.getBalance());
+                debitCardService.save(optionalDebitCard.get());
+            }
+
+        }
+    }
 
 
 }

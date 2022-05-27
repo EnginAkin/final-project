@@ -1,6 +1,7 @@
 package org.norma.finalproject.account.service;
 
 import org.norma.finalproject.account.entity.base.Account;
+import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 
 import java.util.Optional;
 
@@ -11,4 +12,5 @@ public interface BaseAccountService {
     Optional<Account> findAccountByIbanNumber(String iban);
     Optional<Account> findById(long id);
 
+    void refresh(Account account) ;
 }

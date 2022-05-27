@@ -42,16 +42,14 @@ public class Account {
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "account")
     private List<AccountActivity> activities=new ArrayList<>();
 
-    public void addActivity(AccountActivity accountActivity){
-        activities.add(accountActivity);
-    }
-
-
-
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdAt;
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date updatedAt;
     @Column(length = 50)
     private String createdBy;
+
+    public void addActivity(AccountActivity accountActivity){
+        activities.add(accountActivity);
+    }
 }

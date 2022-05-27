@@ -6,6 +6,7 @@ import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.card.entity.enums.CardStatus;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -17,10 +18,12 @@ public class DebitCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotNull
     private String cardNumber;
+    @NotNull
     private String password;
     private BigDecimal balance=BigDecimal.ZERO;
+    @NotNull
     private String cvv;
 
     @Enumerated(EnumType.STRING)

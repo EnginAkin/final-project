@@ -3,6 +3,7 @@ package org.norma.finalproject.transfer.service.impl;
 import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.account.service.BaseAccountService;
+import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.common.response.GeneralResponse;
 import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
@@ -72,7 +73,7 @@ public class IbanTransferBase extends TransferBase<IbanTransferRequest> {
 
         //sendTransfer(optionalFromAccount.get(), optionalToAccount.get(), transferRequest.getAmount(), transferRequest.getDescription());
         sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), transferRequest.getAmount(), transferRequest.getDescription());
-
+        accountService.refresh(optionalFromAccount.get());// hesaba bağlı kart var ise içindeki tutar refresh edilmeli.
         return new GeneralSuccessfullResponse("Transfer successfull.");
     }
 

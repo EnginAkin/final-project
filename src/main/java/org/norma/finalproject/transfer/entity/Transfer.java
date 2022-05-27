@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.common.entity.BaseModel;
-import org.norma.finalproject.transfer.entity.enums.SendType;
+import org.norma.finalproject.transfer.entity.enums.TransferType;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -24,7 +24,7 @@ public class Transfer extends BaseModel {
     private Date processTime;
 
     @Enumerated(value = EnumType.STRING)
-    private SendType sendType;
+    private TransferType transferType;
     @Enumerated(value = EnumType.STRING)
     private CurrencyType currencyType;
 
