@@ -3,6 +3,8 @@ package org.norma.finalproject.customer.core.utilities;
 public final class CustomerConstant {
 
 
+    public static final String CUSTOMER_DELETED_SUCCESSFULL = "Customer deleted Successfull.";
+
     private CustomerConstant() {
         throw new UnsupportedOperationException();
     }

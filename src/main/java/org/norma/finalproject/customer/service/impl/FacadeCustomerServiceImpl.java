@@ -79,12 +79,12 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         if (customer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        boolean checkHasMoneyInDepositAccounts = checkHasMoneyInDepositAccounts(customer.get());
+        boolean checkHasMoneyInDepositAccounts = this.checkHasMoneyInDepositAccounts(customer.get());
         if (checkHasMoneyInDepositAccounts) {
             throw new CustomerDeleteException(CustomerConstant.DELETE_CUSTOMER_OPERATION_HAS_BALANCE_EXCEPTION);
         }
         customerService.delete(customer.get());
-        return new GeneralSuccessfullResponse("Customer deleted.");
+        return new GeneralSuccessfullResponse(CustomerConstant.CUSTOMER_DELETED_SUCCESSFULL);
     }
 
     @Override
