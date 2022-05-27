@@ -1,4 +1,4 @@
-package org.norma.finalproject.customer.service.impl;
+package org.norma.finalproject.customer.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,7 @@ import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.entity.Role;
 import org.norma.finalproject.customer.repository.CustomerRepository;
 import org.norma.finalproject.customer.service.RoleService;
+import org.norma.finalproject.customer.service.impl.CustomerServiceImpl;
 
 import java.util.List;
 import java.util.Optional;

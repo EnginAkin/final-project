@@ -1,4 +1,4 @@
-package org.norma.finalproject.customer.service.impl;
+package org.norma.finalproject.customer.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.norma.finalproject.customer.entity.Role;
 import org.norma.finalproject.customer.repository.RoleRepository;
+import org.norma.finalproject.customer.service.impl.RoleServiceImpl;
 
 import java.util.Optional;
 

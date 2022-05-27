@@ -15,13 +15,14 @@ import org.norma.finalproject.common.security.token.entity.JWTToken;
 import org.norma.finalproject.common.security.token.core.exception.TokenNotFoundException;
 import org.norma.finalproject.common.security.token.service.TokenService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
 
 @Slf4j
-@Service
+@Component
 @Setter
 @Getter
 @RequiredArgsConstructor

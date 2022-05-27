@@ -1,4 +1,4 @@
-package org.norma.finalproject.customer.service.impl;
+package org.norma.finalproject.customer.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,6 +23,7 @@ import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.entity.enums.AddressType;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.norma.finalproject.customer.service.IdentityVerifier;
+import org.norma.finalproject.customer.service.impl.FacadeCustomerServiceImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
