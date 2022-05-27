@@ -8,7 +8,7 @@ import org.norma.finalproject.account.entity.CheckingAccount;
 public interface CheckingAccountMapper {
 
 
-    CheckingAccount ToEntity(CreateCheckingAccountRequest createCheckingAccountRequest);
+    CheckingAccount toEntity(CreateCheckingAccountRequest createCheckingAccountRequest);
 
     CreateDepositAccountResponse toCreateCheckingAccountDto(CheckingAccount checkingAccount);
     CheckingAccountResponse toAccountResponses(CheckingAccount checkingAccount);

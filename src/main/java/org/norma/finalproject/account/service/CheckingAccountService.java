@@ -11,7 +11,7 @@ public interface CheckingAccountService {
     Optional<CheckingAccount> findById(long accountId);
     void deleteCustomerCheckingAccountById(CheckingAccount checkingAccount);
     List<CheckingAccount> getUnBlockedAccounts(long customerId);
-    Optional<CheckingAccount> getAccountByAccountNumber(String parentAccountNumber);
+    Optional<CheckingAccount> findAccountByAccountNumber(String parentAccountNumber);
 
     Optional<CheckingAccount> findCheckingAccountByEmail(String toEmail);
 }

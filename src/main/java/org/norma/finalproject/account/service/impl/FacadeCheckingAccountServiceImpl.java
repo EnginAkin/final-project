@@ -8,7 +8,7 @@ import org.norma.finalproject.account.core.mapper.CheckingAccountMapper;
 import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
 import org.norma.finalproject.account.core.model.response.AccountActivityResponse;
 import org.norma.finalproject.account.core.model.response.CheckingAccountResponse;
-import org.norma.finalproject.account.core.utils.UniqueNoCreator;
+import org.norma.finalproject.account.core.utils.UniqueNoService;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.base.AccountActivity;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
@@ -36,29 +36,27 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
     private final CustomerService customerService;
     private final CheckingAccountService checkingAccountService;
     private final FacadeSavingAccountService facadeSavingAccountService;
-    private final UniqueNoCreator uniqueNoCreator;
+    private final UniqueNoService uniqueNoService;
     private final CheckingAccountMapper checkingAccountMapper;
     private final AccountActivityMapper accountActivityMapper;
 
 
     @Override
-    public GeneralResponse create(long customerID, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
+    public GeneralDataResponse create(long customerID, CreateCheckingAccountRequest createCheckingAccountRequest) throws CustomerNotFoundException, AccountNameAlreadyHaveException {
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        String accountName = createCheckingAccountRequest.getBranchName() + "-" + createCheckingAccountRequest.getBranchCode();
-
-        Optional<CheckingAccount> optionalDepositAccount = getCheckingAccountByAccountNumber(optionalCustomer.get().getCheckingAccounts(), accountName,createCheckingAccountRequest.getCurrencyType());
-        if (optionalDepositAccount.isPresent() && optionalDepositAccount.get().getBankCode().equals(createCheckingAccountRequest.getBankCode())) {
+        String accountName = createCheckingAccountRequest.getBranchName()+"-" + createCheckingAccountRequest.getBranchCode()+"/"+createCheckingAccountRequest.getBankCode();
+        Optional<CheckingAccount> optionalDepositAccount = findCheckingAccountByAccountName(optionalCustomer.get().getCheckingAccounts(), accountName,createCheckingAccountRequest.getCurrencyType());
+        if (optionalDepositAccount.isPresent()) {
             throw new AccountNameAlreadyHaveException("You have a already bank account in this bank same currency and same branch .");
         }
-        CheckingAccount checkingAccount = checkingAccountMapper.ToEntity(createCheckingAccountRequest);
+        CheckingAccount checkingAccount = checkingAccountMapper.toEntity(createCheckingAccountRequest);
 
-
-        String accountNo = uniqueNoCreator.creatAccountNo();
+        String accountNo = uniqueNoService.creatAccountNo();
         checkingAccount.setAccountNo(accountNo);
-        String ibanNo = uniqueNoCreator.createIbanNo(accountNo, createCheckingAccountRequest.getBankCode());
+        String ibanNo = uniqueNoService.createIbanNo(accountNo, createCheckingAccountRequest.getBankCode());
         checkingAccount.setIbanNo(ibanNo);
         checkingAccount.setBalance(BigDecimal.ZERO);
         checkingAccount.setCustomer(optionalCustomer.get());
@@ -80,7 +78,10 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
 
     @Override
     public GeneralResponse getCheckingAccounts(long customerID) throws CustomerNotFoundException {
-        checkCustomerFound(customerID);
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
+        if (optionalCustomer.isEmpty()) {
+            throw new CustomerNotFoundException();
+        }
         List<CheckingAccount> checkingAccounts = checkingAccountService.getUnBlockedAccounts(customerID);
         List<CheckingAccountResponse> accountResponses = checkingAccounts.stream().map(checkingAccountMapper::toAccountResponses).toList();
         return new GeneralDataResponse<>(accountResponses);
@@ -113,7 +114,10 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
 
     @Override
     public GeneralResponse getCheckingAccountById(Long customerID, long accountID) throws CustomerNotFoundException, CustomerAccountNotFoundException, CheckingAccountNotFoundException {
-        checkCustomerFound(customerID);
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
+        if (optionalCustomer.isEmpty()) {
+            throw new CustomerNotFoundException();
+        }
 
         Optional<CheckingAccount> checkingAccount = checkingAccountService.findById(accountID);
         if (checkingAccount.isEmpty()) {
@@ -160,19 +164,13 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         return new GeneralSuccessfullResponse("Deleted successfully Checking account.");
     }
 
-    public Optional<CheckingAccount> getCheckingAccountByAccountNumber(List<CheckingAccount> checkingAccountList, String accountName, CurrencyType currencyType) {
+    public Optional<CheckingAccount> findCheckingAccountByAccountName(List<CheckingAccount> checkingAccountList, String accountName, CurrencyType currencyType) {
         if (checkingAccountList == null) {
             return Optional.empty();
         }
         return checkingAccountList.stream().filter(checkingAccount -> checkingAccount.getAccountName().equals(accountName) && checkingAccount.getCurrencyType().equals(currencyType)).findFirst();
+    }
 
-    }
-    private void checkCustomerFound(long customerID) throws CustomerNotFoundException {
-        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
-        if (optionalCustomer.isEmpty()) {
-            throw new CustomerNotFoundException();
-        }
-    }
     private boolean checkAccountOwnersIsCustomer(List<CheckingAccount> checkingAccounts, long accountID) {
         return checkingAccounts.stream().anyMatch(checkingAccount -> checkingAccount.getId().equals(accountID));
     }

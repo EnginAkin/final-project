@@ -37,7 +37,7 @@ public class JWTHelper {
 
 
 
-    public String generate(String identity, List<String> roles) {
+    public  String generate(String identity, List<String> roles) {
         if (!StringUtils.hasLength(identity)) {
             throw new IllegalArgumentException("Identifier no cannot be null");
         }

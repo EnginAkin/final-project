@@ -58,7 +58,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        Optional<CheckingAccount> parentCheckingAccount = checkingAccountService.getAccountByAccountNumber(createSavingAccountRequest.getParentAccountNumber());
+        Optional<CheckingAccount> parentCheckingAccount = checkingAccountService.findAccountByAccountNumber(createSavingAccountRequest.getParentAccountNumber());
         if (parentCheckingAccount.isEmpty()) {
             throw new CheckingAccountNotFoundException("Checking account not fount by : " + createSavingAccountRequest.getParentAccountNumber());
         }

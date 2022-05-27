@@ -4,6 +4,7 @@ import lombok.*;
 import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.customer.entity.Customer;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Setter
@@ -14,8 +15,11 @@ public class CheckingAccount extends Account {
 
     @Column(insertable = false,updatable = false)
     private Long id;
+    @NotNull
     private String bankCode;
+    @NotNull
     private String branchCode;
+    @NotNull
     private String branchName;
     private boolean blocked=false;
 

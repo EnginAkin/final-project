@@ -56,8 +56,9 @@ public class CustomerController {
 
     @Operation(tags = "Customer Controller", description = "Delete customer By Customer")
     @GetMapping(path = "/getall")
-    public GeneralResponse getall() throws CustomerNotFoundException, CustomerDeleteException {
-        return facadeCustomerService.getall();
+    public String getall() throws CustomerNotFoundException, CustomerDeleteException {
+        //return facadeCustomerService.getall();
+        return "ok.";
 
     }
 

@@ -40,7 +40,7 @@ public class CheckingAccountServiceImpl implements CheckingAccountService {
     }
 
     @Override
-    public Optional<CheckingAccount> getAccountByAccountNumber(String parentAccountNumber) {
+    public Optional<CheckingAccount> findAccountByAccountNumber(String parentAccountNumber) {
         return checkingAccountRepository.findByAccountNo(parentAccountNumber);
     }
 

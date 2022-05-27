@@ -7,6 +7,8 @@ import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.customer.entity.Customer;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,8 +25,11 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String ibanNo;
+    @NotNull
     private String accountNo;
+    @NotNull
     private String accountName;
     private BigDecimal balance=BigDecimal.ZERO;
     private BigDecimal lockedBalance=BigDecimal.ZERO;

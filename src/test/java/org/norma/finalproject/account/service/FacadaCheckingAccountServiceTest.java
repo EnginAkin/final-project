@@ -1,0 +1,155 @@
+package org.norma.finalproject.account.service;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.norma.finalproject.account.core.exception.AccountNameAlreadyHaveException;
+import org.norma.finalproject.account.core.mapper.AccountActivityMapper;
+import org.norma.finalproject.account.core.mapper.CheckingAccountMapper;
+import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
+import org.norma.finalproject.account.core.model.response.CreateDepositAccountResponse;
+import org.norma.finalproject.account.core.utils.UniqueNoCreator;
+import org.norma.finalproject.account.core.utils.UniqueNoService;
+import org.norma.finalproject.account.entity.CheckingAccount;
+import org.norma.finalproject.account.entity.enums.CurrencyType;
+import org.norma.finalproject.account.service.impl.FacadeCheckingAccountServiceImpl;
+import org.norma.finalproject.common.response.GeneralDataResponse;
+import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
+import org.norma.finalproject.customer.entity.Customer;
+import org.norma.finalproject.customer.service.CustomerService;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+@ExtendWith(MockitoExtension.class)
+public class FacadaCheckingAccountServiceTest {
+
+    @Mock
+    private CustomerService customerService;
+    @Mock
+    private CheckingAccountService checkingAccountService;
+    @Mock
+    private FacadeSavingAccountService facadeSavingAccountService;
+    @Mock
+    private UniqueNoService uniqueNoService;
+    @Mock
+    private CheckingAccountMapper checkingAccountMapper;
+    @Mock
+    private AccountActivityMapper accountActivityMapper;
+
+    @Spy
+    @InjectMocks
+    private FacadeCheckingAccountServiceImpl underTest;
+
+    @Test
+    public void givenCustomerIdAndCreateCheckingAccountRequest_whenCreate_thenReturnGeneralDataResponse() throws CustomerNotFoundException, AccountNameAlreadyHaveException {
+        // given
+        CreateCheckingAccountRequest createCheckingAccountRequest = createCheckingAccountRequest();
+
+        Long customerID = 1L;
+        Customer customer = createCustomer();
+        customer.setId(customerID);
+        CheckingAccount checkingAccount = createCheckingAccount();
+
+        customer.addCheckingAccount(checkingAccount);
+
+        CreateDepositAccountResponse createDepositAccountResponse = createDepositAccountResponse(checkingAccount);
+
+
+        String accountName = createCheckingAccountRequest.getBranchName() + "-" + createCheckingAccountRequest.getBranchCode() + "/" + createCheckingAccountRequest.getBankCode();
+        BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.of(customer));
+        BDDMockito.given(underTest.findCheckingAccountByAccountName(customer.getCheckingAccounts(), accountName, createCheckingAccountRequest.getCurrencyType())).willReturn(Optional.empty());
+        BDDMockito.given(checkingAccountMapper.toEntity(createCheckingAccountRequest)).willReturn(checkingAccount);
+        BDDMockito.given(uniqueNoService.creatAccountNo()).willReturn("1111111111111111");
+        BDDMockito.given(uniqueNoService.createIbanNo("1111111111111111", createCheckingAccountRequest.getBankCode())).willReturn("TR00000000");
+        BDDMockito.given(checkingAccountService.save(checkingAccount)).willReturn(checkingAccount);
+        BDDMockito.given(checkingAccountMapper.toCreateCheckingAccountDto(checkingAccount)).willReturn(createDepositAccountResponse);
+
+        // when
+        GeneralDataResponse dataResponse = underTest.create(customerID, createCheckingAccountRequest);
+
+        // then
+
+        Assertions.assertThat(dataResponse.getIsSuccessful()).isTrue();
+        Assertions.assertThat(dataResponse.getData()).isEqualTo(createDepositAccountResponse);
+
+
+    }
+
+
+    @Test
+    public void givenInvalidCustomerId_whenCreate_thenThrowsCustomerNotFoundException() {
+        // given
+        Long customerID = 1L;
+        BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.empty());
+        // when
+
+
+        // then
+
+
+    }
+
+
+
+    private CreateDepositAccountResponse createDepositAccountResponse(CheckingAccount checkingAccount) {
+        CreateDepositAccountResponse createDepositAccountResponse = new CreateDepositAccountResponse();
+        createDepositAccountResponse.setAccountNo(checkingAccount.getAccountNo());
+        createDepositAccountResponse.setAccountName(checkingAccount.getAccountName());
+        createDepositAccountResponse.setIbanNo(checkingAccount.getIbanNo());
+        return createDepositAccountResponse;
+    }
+
+    private Customer createCustomer() {
+        Customer customer = new Customer();
+        customer.setName("Engin");
+        customer.setSurname("akin");
+        customer.setTelephone("11111");
+        customer.setPassword("123545");
+        customer.setEmail("email");
+        customer.setBirthDay(new Date());
+        customer.setIdentityNumber("111111");
+        customer.setIncome(BigDecimal.ONE);
+        return customer;
+    }
+
+    private CheckingAccount createCheckingAccount() {
+        CheckingAccount checkingAccount = new CheckingAccount();
+        checkingAccount.setBranchCode("00");
+        checkingAccount.setCurrencyType(CurrencyType.TRY);
+        checkingAccount.setBlocked(false);
+        checkingAccount.setBankCode("000000");
+        checkingAccount.setAccountName("bulunamadı.");
+        checkingAccount.setBranchName("FATIH");
+        return checkingAccount;
+    }
+
+    private CreateCheckingAccountRequest createCheckingAccountRequest() {
+        CreateCheckingAccountRequest checkingAccountRequest = new CreateCheckingAccountRequest();
+        checkingAccountRequest.setBankCode("000000");
+        checkingAccountRequest.setBranchName("FATIH");
+        checkingAccountRequest.setBranchCode("00");
+        checkingAccountRequest.setCurrencyType(CurrencyType.TRY);
+        return checkingAccountRequest;
+    }
+
+    /*
+     @Test
+    public void given_when_then(){
+        // given
+
+        // when
+
+        // then
+
+
+    }
+     */
+}

@@ -13,7 +13,7 @@ import java.util.Date;
 @Component
 public class CheckingAccountMapperImpl implements CheckingAccountMapper {
     @Override
-    public CheckingAccount ToEntity(CreateCheckingAccountRequest createCheckingAccountRequest) {
+    public CheckingAccount toEntity(CreateCheckingAccountRequest createCheckingAccountRequest) {
         CheckingAccount checkingAccount=new CheckingAccount();
         checkingAccount.setAccountName(createCheckingAccountRequest.getBranchName()+"-"+createCheckingAccountRequest.getBranchCode());
         checkingAccount.setBranchCode(createCheckingAccountRequest.getBranchCode());
