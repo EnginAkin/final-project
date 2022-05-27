@@ -8,13 +8,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-@Service
+@Component
 @Slf4j
-public final class UniqueNoCreator implements UniqueNoService {
+public final class UniqueNoCreator{
     private final BaseAccountService accountService;
 
 
-    @Override
     public String creatAccountNo() {
         String randomDepositAccountNo = RandomStringUtils.randomNumeric(16);
         if (!(accountService.checkIsAccountNoUnique(randomDepositAccountNo))) {
@@ -24,7 +23,6 @@ public final class UniqueNoCreator implements UniqueNoService {
         return creatAccountNo();
     }
 
-    @Override
     public String creatCardNumber() {
         String randomCardNumber = RandomStringUtils.randomNumeric(16);
         if (!(accountService.checkIsAccountNoUnique(randomCardNumber))) {
@@ -34,7 +32,6 @@ public final class UniqueNoCreator implements UniqueNoService {
         return creatCardNumber();
     }
 
-    @Override
     public String createIbanNo(String accountNo, String bankCode) {
             String reservedField="0";
             String iBANCheckDigits="33";

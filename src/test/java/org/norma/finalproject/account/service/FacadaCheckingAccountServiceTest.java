@@ -14,19 +14,21 @@ import org.norma.finalproject.account.core.mapper.CheckingAccountMapper;
 import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
 import org.norma.finalproject.account.core.model.response.CreateDepositAccountResponse;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
-import org.norma.finalproject.account.core.utils.UniqueNoService;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.account.service.impl.FacadeCheckingAccountServiceImpl;
 import org.norma.finalproject.common.response.GeneralDataResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
+import org.norma.finalproject.customer.core.exception.IdentityNotValidException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 public class FacadaCheckingAccountServiceTest {
@@ -38,7 +40,7 @@ public class FacadaCheckingAccountServiceTest {
     @Mock
     private FacadeSavingAccountService facadeSavingAccountService;
     @Mock
-    private UniqueNoService uniqueNoService;
+    private UniqueNoCreator uniqueNoCreator;
     @Mock
     private CheckingAccountMapper checkingAccountMapper;
     @Mock
@@ -47,6 +49,7 @@ public class FacadaCheckingAccountServiceTest {
     @Spy
     @InjectMocks
     private FacadeCheckingAccountServiceImpl underTest;
+
 
     @Test
     public void givenCustomerIdAndCreateCheckingAccountRequest_whenCreate_thenReturnGeneralDataResponse() throws CustomerNotFoundException, AccountNameAlreadyHaveException {
@@ -67,8 +70,8 @@ public class FacadaCheckingAccountServiceTest {
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.of(customer));
         BDDMockito.given(underTest.findCheckingAccountByAccountName(customer.getCheckingAccounts(), accountName, createCheckingAccountRequest.getCurrencyType())).willReturn(Optional.empty());
         BDDMockito.given(checkingAccountMapper.toEntity(createCheckingAccountRequest)).willReturn(checkingAccount);
-        BDDMockito.given(uniqueNoService.creatAccountNo()).willReturn("1111111111111111");
-        BDDMockito.given(uniqueNoService.createIbanNo("1111111111111111", createCheckingAccountRequest.getBankCode())).willReturn("TR00000000");
+        BDDMockito.given(uniqueNoCreator.creatAccountNo()).willReturn("1111111111111111");
+        BDDMockito.given(uniqueNoCreator.createIbanNo("1111111111111111", createCheckingAccountRequest.getBankCode())).willReturn("TR00000000");
         BDDMockito.given(checkingAccountService.save(checkingAccount)).willReturn(checkingAccount);
         BDDMockito.given(checkingAccountMapper.toCreateCheckingAccountDto(checkingAccount)).willReturn(createDepositAccountResponse);
 
@@ -85,18 +88,36 @@ public class FacadaCheckingAccountServiceTest {
 
 
     @Test
-    public void givenInvalidCustomerId_whenCreate_thenThrowsCustomerNotFoundException() {
+    public void givenInvalidCustomerId_whenCreate_thenThrowsCustomerNotFoundException() throws CustomerNotFoundException, AccountNameAlreadyHaveException {
         // given
         Long customerID = 1L;
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.empty());
-        // when
-
-
         // then
-
-
+        assertThrows(CustomerNotFoundException.class,()->underTest.create(customerID,createCheckingAccountRequest()));
     }
 
+
+    @Test
+    public void givenAlreadyHaveAccountName_whenCreate_thenThrowsAccountNameAlreadyHaveException() throws CustomerNotFoundException, AccountNameAlreadyHaveException {
+        // given
+        Long customerID = 1L;
+        Customer customer=createCustomer();
+        CheckingAccount checkingAccount = createCheckingAccount();
+        customer.addCheckingAccount(checkingAccount);
+        CreateCheckingAccountRequest createCheckingAccountRequest = createCheckingAccountRequest();
+        String accountName = createCheckingAccountRequest.getBranchName()+"-" + createCheckingAccountRequest.getBranchCode()+"/"+createCheckingAccountRequest.getBankCode();
+
+        // when
+        BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.of(customer));
+        BDDMockito.given(underTest.findCheckingAccountByAccountName(customer.getCheckingAccounts(),accountName,createCheckingAccountRequest.getCurrencyType())).willReturn(Optional.of(checkingAccount));
+
+        // then
+        AccountNameAlreadyHaveException exception = assertThrows(AccountNameAlreadyHaveException.class, () -> {
+            underTest.create(customerID,createCheckingAccountRequest);
+        });
+        // then
+        Assertions.assertThat(exception.getMessage()).isEqualTo("You have a already bank account in this bank same currency and same branch .");
+    }
 
 
     private CreateDepositAccountResponse createDepositAccountResponse(CheckingAccount checkingAccount) {

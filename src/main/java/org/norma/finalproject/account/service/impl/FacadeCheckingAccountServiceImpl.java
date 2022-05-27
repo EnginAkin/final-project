@@ -8,7 +8,7 @@ import org.norma.finalproject.account.core.mapper.CheckingAccountMapper;
 import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
 import org.norma.finalproject.account.core.model.response.AccountActivityResponse;
 import org.norma.finalproject.account.core.model.response.CheckingAccountResponse;
-import org.norma.finalproject.account.core.utils.UniqueNoService;
+import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.base.AccountActivity;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
@@ -36,7 +36,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
     private final CustomerService customerService;
     private final CheckingAccountService checkingAccountService;
     private final FacadeSavingAccountService facadeSavingAccountService;
-    private final UniqueNoService uniqueNoService;
+    private final UniqueNoCreator uniqueNoCreator;
     private final CheckingAccountMapper checkingAccountMapper;
     private final AccountActivityMapper accountActivityMapper;
 
@@ -54,9 +54,9 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         }
         CheckingAccount checkingAccount = checkingAccountMapper.toEntity(createCheckingAccountRequest);
 
-        String accountNo = uniqueNoService.creatAccountNo();
+        String accountNo = uniqueNoCreator.creatAccountNo();
         checkingAccount.setAccountNo(accountNo);
-        String ibanNo = uniqueNoService.createIbanNo(accountNo, createCheckingAccountRequest.getBankCode());
+        String ibanNo = uniqueNoCreator.createIbanNo(accountNo, createCheckingAccountRequest.getBankCode());
         checkingAccount.setIbanNo(ibanNo);
         checkingAccount.setBalance(BigDecimal.ZERO);
         checkingAccount.setCustomer(optionalCustomer.get());
