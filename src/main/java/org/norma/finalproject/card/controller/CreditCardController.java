@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.card.core.model.request.CreateCreditCardRequest;
 import org.norma.finalproject.card.service.CreditCardFacadeService;
+import org.norma.finalproject.common.core.exception.BusinessException;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
@@ -21,7 +22,7 @@ public class CreditCardController {
     private final CreditCardFacadeService creditCardFacadeService;
 
     @PostMapping
-    public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody CreateCreditCardRequest createCreditCardRequest) throws CustomerNotFoundException {
+    public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody CreateCreditCardRequest createCreditCardRequest) throws BusinessException {
         return creditCardFacadeService.create(userDetail.getUser().getId(),createCreditCardRequest);
     }
 

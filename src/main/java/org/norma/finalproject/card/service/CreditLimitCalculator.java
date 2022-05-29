@@ -4,6 +4,6 @@ import java.math.BigDecimal;
 
 public interface CreditLimitCalculator<T> {
 
-    BigDecimal getCreditLimit(T data);
+    BigDecimal getCreditLimit(T data,BigDecimal desiredCreditLimit);
 
 }

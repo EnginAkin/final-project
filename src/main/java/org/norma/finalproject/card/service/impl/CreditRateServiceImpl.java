@@ -15,15 +15,14 @@ public class CreditRateServiceImpl implements CreditRateService {
         BigDecimal moderateRisky=BigDecimal.valueOf(1000);
         BigDecimal oddsOnRisky=BigDecimal.valueOf(4250);
         BigDecimal good=BigDecimal.valueOf(8000);
-        BigDecimal veryGood=BigDecimal.valueOf(20000);
 
-        if(income.compareTo(risky)<0){
+        if(income.compareTo(risky)<=0){
             return CreditRateType.RISKY;
-        }else if(income.compareTo(risky)>0 && income.compareTo(moderateRisky)<0){
+        }else if(income.compareTo(risky)>=0 && income.compareTo(moderateRisky)<=0){
             return CreditRateType.MODERATE_RISKY;
-        }else if(income.compareTo(moderateRisky)>0 && income.compareTo(oddsOnRisky)<0){
+        }else if(income.compareTo(moderateRisky)>=0 && income.compareTo(oddsOnRisky)<=0){
             return CreditRateType.ODDS_ON_RISKY;
-        }else if(income.compareTo(oddsOnRisky)>0 && income.compareTo(good)<0){
+        }else if(income.compareTo(oddsOnRisky)>=0 && income.compareTo(good)<=0){
             return CreditRateType.GOOD;
         }
         return CreditRateType.VERY_GOOD;

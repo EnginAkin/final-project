@@ -11,6 +11,8 @@ public class CreditCardMapperImpl implements CreditCardMapper {
     public CreditCardResponse toCreditCardResponse(CreditCard creditCard) {
         CreditCardResponse creditCardResponse=new CreditCardResponse();
         creditCardResponse.setCardNumber(creditCard.getCardNumber());
+        creditCardResponse.setPassword(creditCard.getPassword());
+        creditCardResponse.setCreditLimit(creditCard.getCreditCardAccount().getTotalCreditLimit());
         creditCardResponse.setExpiryDate(creditCard.getExpiryDate());
         creditCardResponse.setCutOffDate(creditCard.getCreditCardAccount().getCutOffDate());
         creditCardResponse.setPaymentDate(creditCard.getCreditCardAccount().getPaymentDate());

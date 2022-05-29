@@ -14,21 +14,21 @@ public class CreditLimitCalculatorByIncome<T> implements CreditLimitCalculator<B
     private final CreditRateService creditRateService;
 
     @Override
-    public BigDecimal getCreditLimit(BigDecimal income) {
+    public BigDecimal getCreditLimit(BigDecimal income,BigDecimal desiredCreditLimit) {
         CreditRateType creditRate = creditRateService.getCreditRate(income);
         if (creditRate.equals(CreditRateType.VERY_GOOD)) {
-            return BigDecimal.valueOf(20000);
+            return desiredCreditLimit;
         } else if (creditRate.equals(CreditRateType.GOOD)) {
-            return BigDecimal.valueOf(8000);
+            return desiredCreditLimit;
 
         } else if (creditRate.equals(CreditRateType.ODDS_ON_RISKY)) {
-            return BigDecimal.valueOf(4000);
+            return desiredCreditLimit.multiply(BigDecimal.valueOf(0.8));
 
         } else if (creditRate.equals(CreditRateType.MODERATE_RISKY)) {
-            return BigDecimal.valueOf(2000);
+            return desiredCreditLimit.multiply(BigDecimal.valueOf(0.5));
 
         }
-        return BigDecimal.valueOf(1000);
+         return BigDecimal.ZERO; // very risk not given credit limit
 
     }
 }
