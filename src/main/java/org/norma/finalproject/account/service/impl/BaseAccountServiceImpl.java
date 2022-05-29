@@ -54,7 +54,6 @@ public class BaseAccountServiceImpl implements BaseAccountService {
     @Override
     public void refresh(Account account)  {
         if (account.getAccountType().equals(AccountType.CHECKING)) {
-
             Optional<DebitCard> optionalDebitCard = debitCardService.findByParentCheckingAccount(account.getId());
             if(optionalDebitCard.isPresent()){
                 optionalDebitCard.get().setBalance(account.getBalance());

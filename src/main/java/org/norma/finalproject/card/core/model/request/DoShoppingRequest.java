@@ -20,7 +20,5 @@ public class DoShoppingRequest {
     @Min(0)
     private BigDecimal shoppingAmount;
 
-    @JsonProperty(defaultValue = "TR00..")
-    private String toIbanNumber;// this is a scenario
 
 }

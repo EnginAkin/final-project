@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.card.core.model.request.DoShoppingRequest;
 import org.norma.finalproject.card.shop.service.ShoppingService;
 import org.norma.finalproject.common.core.exception.BusinessException;
+import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +19,8 @@ public class ShoppingController {
     private final ShoppingService shoppingService;
 
     @PostMapping("/debit-card")
-    public void doShopping(@RequestBody DoShoppingRequest doShoppingRequest)throws BusinessException {
-        shoppingService.shoppingWithDebitCard(doShoppingRequest);
+    public GeneralResponse doShopping(@RequestBody DoShoppingRequest doShoppingRequest)throws BusinessException {
+        return shoppingService.shoppingWithDebitCard(doShoppingRequest);
     }
 
 }

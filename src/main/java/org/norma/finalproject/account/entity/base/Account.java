@@ -53,7 +53,7 @@ public class Account {
         activities.add(accountActivity);
     }
     public List<AccountActivity> getActivityWithFilter(ActivityFilter filter){
-        return activities.stream().filter(accountActivity -> accountActivity.getDate().before(filter.getFromDate()) &&
-                accountActivity.getDate().after(filter.getToDate())).toList();
+        return activities.stream().filter(accountActivity -> accountActivity.getDate().before(filter.getToDate()) &&
+                accountActivity.getDate().after(filter.getFromDate())).toList();
     }
 }

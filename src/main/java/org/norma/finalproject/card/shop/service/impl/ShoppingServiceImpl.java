@@ -1,6 +1,8 @@
 package org.norma.finalproject.card.shop.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.norma.finalproject.account.entity.base.AccountActivity;
+import org.norma.finalproject.account.service.BaseAccountService;
 import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.card.core.exception.DebitCardOperationException;
 import org.norma.finalproject.card.core.model.request.DoShoppingRequest;
@@ -10,6 +12,7 @@ import org.norma.finalproject.card.shop.service.ShoppingService;
 import org.norma.finalproject.common.core.exception.BusinessException;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
+import org.norma.finalproject.common.entity.enums.ActionStatus;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -27,11 +31,9 @@ import java.util.Optional;
 public class ShoppingServiceImpl implements ShoppingService {
 
     private final DebitCardService debitCardService;
-
-    private final TransferBase<IbanTransferRequest> ibanTransferService;
+    private final BaseAccountService accountService;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = BusinessException.class)
     public GeneralResponse shoppingWithDebitCard(DoShoppingRequest doShoppingRequest) throws DebitCardNotFoundException, DebitCardOperationException, AmountNotValidException, CustomerNotFoundException, TransferOperationException {
 
         Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCardNumber(doShoppingRequest.getCardNumber());
@@ -45,18 +47,22 @@ public class ShoppingServiceImpl implements ShoppingService {
             throw new DebitCardOperationException("Card balance not enough for this shopping.");
         }
 
-        IbanTransferRequest ibanTransferRequest=new IbanTransferRequest();
-        ibanTransferRequest.setToIban(doShoppingRequest.getToIbanNumber());// this is scenario for shopping cross account.
-        ibanTransferRequest.setFromIban(optionalDebitCard.get().getCheckingAccount().getIbanNo());
-        ibanTransferRequest.setDescription("Shopping scenario");
-        ibanTransferRequest.setAmount(doShoppingRequest.getShoppingAmount());
-        ibanTransferRequest.setTransferType(TransferType.SHOPPING);
+        optionalDebitCard.get().getCheckingAccount().setBalance(optionalDebitCard.get().getBalance().subtract(doShoppingRequest.getShoppingAmount()));
 
-        long customerID=optionalDebitCard.get().getCheckingAccount().getCustomer().getId();
+        AccountActivity accountActivity=new AccountActivity();
+        accountActivity.setAccount(optionalDebitCard.get().getCheckingAccount());
+        accountActivity.setDescription("Shopping scenario");
+        accountActivity.setCrossAccount("Shopping scenario");
+        accountActivity.setAmount(doShoppingRequest.getShoppingAmount());
+        accountActivity.setDate(new Date());
+        accountActivity.setActionStatus(ActionStatus.OUTGOING);
+        accountActivity.setAvailableBalance(optionalDebitCard.get().getBalance());
 
-        ibanTransferService.transfer(customerID,ibanTransferRequest);
-        optionalDebitCard.get().refreshBalance(); // card balance refresh.
-        return new GeneralSuccessfullResponse("Payment successfully.");
+        optionalDebitCard.get().getCheckingAccount().addActivity(accountActivity);
+
+        accountService.update(optionalDebitCard.get().getCheckingAccount());
+        accountService.refresh(optionalDebitCard.get().getCheckingAccount());
+        return new GeneralSuccessfullResponse("Shopping successfull.");
     }
 
 

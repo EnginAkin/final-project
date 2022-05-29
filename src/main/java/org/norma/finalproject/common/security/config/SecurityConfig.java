@@ -35,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/v1/customers/sing-up/**",
             "/api/v1/authentication/login/**",
             "/api/v1/shopping/**",
+            "/api/v1/atm/**",
     };
 
     private static final String[] AUTH_WHITELIST_FOR_USER = {

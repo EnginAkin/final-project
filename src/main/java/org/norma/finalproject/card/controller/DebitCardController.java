@@ -45,6 +45,7 @@ public class DebitCardController {
         return debitFacadeService.getDebitCardActivities(userDetail.getUser().getId(), debitCardID, filter);
     }
 
+
     @GetMapping
     public GeneralResponse getAllCustomerDebitCards(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws BusinessException {
         return debitFacadeService.getAllCustomerDebitCards(userDetail.getUser().getId());
@@ -54,6 +55,8 @@ public class DebitCardController {
     public GeneralResponse deleteDebitCardById(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long debitCardID) throws BusinessException {
         return debitFacadeService.deleteDebitCardById(userDetail.getUser().getId(), debitCardID);
     }
+
+
 
 
 }
