@@ -1,6 +1,6 @@
 package org.norma.finalproject.common.security.exception;
 
-import org.norma.finalproject.common.exception.BusinessException;
+import org.norma.finalproject.common.core.exception.BusinessException;
 
 public class TokenLockedException extends BusinessException {
     public TokenLockedException() {

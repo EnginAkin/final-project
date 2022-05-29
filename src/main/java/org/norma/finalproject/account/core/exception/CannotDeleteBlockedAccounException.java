@@ -1,6 +1,6 @@
 package org.norma.finalproject.account.core.exception;
 
-import org.norma.finalproject.common.exception.BusinessException;
+import org.norma.finalproject.common.core.exception.BusinessException;
 
 public class CannotDeleteBlockedAccounException extends BusinessException {
     public CannotDeleteBlockedAccounException() {

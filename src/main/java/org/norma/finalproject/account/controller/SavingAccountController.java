@@ -1,13 +1,13 @@
 package org.norma.finalproject.account.controller;
 
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.account.core.model.request.CreateSavingAccountRequest;
 import org.norma.finalproject.account.service.FacadeSavingAccountService;
-import org.norma.finalproject.common.exception.BusinessException;
-import org.norma.finalproject.common.response.GeneralResponse;
+import org.norma.finalproject.card.core.model.request.ActivityFilter;
+import org.norma.finalproject.common.core.exception.BusinessException;
+import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,8 +39,10 @@ public class SavingAccountController {
     }
 
     @GetMapping("{accountID}/activities")
-    public GeneralResponse getAccountActivity(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable long accountID) throws BusinessException {
-        return facadeSavingAccountService.getAccountActivities(userDetail.getUser().getId(),accountID);
+    public GeneralResponse getAccountActivity(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
+                                              @PathVariable long accountID,
+                                              @RequestBody(required = false) ActivityFilter filter) throws BusinessException {
+        return facadeSavingAccountService.getAccountActivities(userDetail.getUser().getId(),accountID,filter);
     }
 
     @DeleteMapping("/{accountID}")

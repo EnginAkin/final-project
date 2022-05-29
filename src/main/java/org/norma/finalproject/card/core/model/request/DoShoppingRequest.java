@@ -14,13 +14,13 @@ import java.math.BigDecimal;
 public class DoShoppingRequest {
 
     @NotNull
-    private String CardNumber;
+    private String cardNumber;
     @NotNull
     private String cardPassword;
     @Min(0)
     private BigDecimal shoppingAmount;
 
     @JsonProperty(defaultValue = "TR00..")
-    private String ToIbanNumber;// this is a scenario
+    private String toIbanNumber;// this is a scenario
 
 }

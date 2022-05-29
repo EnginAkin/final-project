@@ -35,16 +35,28 @@ class CheckingAccountRepositoryTest {
         CheckingAccount checkingAccount1=new CheckingAccount();
                 checkingAccount1.setBankCode("000000");
                 checkingAccount1.setBranchCode("000000");
+                checkingAccount1.setAccountName("account");
+                checkingAccount1.setIbanNo("000000");
+                checkingAccount1.setBranchName("branch");
+                checkingAccount1.setAccountNo("000000");
                 checkingAccount1.setBlocked(true);
                 checkingAccount1.setCustomer(customer);
         CheckingAccount checkingAccount2=new CheckingAccount();
                 checkingAccount2.setBankCode("000000");
                 checkingAccount2.setBranchCode("000000");
+                checkingAccount2.setAccountName("account");
+                checkingAccount2.setIbanNo("000000");
+                checkingAccount2.setBranchName("branch");
+                checkingAccount2.setAccountNo("000000");
                 checkingAccount2.setBlocked(false);
                 checkingAccount2.setCustomer(customer);
         CheckingAccount checkingAccount3=new CheckingAccount();
                 checkingAccount3.setBankCode("000000");
                 checkingAccount3.setBranchCode("000000");
+                checkingAccount3.setAccountName("account");
+                checkingAccount3.setIbanNo("000000");
+                checkingAccount3.setBranchName("branch");
+                checkingAccount3.setAccountNo("000000");
                 checkingAccount3.setBlocked(false);
                 checkingAccount3.setCustomer(customer);
         underTest.saveAll(List.of(checkingAccount1,checkingAccount2,checkingAccount3));
@@ -66,6 +78,9 @@ class CheckingAccountRepositoryTest {
         checkingAccount.setAccountNo(accountNumber);
         checkingAccount.setBankCode("000000");
         checkingAccount.setBranchCode("000000");
+        checkingAccount.setBranchName("FATIH");
+        checkingAccount.setAccountName("dd");
+        checkingAccount.setIbanNo("111111");
         checkingAccount.setBlocked(true);
         underTest.save(checkingAccount);
         // when

@@ -5,7 +5,7 @@ import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.account.service.BaseAccountService;
 import org.norma.finalproject.account.service.CheckingAccountService;
-import org.norma.finalproject.common.response.GeneralResponse;
+import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;

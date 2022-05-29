@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.card.core.model.request.CreateCreditCardRequest;
 import org.norma.finalproject.card.service.CreditCardFacadeService;
-import org.norma.finalproject.common.response.GeneralResponse;
+import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

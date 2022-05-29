@@ -3,8 +3,8 @@ package org.norma.finalproject.customer.controller;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
-import org.norma.finalproject.common.response.GeneralResponse;
-import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
+import org.norma.finalproject.common.core.result.GeneralResponse;
+import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
 import org.norma.finalproject.common.security.jwt.JWTHelper;
 import org.norma.finalproject.common.security.token.core.exception.TokenNotFoundException;
 import org.norma.finalproject.common.security.user.CustomUserDetail;

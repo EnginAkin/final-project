@@ -1,4 +1,4 @@
-package org.norma.finalproject.common.exception;
+package org.norma.finalproject.common.core.exception;
 
 public class NotFoundException extends BusinessException{
 

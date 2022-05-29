@@ -1,4 +1,4 @@
-package org.norma.finalproject.common.response;
+package org.norma.finalproject.common.core.result;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -9,8 +9,8 @@ import org.norma.finalproject.account.core.exception.AccountNameAlreadyHaveExcep
 import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.account.service.FacadeCheckinAccountService;
-import org.norma.finalproject.common.response.GeneralResponse;
-import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
+import org.norma.finalproject.common.core.result.GeneralResponse;
+import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
 import org.norma.finalproject.customer.core.exception.*;
 import org.norma.finalproject.customer.core.mapper.CustomerMapper;
 import org.norma.finalproject.customer.core.model.AddressDto;
@@ -21,8 +21,6 @@ import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.entity.Address;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.entity.enums.AddressType;
-import org.norma.finalproject.customer.service.CustomerService;
-import org.norma.finalproject.customer.service.IdentityVerifier;
 import org.norma.finalproject.customer.service.impl.FacadeCustomerServiceImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

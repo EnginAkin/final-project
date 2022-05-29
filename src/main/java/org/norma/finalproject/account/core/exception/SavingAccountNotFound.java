@@ -1,6 +1,6 @@
 package org.norma.finalproject.account.core.exception;
 
-import org.norma.finalproject.common.exception.NotFoundException;
+import org.norma.finalproject.common.core.exception.NotFoundException;
 
 public class SavingAccountNotFound extends NotFoundException {
     public SavingAccountNotFound() {

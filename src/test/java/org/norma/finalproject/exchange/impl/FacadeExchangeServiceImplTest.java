@@ -1,28 +1,14 @@
 package org.norma.finalproject.exchange.impl;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.norma.finalproject.account.entity.enums.CurrencyType;
-import org.norma.finalproject.common.response.GeneralDataResponse;
-import org.norma.finalproject.common.response.GeneralResponse;
-import org.norma.finalproject.exchange.core.constant.ExchangeConstant;
-import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.exchange.core.validator.Validator;
 import org.norma.finalproject.exchange.service.ExchangeService;
 import org.norma.finalproject.exchange.service.impl.FacadeExchangeServiceImpl;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-
-import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(MockitoExtension.class)

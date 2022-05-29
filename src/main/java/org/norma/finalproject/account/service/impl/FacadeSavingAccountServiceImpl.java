@@ -20,9 +20,12 @@ import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.account.service.FacadeSavingAccountService;
 import org.norma.finalproject.account.service.SavingAccountService;
 import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
-import org.norma.finalproject.common.response.GeneralDataResponse;
-import org.norma.finalproject.common.response.GeneralResponse;
-import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
+import org.norma.finalproject.card.core.model.request.ActivityFilter;
+import org.norma.finalproject.common.core.result.GeneralDataResponse;
+import org.norma.finalproject.common.core.result.GeneralResponse;
+import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
+import org.norma.finalproject.common.core.utils.Message;
+import org.norma.finalproject.common.core.utils.Utils;
 import org.norma.finalproject.customer.core.exception.ActivitiesNotFoundException;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
@@ -35,10 +38,14 @@ import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileFilter;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.norma.finalproject.common.core.utils.Utils.get30DaysAgo;
 
 @Service
 @RequiredArgsConstructor
@@ -63,27 +70,28 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         }
         Optional<CheckingAccount> parentCheckingAccount = checkingAccountService.findAccountByAccountNumber(createSavingAccountRequest.getParentAccountNumber());
         if (parentCheckingAccount.isEmpty()) {
-            throw new CheckingAccountNotFoundException("Checking account not fount by : " + createSavingAccountRequest.getParentAccountNumber());
+            throw new CheckingAccountNotFoundException(Message.CHECKING_ACCOUNT_NOT_FOUND+"By "+createSavingAccountRequest.getParentAccountNumber());
         }
         if (parentCheckingAccount.get().getCurrencyType() != createSavingAccountRequest.getCurrencyType()) {
-            throw new SavingAccountOperationException("Parent currency type not matched for saving account,Please create checking Account currency type :" + createSavingAccountRequest.getCurrencyType());
+            throw new SavingAccountOperationException(Message.SAVING_ACCOUNT_OPERATION_NOT_MATCHED_CURRENCY_TYPE_EXCEPTION + createSavingAccountRequest.getCurrencyType());
         }
         boolean checkUsedParentAccountForSavingAccount = savingAccountService.isUsedParentAccountForSavingAccount(optionalCustomer.get().getId(), parentCheckingAccount.get().getId());
         if (checkUsedParentAccountForSavingAccount) {
-            throw new SavingAccountOperationException("Parent Used for saving account , change parent checking account.");
+            throw new SavingAccountOperationException(Message.SAVING_ACCOUNT_OPERATION_PARENT_USED_FOR_SAVING_ACCOUNT_EXCEPTION);
         }
         if (createSavingAccountRequest.getOpeningBalance().compareTo(parentCheckingAccount.get().getBalance()) > 0) {
-            throw new SavingAccountOperationException("Parent account balance not enough for saving balance.");
+            throw new SavingAccountOperationException(Message.SAVING_ACCOUNT_OPERATION_PARENT_BALANCE_NOT_ENOUGH_EXCEPTION);
         }
         SavingAccount savingAccount = savingAccountMapper.createSavingAccountToEntity(createSavingAccountRequest);
         savingAccount.setCustomer(optionalCustomer.get());
         savingAccount.setParentAccount(parentCheckingAccount.get());
         savingAccount.setAccountNo(uniqueNoCreator.creatAccountNo());
         savingAccount.setIbanNo(uniqueNoCreator.createIbanNo(savingAccount.getAccountNo(), savingAccount.getParentAccount().getBankCode()));
+
         SavingAccount savedAccount = savingAccountService.save(savingAccount);
-        // Transfer to save acccount from checking account
+        // Transfer to save account from checking account
         IbanTransferRequest transferRequest = new IbanTransferRequest(parentCheckingAccount.get().getIbanNo(), savingAccount.getIbanNo(),createSavingAccountRequest.getOpeningBalance(),"Opening balance", TransferType.OTHER);
-        ibanTransferBase.transfer(customerID, transferRequest);
+        ibanTransferBase.transfer(customerID, transferRequest); // transfer with iban
         return new GeneralDataResponse<>(savingAccountMapper.toDto(savedAccount));
     }
 
@@ -99,22 +107,31 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
     }
 
     @Override
-    public GeneralResponse getAccountActivities(Long customerID, long accountID) throws CustomerNotFoundException, CheckingAccountNotFoundException, ActivitiesNotFoundException, SavingAccountOperationException {
+    public GeneralResponse getAccountActivities(Long customerID, long accountID, ActivityFilter filter) throws CustomerNotFoundException, ActivitiesNotFoundException, SavingAccountOperationException, SavingAccountNotFound {
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
+        Optional<SavingAccount> optionalSavingAccount=savingAccountService.findById(accountID);
+        if(optionalSavingAccount.isEmpty()){
+            throw new SavingAccountNotFound();
+        }
+
         boolean checkOwnersAccountIsCustomer = checkOwnersAccountIsCustomer(optionalCustomer.get(),accountID);
         if(!checkOwnersAccountIsCustomer){
-            throw new SavingAccountOperationException("Saving account activities not found.");
+            throw new SavingAccountOperationException(Message.SAVING_ACCOUNT_OPERATION_ACTIVITIES_NOT_FOUND_EXCEPTION);
         }
-        List<AccountActivity> accountActivities = accountActivityService.getAccountActivitiesByAccountId(accountID);
+        if(filter==null){
+            Date today = new Date();
+            Date aMonthAgo= Utils.get30DaysAgo(today); // get 30 day ago from today
+            filter=new ActivityFilter(aMonthAgo,today); //  default filter a month ago
+        }
+        List<AccountActivity> accountActivities=optionalSavingAccount.get().getActivityWithFilter(filter);
         if (accountActivities.isEmpty()) {
             throw new ActivitiesNotFoundException();
         }
         List<AccountActivityResponse> responseList = accountActivities.stream().map(accountActivityMapper::toDto).toList();
         return new GeneralDataResponse<>(responseList);
-
     }
 
     @Override
@@ -124,11 +141,9 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
             throw new SavingAccountNotFound();
         }
         if(optionalSavingAccount.get().getBalance().compareTo(BigDecimal.ZERO)>0){
-            throw new AccountBalanceGreatherThenZeroException("Saving account balance greather than zero");
+            throw new AccountBalanceGreatherThenZeroException(Message.ACCOUNT_HAS_BALANCE_DELETE_EXCEPTION);
         }
-
         savingAccountService.deleteByParent(optionalSavingAccount.get());
-
     }
 
     @Override
@@ -138,7 +153,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
             throw new SavingAccountNotFound();
         }
         if(optionalSavingAccount.get().getBalance().compareTo(BigDecimal.ZERO)>0){
-            throw new AccountBalanceGreatherThenZeroException("Saving account balance greather than zero");
+            throw new AccountBalanceGreatherThenZeroException(Message.ACCOUNT_HAS_BALANCE_DELETE_EXCEPTION);
         }
         savingAccountService.deleteByParent(optionalSavingAccount.get());
         return new GeneralSuccessfullResponse("Successfully deleted");

@@ -29,5 +29,4 @@ public class AccountActivity {
     @ManyToOne
     private Account account;
 
-
 }

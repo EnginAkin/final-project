@@ -6,8 +6,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
 import org.norma.finalproject.account.service.FacadeCheckinAccountService;
-import org.norma.finalproject.common.exception.BusinessException;
-import org.norma.finalproject.common.response.GeneralResponse;
+import org.norma.finalproject.card.core.model.request.ActivityFilter;
+import org.norma.finalproject.common.core.exception.BusinessException;
+import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.springframework.http.HttpStatus;
@@ -23,36 +24,40 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Validated
 public class CheckingAccountController {
-
     private final FacadeCheckinAccountService facadeCheckinAccountService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(tags = "Deposit Controller", description = "Create a deposit account By customer.")
     @PostMapping
-    public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateCheckingAccountRequest createCheckingAccountRequest) throws BusinessException {
+    public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
+                                  @RequestBody @Valid CreateCheckingAccountRequest createCheckingAccountRequest) throws BusinessException {
         return facadeCheckinAccountService.create(userDetail.getUser().getId(), createCheckingAccountRequest);
     }
 
     @Operation(tags = "Deposit Controller", description = "Delete a deposit account by Customer.")
     @DeleteMapping("/{accountID}")
-    public GeneralResponse deleteByAccountId(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long accountID) throws BusinessException {
+    public GeneralResponse deleteByAccountId(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
+                                             @PathVariable long accountID) throws BusinessException {
         return facadeCheckinAccountService.deleteById(userDetail.getUser().getId(), accountID);
 
     }
 
     @GetMapping
     public GeneralResponse getAllCheckingAccounts(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws BusinessException {
-        return facadeCheckinAccountService.getCheckingAccounts(userDetail.getUser().getId());
+        return facadeCheckinAccountService.getCustomersUnblockedCheckingAccounts(userDetail.getUser().getId());
     }
 
     @GetMapping("/{accountID}")
-    public GeneralResponse getById(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long accountID) throws BusinessException {
+    public GeneralResponse getById(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
+                                   @PathVariable long accountID) throws BusinessException {
         return facadeCheckinAccountService.getCheckingAccountById(userDetail.getUser().getId(), accountID);
     }
 
-    @GetMapping("/{accountID}/activities")
-    public GeneralResponse getCheckingAccountActivities(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long accountID) throws BusinessException {
-        return facadeCheckinAccountService.getCheckingAccountActivities(userDetail.getUser().getId(), accountID);
+    @GetMapping(value = "/{accountID}/activities")
+    public GeneralResponse getCheckingAccountActivities(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
+                                                        @PathVariable long accountID,
+                                                        @RequestBody(required = false) ActivityFilter filter) throws BusinessException {
+        return facadeCheckinAccountService.getCheckingAccountActivities(userDetail.getUser().getId(), accountID, filter);
     }
 
     @RolesAllowed(CustomerConstant.ROLE_ADMIN)

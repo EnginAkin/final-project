@@ -24,6 +24,7 @@ class AccountRepositoryTest {
         String accountNo = "0000000000000000";
         Account account = new Account();
         account.setAccountName("account");
+        account.setIbanNo("1111111111");
         account.setAccountNo(accountNo);
         underTest.save(account);
         // when
@@ -39,6 +40,7 @@ class AccountRepositoryTest {
         String invalidAccountNo = "11111111111111111";
         Account account = new Account();
         account.setAccountName("account");
+        account.setIbanNo("1111111111");
         account.setAccountNo(accountNo);
         underTest.save(account);
         // when
@@ -55,6 +57,7 @@ class AccountRepositoryTest {
         Account account = new Account();
         account.setAccountName("account");
         account.setIbanNo(ibanNo);
+        account.setAccountNo("11111111");
         underTest.save(account);
         // when
         Optional<Account> optionalAccount = underTest.findByIbanNo(ibanNo);
@@ -71,6 +74,7 @@ class AccountRepositoryTest {
 
         Account account = new Account();
         account.setAccountName("account");
+        account.setAccountNo("11111111111");
         account.setIbanNo(ibanNo);
         underTest.save(account);
         // when

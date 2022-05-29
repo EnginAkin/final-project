@@ -7,9 +7,9 @@ import org.norma.finalproject.card.core.model.request.DoShoppingRequest;
 import org.norma.finalproject.card.entity.DebitCard;
 import org.norma.finalproject.card.service.DebitCardService;
 import org.norma.finalproject.card.shop.service.ShoppingService;
-import org.norma.finalproject.common.exception.BusinessException;
-import org.norma.finalproject.common.response.GeneralResponse;
-import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
+import org.norma.finalproject.common.core.exception.BusinessException;
+import org.norma.finalproject.common.core.result.GeneralResponse;
+import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
@@ -51,6 +51,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         ibanTransferRequest.setDescription("Shopping scenario");
         ibanTransferRequest.setAmount(doShoppingRequest.getShoppingAmount());
         ibanTransferRequest.setTransferType(TransferType.SHOPPING);
+
         long customerID=optionalDebitCard.get().getCheckingAccount().getCustomer().getId();
 
         ibanTransferService.transfer(customerID,ibanTransferRequest);

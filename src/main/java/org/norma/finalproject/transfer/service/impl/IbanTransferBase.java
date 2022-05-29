@@ -3,9 +3,8 @@ package org.norma.finalproject.transfer.service.impl;
 import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.account.service.BaseAccountService;
-import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
-import org.norma.finalproject.common.response.GeneralResponse;
-import org.norma.finalproject.common.response.GeneralSuccessfullResponse;
+import org.norma.finalproject.common.core.result.GeneralResponse;
+import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
@@ -58,13 +57,12 @@ public class IbanTransferBase extends TransferBase<IbanTransferRequest> {
         }
         if (optionalFromAccount.get().getBalance().compareTo(transferRequest.getAmount()) < 0) {
             throw new TransferOperationException("There is not enough money in the account");
-
         }
         Optional<Account> optionalToAccount = accountService.findAccountByIbanNumber(transferRequest.getToIban());
         if (optionalToAccount.isEmpty()) {
             throw new TransferOperationException("Cross account not found");
         }
-        // allowed saving -> checking  --- saving-saving not allowed
+        // allowed saving -> checking And checking ->checking  . Not allowed saving-saving
         if (optionalFromAccount.get().getAccountType().equals(AccountType.SAVING)) {
             if (!(optionalToAccount.get().getAccountType().equals(AccountType.CHECKING))) {
                 throw new TransferOperationException("You can transfer only parent checking account.");

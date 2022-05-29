@@ -2,8 +2,8 @@ package org.norma.finalproject.customer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.norma.finalproject.common.response.GeneralDataResponse;
-import org.norma.finalproject.common.response.GeneralResponse;
+import org.norma.finalproject.common.core.result.GeneralDataResponse;
+import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.security.jwt.JWTHelper;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.norma.finalproject.customer.core.exception.LoginFailedException;
@@ -14,9 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

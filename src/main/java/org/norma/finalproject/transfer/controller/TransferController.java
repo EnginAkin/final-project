@@ -1,8 +1,8 @@
 package org.norma.finalproject.transfer.controller;
 
 import io.swagger.v3.oas.annotations.Parameter;
-import org.norma.finalproject.common.exception.BusinessException;
-import org.norma.finalproject.common.response.GeneralResponse;
+import org.norma.finalproject.common.core.exception.BusinessException;
+import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
 import org.norma.finalproject.transfer.core.model.request.EmailTransferRequest;

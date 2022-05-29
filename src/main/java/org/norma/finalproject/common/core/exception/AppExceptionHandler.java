@@ -1,9 +1,8 @@
-package org.norma.finalproject.common.exception;
+package org.norma.finalproject.common.core.exception;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import org.norma.finalproject.common.response.ErrorDataResponse;
-import org.norma.finalproject.common.response.GeneralErrorResponse;
-import org.norma.finalproject.common.response.GeneralResponse;
+import org.norma.finalproject.common.core.result.ErrorDataResponse;
+import org.norma.finalproject.common.core.result.GeneralErrorResponse;
+import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.customer.core.exception.LoginFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.ConstraintViolationException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

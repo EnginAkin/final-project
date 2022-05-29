@@ -1,13 +1,10 @@
 package org.norma.finalproject.card.shop.controller;
 
 
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.card.core.model.request.DoShoppingRequest;
 import org.norma.finalproject.card.shop.service.ShoppingService;
-import org.norma.finalproject.common.exception.BusinessException;
-import org.norma.finalproject.common.security.user.CustomUserDetail;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.norma.finalproject.common.core.exception.BusinessException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

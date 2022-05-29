@@ -42,11 +42,17 @@ class SavingAccountRepositoryTest {
         CheckingAccount checkingAccount=new CheckingAccount();
         checkingAccount.setBankCode("000000");
         checkingAccount.setBranchCode("000000");
+        checkingAccount.setBranchName("FATIH");
         checkingAccount.setBlocked(true);
+        checkingAccount.setAccountNo("11");
+        checkingAccount.setAccountName("account name");
+        checkingAccount.setIbanNo("11");
         checkingAccount.setCustomer(customer);
         checkingAccountRepository.save(checkingAccount);
         SavingAccount savingAccount=new SavingAccount();
-        savingAccount.setAccountName("example account name");
+        savingAccount.setAccountName("1");
+        savingAccount.setIbanNo("1");
+        savingAccount.setAccountNo("1");
         savingAccount.setParentAccount(checkingAccount);
         underTest.save(savingAccount);
         // when
