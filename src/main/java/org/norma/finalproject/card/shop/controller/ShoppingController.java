@@ -19,8 +19,14 @@ public class ShoppingController {
     private final ShoppingService shoppingService;
 
     @PostMapping("/debit-card")
-    public GeneralResponse doShopping(@RequestBody DoShoppingRequest doShoppingRequest)throws BusinessException {
+    public GeneralResponse doShoppingWithDebitCard(@RequestBody DoShoppingRequest doShoppingRequest)throws BusinessException {
         return shoppingService.shoppingWithDebitCard(doShoppingRequest);
     }
 
+
+
+    @PostMapping("/credit-card")
+    public GeneralResponse doShoppingWithCreditCard(@RequestBody DoShoppingRequest doShoppingRequest)throws BusinessException {
+        return shoppingService.shoppingWithCreditCard(doShoppingRequest);
+    }
 }

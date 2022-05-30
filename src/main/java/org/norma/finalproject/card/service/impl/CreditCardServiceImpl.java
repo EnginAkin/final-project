@@ -16,4 +16,9 @@ public class CreditCardServiceImpl implements CreditCardService {
     public CreditCard save(CreditCard creditCard) {
         return creditCardRepository.save(creditCard);
     }
+
+    @Override
+    public Optional<CreditCard> findCreditCardByCreditCardNumber(String cardNumber) {
+        return creditCardRepository.findByCardNumber(cardNumber);
+    }
 }

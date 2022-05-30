@@ -65,7 +65,7 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
     }
     private CreditCardAccount createCreditAccount(CreateCreditCardRequest createCreditCardRequest){
         CreditCardAccount creditCardAccount=new CreditCardAccount();
-        creditCardAccount.setCurrentDebt(BigDecimal.ZERO);
+        creditCardAccount.setTotalDebt(BigDecimal.ZERO);
         creditCardAccount.setAvailableBalance(BigDecimal.ZERO);
         creditCardAccount.setCutOffDate(createCreditCardRequest.getCutOffDate());
         creditCardAccount.setLastExtractDebt(BigDecimal.ZERO);

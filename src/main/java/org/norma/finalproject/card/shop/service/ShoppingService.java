@@ -1,5 +1,7 @@
 package org.norma.finalproject.card.shop.service;
 
+import org.norma.finalproject.card.core.exception.CreditCardNotFoundException;
+import org.norma.finalproject.card.core.exception.CreditCardOperationException;
 import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.card.core.exception.DebitCardOperationException;
 import org.norma.finalproject.card.core.model.request.DoShoppingRequest;
@@ -11,4 +13,5 @@ import org.norma.finalproject.transfer.core.exception.TransferOperationException
 public interface ShoppingService {
     GeneralResponse shoppingWithDebitCard(DoShoppingRequest doShoppingRequest) throws DebitCardNotFoundException, DebitCardOperationException, AmountNotValidException, CustomerNotFoundException, TransferOperationException;
 
+    GeneralResponse shoppingWithCreditCard(DoShoppingRequest doShoppingRequest) throws CreditCardNotFoundException, CreditCardOperationException;
 }

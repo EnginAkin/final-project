@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface CreditCardService {
     CreditCard save(CreditCard creditCard);
+
+    Optional<CreditCard> findCreditCardByCreditCardNumber(String cardNumber);
 }
