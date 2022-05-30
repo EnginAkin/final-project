@@ -16,11 +16,8 @@ import java.util.Date;
 public class CreateCreditCardRequest {
 
     @NotNull
-    @Pattern(regexp = "\\d{4}")
+    @Pattern(regexp = "\\d{4}",message = "Password must be only 4 digit")
     private String password;
-
-    @NotNull(message = "Date Cannot be null.")
-    private Date cutOffDate;
 
     @NotNull
     @Min(0)

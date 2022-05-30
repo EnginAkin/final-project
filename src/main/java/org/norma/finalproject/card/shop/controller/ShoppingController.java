@@ -2,7 +2,8 @@ package org.norma.finalproject.card.shop.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.norma.finalproject.card.core.model.request.DoShoppingRequest;
+import org.norma.finalproject.card.shop.core.model.request.DoShoppingRequestWithCreditCard;
+import org.norma.finalproject.card.shop.core.model.request.DoShoppingRequestWithDebitCard;
 import org.norma.finalproject.card.shop.service.ShoppingService;
 import org.norma.finalproject.common.core.exception.BusinessException;
 import org.norma.finalproject.common.core.result.GeneralResponse;
@@ -19,14 +20,14 @@ public class ShoppingController {
     private final ShoppingService shoppingService;
 
     @PostMapping("/debit-card")
-    public GeneralResponse doShoppingWithDebitCard(@RequestBody DoShoppingRequest doShoppingRequest)throws BusinessException {
-        return shoppingService.shoppingWithDebitCard(doShoppingRequest);
+    public GeneralResponse doShoppingWithDebitCard(@RequestBody DoShoppingRequestWithDebitCard doShoppingRequestWithDebitCard)throws BusinessException {
+        return shoppingService.shoppingWithDebitCard(doShoppingRequestWithDebitCard);
     }
 
 
 
     @PostMapping("/credit-card")
-    public GeneralResponse doShoppingWithCreditCard(@RequestBody DoShoppingRequest doShoppingRequest)throws BusinessException {
-        return shoppingService.shoppingWithCreditCard(doShoppingRequest);
+    public GeneralResponse doShoppingWithCreditCard(@RequestBody DoShoppingRequestWithCreditCard shoppingRequest)throws BusinessException {
+        return shoppingService.shoppingWithCreditCard(shoppingRequest);
     }
 }

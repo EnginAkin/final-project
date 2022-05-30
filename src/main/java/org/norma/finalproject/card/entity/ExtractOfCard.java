@@ -21,6 +21,8 @@ public class ExtractOfCard {
 
     private BigDecimal paymentAmount;
 
+    private boolean isCurrentTerm=true;
+
     @Temporal(TemporalType.DATE)
     private Date extractPeriod;// ekstre dönemi
 

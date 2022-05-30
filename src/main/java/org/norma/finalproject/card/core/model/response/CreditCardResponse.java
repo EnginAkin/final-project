@@ -14,8 +14,12 @@ public class CreditCardResponse {
 
     private Long id;
     private String cardNumber;
+    private String customerName;
+    private String customerSurname;
+    private String cvv;
     private String password;
     private BigDecimal creditLimit;
+    private BigDecimal availableBalance;
     private Date expiryDate;
     private Date cutOffDate;
     private Date paymentDate;

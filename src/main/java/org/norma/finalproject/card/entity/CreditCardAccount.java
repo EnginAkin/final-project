@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -25,19 +26,16 @@ public class CreditCardAccount {
     private BigDecimal lastExtractDebt=BigDecimal.ZERO;// son ekstreden kalan borç
     private BigDecimal totalDebt; // güncel borç
 
-
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "creditCardAccount")
-    private Set<ExtractOfCard> extracts;
-  /*
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<CreditCardActivity> currentTermTransactions=new HashSet<>();
+    private Set<ExtractOfCard> extracts=new HashSet<>();
 
-        dönem içi güncel borçlar, dönem kapanınca extrelere aktarılır.
-     */
 
-    public void addExtractOfCard(ExtractOfCard extract){
-        extracts.add(extract);
+
+    public ExtractOfCard getCurrentTermExtract() {
+        if(extracts.isEmpty()){
+            ExtractOfCard extract=new ExtractOfCard();
+            extracts.add(extract);
+        }
+        return extracts.stream().filter(ExtractOfCard::isCurrentTerm).findFirst().get();
     }
-
-
 }

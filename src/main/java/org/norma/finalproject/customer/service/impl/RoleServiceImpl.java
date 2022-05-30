@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -24,14 +25,15 @@ public class RoleServiceImpl implements RoleService {
         return repository.findByName(role).get();
 
     }
-    /*
     @PostConstruct
     public void addRoleDatabase(){
-        Role roleUser=new Role(CustomerConstant.ROLE_USER);
-        Role roleAdmin=new Role(CustomerConstant.ROLE_ADMIN);
-        repository.saveAll(List.of(roleAdmin,roleUser));
+        Optional<Role> optionalRole = repository.findByName(CustomerConstant.ROLE_USER);
+        if(optionalRole.isEmpty()){
+            Role roleUser=new Role(CustomerConstant.ROLE_USER);
+            Role roleAdmin=new Role(CustomerConstant.ROLE_ADMIN);
+            repository.saveAll(List.of(roleAdmin,roleUser));
+        }
     }
-     */
 
 }
 
