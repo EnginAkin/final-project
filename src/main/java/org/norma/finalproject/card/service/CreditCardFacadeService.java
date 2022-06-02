@@ -10,9 +10,11 @@ public interface CreditCardFacadeService {
 
     GeneralResponse  create(long userID, CreateCreditCardRequest createCreditCardRequest) throws CustomerNotFoundException, CreditCardOperationException;
 
-    GeneralResponse getCurrentTermTransactions(Long customerID, long creditCardID) throws CustomerNotFoundException, CreditCardNotFoundException, CreditCardOperationException;
+    GeneralResponse getCurrentTermTransactions(Long userID, long creditCardID) throws CustomerNotFoundException, CreditCardNotFoundException, CreditCardOperationException;
 
-    GeneralResponse getCustomerCreditCards(Long customerID) throws CustomerNotFoundException;
+    GeneralResponse getCustomerCreditCards(Long userID) throws CustomerNotFoundException;
 
-    GeneralResponse getCreditCardDebt(Long CustomerID, long creditCardID) throws CustomerNotFoundException, CreditCardOperationException, CreditCardNotFoundException;
+    GeneralResponse getCreditCardDebt(Long userID, long creditCardID) throws CustomerNotFoundException, CreditCardOperationException, CreditCardNotFoundException;
+
+    GeneralResponse deleteCreditCard(Long userID, long creditCardId) throws CustomerNotFoundException, CreditCardNotFoundException, CreditCardOperationException;
 }

@@ -38,14 +38,11 @@ import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileFilter;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static org.norma.finalproject.common.core.utils.Utils.get30DaysAgo;
 
 @Service
 @RequiredArgsConstructor
@@ -126,7 +123,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
             Date aMonthAgo= Utils.get30DaysAgo(today); // get 30 day ago from today
             filter=new ActivityFilter(aMonthAgo,today); //  default filter a month ago
         }
-        List<AccountActivity> accountActivities=optionalSavingAccount.get().getActivityWithFilter(filter);
+        List<AccountActivity> accountActivities=optionalSavingAccount.get().getActivityWithFilterDate(filter);
         if (accountActivities.isEmpty()) {
             throw new ActivitiesNotFoundException();
         }

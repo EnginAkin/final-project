@@ -47,28 +47,29 @@ public class ShoppingServiceImpl implements ShoppingService {
         if(optionalDebitCard.isEmpty()){
             throw new DebitCardNotFoundException();
         }
-        if(!(doShoppingRequestWithDebitCard.getCardPassword().equals(optionalDebitCard.get().getPassword()))){
+        DebitCard debitCard=optionalDebitCard.get();
+        if(!(doShoppingRequestWithDebitCard.getCardPassword().equals(debitCard.getPassword()))){
             throw new DebitCardOperationException("Password invalid.");
         }
-        if(optionalDebitCard.get().getBalance().compareTo(doShoppingRequestWithDebitCard.getShoppingAmount())<0){
+        if(debitCard.getBalance().compareTo(doShoppingRequestWithDebitCard.getShoppingAmount())<0){
             throw new DebitCardOperationException("Card balance not enough for this shopping.");
         }
 
-        optionalDebitCard.get().getCheckingAccount().setBalance(optionalDebitCard.get().getBalance().subtract(doShoppingRequestWithDebitCard.getShoppingAmount()));
+        debitCard.getCheckingAccount().setBalance(debitCard.getBalance().subtract(doShoppingRequestWithDebitCard.getShoppingAmount()));
 
         AccountActivity accountActivity=new AccountActivity();
-        accountActivity.setAccount(optionalDebitCard.get().getCheckingAccount());
+        accountActivity.setAccount(debitCard.getCheckingAccount());
         accountActivity.setDescription("Shopping scenario");
         accountActivity.setCrossAccount("Shopping scenario");
         accountActivity.setAmount(doShoppingRequestWithDebitCard.getShoppingAmount());
         accountActivity.setDate(new Date());
         accountActivity.setActionStatus(ActionStatus.OUTGOING);
-        accountActivity.setAvailableBalance(optionalDebitCard.get().getBalance());
+        accountActivity.setAvailableBalance(debitCard.getBalance());
 
-        optionalDebitCard.get().getCheckingAccount().addActivity(accountActivity);
+        debitCard.getCheckingAccount().addActivity(accountActivity);
 
-        accountService.update(optionalDebitCard.get().getCheckingAccount());
-        accountService.refresh(optionalDebitCard.get().getCheckingAccount());
+        accountService.update(debitCard.getCheckingAccount());
+        accountService.refresh(debitCard.getCheckingAccount());
         return new GeneralSuccessfullResponse("Shopping successfull.");
     }
 

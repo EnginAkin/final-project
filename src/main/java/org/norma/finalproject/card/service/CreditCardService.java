@@ -9,4 +9,6 @@ public interface CreditCardService {
 
     Optional<CreditCard> findCreditCardByCreditCardNumber(String cardNumber);
     Optional<CreditCard> findCreditCardById(long id);
+
+    void delete(CreditCard creditCard);
 }

@@ -83,6 +83,7 @@ public class CheckingAccountServiceTest {
         // given
 
         CheckingAccount checkingAccount = new CheckingAccount();
+        checkingAccount.setId(1L);
         checkingAccount.setAccountNo("1111");
         checkingAccount.setBranchCode("00");
         checkingAccount.setBankCode("000000");
@@ -90,7 +91,7 @@ public class CheckingAccountServiceTest {
         checkingAccount.setBranchName("FATIH");
         doNothing().when(checkingAccountRepository).delete(checkingAccount);
         // when
-        underTest.deleteCustomerCheckingAccountById(checkingAccount);
+        underTest.deleteCustomerCheckingAccountById(checkingAccount.getId());
     }
 
     @Test

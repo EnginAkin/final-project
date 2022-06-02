@@ -7,7 +7,6 @@ import org.norma.finalproject.account.core.model.response.AccountActivityRespons
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.base.AccountActivity;
-import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.card.core.exception.DebitCardOperationException;
@@ -29,6 +28,7 @@ import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -95,7 +95,7 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
             Date aMonthAgo= Utils.get30DaysAgo(today); // get 30 day ago from today
             filter=new ActivityFilter(aMonthAgo,today); //  default filter a month ago
         }
-        List<AccountActivity> accountActivities=optionalDebitCard.get().getCheckingAccount().getActivityWithFilter(filter);
+        List<AccountActivity> accountActivities=optionalDebitCard.get().getCheckingAccount().getActivityWithFilterDate(filter);
         List<AccountActivityResponse> responseList = accountActivities.stream().map(accountActivityMapper::toDto).toList();
         return new GeneralDataResponse<>(responseList);
     }
@@ -151,6 +151,9 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
         Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardID(customerID,debitCardID);
         if (optionalDebitCard.isEmpty()) {
             throw new DebitCardOperationException("debit card not found.");
+        }
+        if(optionalDebitCard.get().getBalance().compareTo(BigDecimal.ZERO)>0){
+            throw new DebitCardOperationException("Debit card has a balance.");
         }
         debitCardService.delete(optionalDebitCard.get());
         return new GeneralSuccessfullResponse("Delete debit card successfully");

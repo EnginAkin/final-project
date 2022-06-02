@@ -68,8 +68,6 @@ public class IbanTransferBase extends TransferBase<IbanTransferRequest> {
                 throw new TransferOperationException("You can transfer only parent checking account.");
             }
         }
-
-        //sendTransfer(optionalFromAccount.get(), optionalToAccount.get(), transferRequest.getAmount(), transferRequest.getDescription());
         sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), transferRequest.getAmount(), transferRequest.getDescription());
         accountService.refresh(optionalFromAccount.get());// hesaba bağlı kart var ise içindeki tutar refresh edilmeli.
         return new GeneralSuccessfullResponse("Transfer successfull.");

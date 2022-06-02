@@ -5,14 +5,11 @@ import lombok.*;
 import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.card.core.model.request.ActivityFilter;
-import org.norma.finalproject.customer.entity.Customer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.logging.Filter;
 
 @Entity
 @Builder
@@ -52,7 +49,7 @@ public class Account {
     public void addActivity(AccountActivity accountActivity){
         activities.add(accountActivity);
     }
-    public List<AccountActivity> getActivityWithFilter(ActivityFilter filter){
+    public List<AccountActivity> getActivityWithFilterDate(ActivityFilter filter){
         return activities.stream().filter(accountActivity -> accountActivity.getDate().before(filter.getToDate()) &&
                 accountActivity.getDate().after(filter.getFromDate())).toList();
     }

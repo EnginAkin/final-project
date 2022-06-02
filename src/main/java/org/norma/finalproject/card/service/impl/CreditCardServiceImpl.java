@@ -26,4 +26,9 @@ public class CreditCardServiceImpl implements CreditCardService {
     public Optional<CreditCard> findCreditCardById(long id) {
         return creditCardRepository.findById(id);
     }
+
+    @Override
+    public void delete(CreditCard creditCard) {
+        creditCardRepository.delete(creditCard);
+    }
 }

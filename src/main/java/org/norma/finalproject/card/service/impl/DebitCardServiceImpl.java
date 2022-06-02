@@ -49,6 +49,15 @@ public class DebitCardServiceImpl implements DebitCardService {
     }
 
     @Override
+    public void deleteByCheckingAccount(long parentId) {
+        Optional<DebitCard> optionalDebitCard = findByParentCheckingAccount(parentId);
+        if(optionalDebitCard.isEmpty()){
+            return;
+        }
+        debitCardRepository.delete(optionalDebitCard.get());
+    }
+
+    @Override
     public void delete(DebitCard debitCard) {
         debitCardRepository.delete(debitCard);
     }

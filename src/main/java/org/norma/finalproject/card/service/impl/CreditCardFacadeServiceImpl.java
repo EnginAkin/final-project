@@ -16,6 +16,7 @@ import org.norma.finalproject.card.service.CreditCardService;
 import org.norma.finalproject.card.service.CreditLimitCalculator;
 import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;
+import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
@@ -36,8 +37,8 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
     private final CreditCardMapper creditCardMapper;
 
     @Override
-    public GeneralResponse create(long customerID, CreateCreditCardRequest createCreditCardRequest) throws CustomerNotFoundException, CreditCardOperationException {
-        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
+    public GeneralResponse create(long userID, CreateCreditCardRequest createCreditCardRequest) throws CustomerNotFoundException, CreditCardOperationException {
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(userID);
         if(optionalCustomer.isEmpty()){
             throw new CustomerNotFoundException();
         }
@@ -66,8 +67,8 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
     }
 
     @Override
-    public GeneralResponse getCurrentTermTransactions(Long customerID, long creditCardId) throws CustomerNotFoundException, CreditCardNotFoundException, CreditCardOperationException {
-        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
+    public GeneralResponse getCurrentTermTransactions(Long userID, long creditCardId) throws CustomerNotFoundException, CreditCardNotFoundException, CreditCardOperationException {
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(userID);
         if(optionalCustomer.isEmpty()){
             throw new CustomerNotFoundException();
         }
@@ -75,7 +76,7 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
         if(optionalCreditCard.isEmpty()){
             throw new CreditCardNotFoundException();
         }
-        if(!(optionalCreditCard.get().getCustomer().getId().equals(customerID))){
+        if(!(optionalCreditCard.get().getCustomer().getId().equals(userID))){
             throw new CreditCardOperationException("Credit not found in customers credit cards.");
         }
         List<CreditCardActivityResponse> responseList = optionalCreditCard.get().getCreditCardAccount().getCurrentTermExtract().getCreditCardActivities().stream().map(creditCardMapper::toCreditCardResponse).toList();
@@ -84,8 +85,8 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
     }
 
     @Override
-    public GeneralResponse getCustomerCreditCards(Long customerID) throws CustomerNotFoundException {
-        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
+    public GeneralResponse getCustomerCreditCards(Long userID) throws CustomerNotFoundException {
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(userID);
         if(optionalCustomer.isEmpty()){
             throw new CustomerNotFoundException();
         }
@@ -94,8 +95,8 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
     }
 
     @Override
-    public GeneralResponse getCreditCardDebt(Long customerID, long creditCardID) throws CustomerNotFoundException, CreditCardOperationException, CreditCardNotFoundException {
-        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
+    public GeneralResponse getCreditCardDebt(Long userID, long creditCardID) throws CustomerNotFoundException, CreditCardOperationException, CreditCardNotFoundException {
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(userID);
         if(optionalCustomer.isEmpty()){
             throw new CustomerNotFoundException();
         }
@@ -103,7 +104,7 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
         if(optionalCreditCard.isEmpty()){
             throw new CreditCardNotFoundException();
         }
-        if(!(optionalCreditCard.get().getCustomer().getId().equals(customerID))){
+        if(!(optionalCreditCard.get().getCustomer().getId().equals(userID))){
             throw new CreditCardOperationException("Credit not found in customers credit cards.");
         }
         CreditCardAccount creditCardAccount=optionalCreditCard.get().getCreditCardAccount();
@@ -114,6 +115,27 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
         debtResponse.setLastExtractDebt(creditCardAccount.getLastExtractDebt());
         return new GeneralDataResponse<>(debtResponse);
 
+    }
+
+    @Override
+    public GeneralResponse deleteCreditCard(Long userID, long creditCardId) throws CustomerNotFoundException, CreditCardNotFoundException, CreditCardOperationException {
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(userID);
+        if(optionalCustomer.isEmpty()){
+            throw new CustomerNotFoundException();
+        }
+        Optional<CreditCard> optionalCreditCard = creditCardService.findCreditCardById(creditCardId);
+        if(optionalCreditCard.isEmpty()){
+            throw new CreditCardNotFoundException();
+        }
+        if(!(optionalCreditCard.get().getCustomer().getId().equals(userID))){
+            throw new CreditCardOperationException("Credit not found in customers credit cards.");
+        }
+        if(optionalCreditCard.get().getCreditCardAccount().getTotalDebt().compareTo(BigDecimal.ZERO)>0){
+            throw new CreditCardOperationException("Credit has a debt. you cannot delete credit card.");
+        }
+
+        creditCardService.delete(optionalCreditCard.get());
+        return new GeneralSuccessfullResponse("Delete successfully");
     }
 
     private CreditCardAccount createCreditAccount(){

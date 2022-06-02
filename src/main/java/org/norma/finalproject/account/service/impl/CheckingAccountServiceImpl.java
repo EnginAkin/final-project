@@ -29,8 +29,8 @@ public class CheckingAccountServiceImpl implements CheckingAccountService {
     }
 
     @Override
-    public void deleteCustomerCheckingAccountById(CheckingAccount checkingAccount) {
-        checkingAccountRepository.delete(checkingAccount);
+    public void deleteCustomerCheckingAccountById(Long checkingAccountId) {
+        checkingAccountRepository.deleteById(checkingAccountId);
 
     }
 

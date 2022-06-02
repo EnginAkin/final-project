@@ -18,21 +18,29 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @RequiredArgsConstructor
-public abstract class TransferBase<T>  {
+public abstract class TransferBase<T> {
     private final BaseAccountService accountService;
     private final FacadeExchangeService exchangeService;
 
     public abstract GeneralResponse transfer(long customerId, T request) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException, DebitCardNotFoundException;
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public void sendTransferWithIban(String fromAccountIban, String toAccountIban, BigDecimal amount, String description) throws AmountNotValidException {
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public void sendTransferWithIban(String fromAccountIban, String toAccountIban, BigDecimal amount, String description) throws AmountNotValidException, TransferOperationException {
 
         Account fromAccount = accountService.findAccountByIbanNumber(fromAccountIban).get();
         Account toAccount = accountService.findAccountByIbanNumber(toAccountIban).get();
+
+
         fromAccount.setLockedBalance(amount);
         fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
-
         accountService.update(fromAccount); // lock balance for security
+
+        BigDecimal checkLockedBalance=fromAccount.getBalance().subtract(fromAccount.getLockedBalance());
+        if(checkLockedBalance.compareTo(BigDecimal.ZERO)<0){ //
+            fromAccount.setLockedBalance(BigDecimal.ZERO);
+            throw new TransferOperationException("Locked balance rather than account balance.");
+        }
+
         AccountActivity fromAccountActivity = new AccountActivity();
         fromAccountActivity.setAccount(fromAccount);
         fromAccountActivity.setCrossAccount(toAccount.getIbanNo());
@@ -51,8 +59,6 @@ public abstract class TransferBase<T>  {
         toAccountActivity.setAmount(amount);
         toAccount.setBalance(toAccount.getBalance().add(amount));
 
-
-
         toAccountActivity.setAvailableBalance(toAccount.getBalance());
         fromAccountActivity.setAvailableBalance(fromAccount.getBalance());
 
@@ -62,55 +68,9 @@ public abstract class TransferBase<T>  {
 
         fromAccount.setLockedBalance(BigDecimal.ZERO);
 
-
         accountService.update(toAccount);
         accountService.update(fromAccount);
 
     }
 
-
-    /// TODO Burası sorulacak
-
-    /*
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public void sendTransfer(Account fromAccount, Account toAccount, BigDecimal amount, String description) throws AmountNotValidException {
-
-
-        fromAccount.setLockedBalance(amount);
-        accountService.update(fromAccount); // lock balance for security
-        AccountActivity fromAccountActivity = new AccountActivity();
-        fromAccountActivity.setAccount(fromAccount);
-        fromAccountActivity.setCrossAccount(toAccount.getIbanNo());
-        fromAccountActivity.setActionStatus(ActionStatus.OUTGOING);
-        fromAccountActivity.setAmount(amount);
-        fromAccountActivity.setDate(new Date());
-
-        amount = exchangeService.getExchangedAmount(toAccount.getCurrencyType(), fromAccount.getCurrencyType(), amount); // get exchange
-
-        AccountActivity toAccountActivity = new AccountActivity();
-        toAccountActivity.setAccount(toAccount);
-        toAccountActivity.setCrossAccount(fromAccount.getIbanNo());
-        toAccountActivity.setActionStatus(ActionStatus.INCOMING);
-        toAccountActivity.setDate(new Date());
-        toAccountActivity.setDescription(description);
-        toAccountActivity.setAmount(amount);
-        toAccount.setBalance(toAccount.getBalance().add(amount));
-
-        fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
-
-        toAccountActivity.setAvailableBalance(toAccount.getBalance());
-        fromAccountActivity.setAvailableBalance(fromAccount.getBalance());
-
-        // add activity account
-        toAccount.addActivity(toAccountActivity);
-        fromAccount.addActivity(fromAccountActivity);
-
-        fromAccount.setLockedBalance(BigDecimal.ZERO);
-        accountService.update(toAccount);
-        accountService.update(fromAccount);
-
-    }
-
-
- */
 }
