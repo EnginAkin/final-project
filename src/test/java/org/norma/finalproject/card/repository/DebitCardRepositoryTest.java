@@ -55,7 +55,6 @@ public class DebitCardRepositoryTest {
 
         DebitCard debitCard1 =new DebitCard();
         debitCard1.setCardNumber("11111");
-        debitCard1.setBalance(BigDecimal.TEN);
         debitCard1.setPassword("123");
         debitCard1.setCvv("123");
         debitCard1.setCheckingAccount(checkingAccount);
@@ -79,7 +78,6 @@ public class DebitCardRepositoryTest {
 
         DebitCard debitCard =new DebitCard();
         debitCard.setCardNumber(cardNumber);
-        debitCard.setBalance(BigDecimal.TEN);
         debitCard.setPassword("123");
         debitCard.setCvv("123");
         underTest.save(debitCard);

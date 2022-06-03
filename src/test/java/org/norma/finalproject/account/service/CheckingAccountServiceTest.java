@@ -78,21 +78,6 @@ public class CheckingAccountServiceTest {
         Assertions.assertThat(optionalCheckingAccount).isEmpty();
     }
 
-    @Test
-    public void givenInvalidAccountId_whenFindById_thenReturnCheckingAccount() {
-        // given
-
-        CheckingAccount checkingAccount = new CheckingAccount();
-        checkingAccount.setId(1L);
-        checkingAccount.setAccountNo("1111");
-        checkingAccount.setBranchCode("00");
-        checkingAccount.setBankCode("000000");
-        checkingAccount.setAccountName("account name");
-        checkingAccount.setBranchName("FATIH");
-        doNothing().when(checkingAccountRepository).delete(checkingAccount);
-        // when
-        underTest.deleteCustomerCheckingAccountById(checkingAccount.getId());
-    }
 
     @Test
     public void givenCustomerId_whenGetUnblockedAccounts_thenReturnUnblockedAccountList() {

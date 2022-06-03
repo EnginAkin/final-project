@@ -1,6 +1,7 @@
 package org.norma.finalproject.transfer.core.mapper.impl;
 
 import org.norma.finalproject.transfer.core.mapper.TransferMapper;
+import org.norma.finalproject.transfer.core.model.request.EmailTransferRequest;
 import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
 import org.norma.finalproject.transfer.entity.Transfer;
 import org.springframework.stereotype.Component;
@@ -23,4 +24,6 @@ public class TransferMapperImpl implements TransferMapper {
         transfer.setTransferType(transferRequest.getTransferType());
         return transfer;
     }
+
+
 }
