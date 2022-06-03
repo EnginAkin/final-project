@@ -68,6 +68,7 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
         this.sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), emailTransferRequest.getAmount(), emailTransferRequest.getDescription());
 
         Transfer transfer = transferMapper.toEntity(new IbanTransferRequest(optionalFromAccount.get().getIbanNo(),optionalToAccount.get().getIbanNo(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription(),emailTransferRequest.getTransferType()));
+        transfer.setCurrencyType(optionalFromAccount.get().getCurrencyType());
         transferService.save(transfer);
         return new GeneralSuccessfullResponse("Transfer successfully.");
     }

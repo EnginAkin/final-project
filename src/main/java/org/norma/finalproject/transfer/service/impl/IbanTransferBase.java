@@ -78,6 +78,7 @@ public class IbanTransferBase extends TransferBase<IbanTransferRequest> {
         this.sendTransferWithIban(fromAccount.getIbanNo(), toAccount.getIbanNo(), transferRequest.getAmount(), transferRequest.getDescription());
         IbanTransferRequest ibanTransferRequest=new IbanTransferRequest(fromAccount.getIbanNo(),toAccount.getIbanNo(),transferRequest.getAmount(),transferRequest.getDescription(),transferRequest.getTransferType());
         Transfer transfer = transferMapper.toEntity(ibanTransferRequest);
+        transfer.setCurrencyType(fromAccount.getCurrencyType());
         transferService.save(transfer);
         return new GeneralSuccessfullResponse("Transfer successfull.");
     }
@@ -93,10 +94,3 @@ public class IbanTransferBase extends TransferBase<IbanTransferRequest> {
     }
 
 }
-//
-
-/*
-    transfer deneme
-    2.kişi   10 id   engin3@gmail.com 100 tl  TR3300006101133939763635453          eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMiIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM0OTY1NzksImlhdCI6MTY1MzQ2NjU3OX0.Y7tyV88t0Tt1fCzd0ax535PL6GUCZt7tKVDyTnQYQI4AQnZixEB5d2-AO5Io9YjnAU4S8dBtVp50vz1XIOjMlg
-    1. kişi 9 id TR3300006102444125751110611  engin2@gmail.com
- */

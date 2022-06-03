@@ -40,7 +40,7 @@ public class AtmServiceImpl implements AtmService {
         if(!(optionalDebitCard.get().getPassword().equals(depositRequest.getCardPassword()))){
             throw new DebitCardOperationException("Debit card password not valid.");
         }
-        optionalDebitCard.get().getCheckingAccount().setBalance(optionalDebitCard.get().getBalance().add(depositRequest.getDepositAmount()));
+        optionalDebitCard.get().getCheckingAccount().setBalance(optionalDebitCard.get().getCheckingAccount().getBalance().add(depositRequest.getDepositAmount()));
         AccountActivity activity=new AccountActivity();
         activity.setActionStatus(ActionStatus.INCOMING);
         activity.setDate(new Date());
@@ -52,7 +52,6 @@ public class AtmServiceImpl implements AtmService {
 
         optionalDebitCard.get().getCheckingAccount().addActivity(activity);
         accountService.update(optionalDebitCard.get().getCheckingAccount());
-        accountService.refresh(optionalDebitCard.get().getCheckingAccount());
         DebitCardResponse response = debitCardMapper.toDto(optionalDebitCard.get());
         return new GeneralDataResponse<>(response,"Deposit successfully completed.");
     }
@@ -66,11 +65,11 @@ public class AtmServiceImpl implements AtmService {
         if(!(optionalDebitCard.get().getPassword().equals(withdrawRequest.getCardPassword()))){
             throw new DebitCardOperationException("Debit card password not valid.");
         }
-        if(optionalDebitCard.get().getBalance().compareTo(withdrawRequest.getWithdrawAmount())<0){
+        if(optionalDebitCard.get().getCheckingAccount().getBalance().compareTo(withdrawRequest.getWithdrawAmount())<0){
             throw new DebitCardOperationException("Not enough money for withdraw.");
         }
 
-        optionalDebitCard.get().getCheckingAccount().setBalance(optionalDebitCard.get().getBalance().subtract(withdrawRequest.getWithdrawAmount()));
+        optionalDebitCard.get().getCheckingAccount().setBalance(optionalDebitCard.get().getCheckingAccount().getBalance().subtract(withdrawRequest.getWithdrawAmount()));
 
         AccountActivity activity=new AccountActivity();
         activity.setActionStatus(ActionStatus.OUTGOING);
@@ -84,7 +83,6 @@ public class AtmServiceImpl implements AtmService {
 
         optionalDebitCard.get().getCheckingAccount().addActivity(activity);
         accountService.update(optionalDebitCard.get().getCheckingAccount());
-        accountService.refresh(optionalDebitCard.get().getCheckingAccount());// for debit card
         DebitCardResponse response = debitCardMapper.toDto(optionalDebitCard.get());
         return new GeneralDataResponse<>(response,"withdraw successfully completed.");
 

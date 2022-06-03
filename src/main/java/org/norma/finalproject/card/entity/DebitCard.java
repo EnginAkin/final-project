@@ -22,7 +22,7 @@ public class DebitCard {
     private String cardNumber;
     @NotNull
     private String password;
-    private BigDecimal balance=BigDecimal.ZERO;
+
     @NotNull
     private String cvv;
 
@@ -36,7 +36,5 @@ public class DebitCard {
     private CheckingAccount checkingAccount;
 
 
-    public void refreshBalance() {
-        this.balance=checkingAccount.getBalance();
-    }
+
 }

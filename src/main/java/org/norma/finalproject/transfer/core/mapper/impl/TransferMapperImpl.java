@@ -16,6 +16,7 @@ public class TransferMapperImpl implements TransferMapper {
         transfer.setBalance(transferRequest.getAmount());
         transfer.setDescription(transferRequest.getDescription());
         transfer.setFromIban(transferRequest.getFromIban());
+        transfer.setTransferType(transferRequest.getTransferType());
 
         transfer.setToIban(transferRequest.getToIban());
         transfer.setProcessTime(new Date());

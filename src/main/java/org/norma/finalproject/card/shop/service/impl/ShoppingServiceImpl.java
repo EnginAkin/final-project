@@ -51,11 +51,11 @@ public class ShoppingServiceImpl implements ShoppingService {
         if(!(doShoppingRequestWithDebitCard.getCardPassword().equals(debitCard.getPassword()))){
             throw new DebitCardOperationException("Password invalid.");
         }
-        if(debitCard.getBalance().compareTo(doShoppingRequestWithDebitCard.getShoppingAmount())<0){
+        if(debitCard.getCheckingAccount().getBalance().compareTo(doShoppingRequestWithDebitCard.getShoppingAmount())<0){
             throw new DebitCardOperationException("Card balance not enough for this shopping.");
         }
 
-        debitCard.getCheckingAccount().setBalance(debitCard.getBalance().subtract(doShoppingRequestWithDebitCard.getShoppingAmount()));
+        debitCard.getCheckingAccount().setBalance(debitCard.getCheckingAccount().getBalance().subtract(doShoppingRequestWithDebitCard.getShoppingAmount()));
 
         AccountActivity accountActivity=new AccountActivity();
         accountActivity.setAccount(debitCard.getCheckingAccount());
@@ -64,12 +64,11 @@ public class ShoppingServiceImpl implements ShoppingService {
         accountActivity.setAmount(doShoppingRequestWithDebitCard.getShoppingAmount());
         accountActivity.setDate(new Date());
         accountActivity.setActionStatus(ActionStatus.OUTGOING);
-        accountActivity.setAvailableBalance(debitCard.getBalance());
+        accountActivity.setAvailableBalance(debitCard.getCheckingAccount().getBalance());
 
         debitCard.getCheckingAccount().addActivity(accountActivity);
 
         accountService.update(debitCard.getCheckingAccount());
-        accountService.refresh(debitCard.getCheckingAccount());
         return new GeneralSuccessfullResponse("Shopping successfull.");
     }
 

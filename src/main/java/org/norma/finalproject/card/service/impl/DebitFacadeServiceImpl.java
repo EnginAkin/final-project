@@ -66,7 +66,6 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
         }
         DebitCard debitCard = new DebitCard();
         debitCard.setCardNumber(uniqueNoCreator.creatAccountNo());
-        debitCard.setBalance(optionalCheckingAccount.get().getBalance());
         Random random = new Random();
         int cvv = random.nextInt(900) + 100;
         debitCard.setCvv(String.valueOf(cvv));
@@ -176,7 +175,7 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
             log.error("Debit card not found.");
             throw new DebitCardOperationException("debit card not found.");
         }
-        if (optionalDebitCard.get().getBalance().compareTo(BigDecimal.ZERO) > 0) {
+        if (optionalDebitCard.get().getCheckingAccount().getBalance().compareTo(BigDecimal.ZERO) > 0) {
             log.error("Debit card has balance so cannot deleted..");
             throw new DebitCardOperationException("Debit card has a balance.");
         }
