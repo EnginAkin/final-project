@@ -3,10 +3,11 @@ package org.norma.finalproject.account.entity;
 import lombok.*;
 import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.account.entity.enums.Maturity;
-import org.norma.finalproject.account.entity.enums.PurposeCumulative;
+import org.norma.finalproject.account.entity.enums.PurposeSaving;
 import org.norma.finalproject.customer.entity.Customer;
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -23,10 +24,13 @@ public class SavingAccount extends Account {
     @Enumerated(value = EnumType.ORDINAL)
     private Maturity maturity;
 
-    @Enumerated(EnumType.STRING)
-    private PurposeCumulative purposeCumulative;
+    @Temporal(TemporalType.DATE)
+    private Date maturityDate; // Maturity date -> for giving interest .
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @Enumerated(EnumType.STRING)
+    private PurposeSaving purposeSaving;
+
+    @OneToOne
     private CheckingAccount parentAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)

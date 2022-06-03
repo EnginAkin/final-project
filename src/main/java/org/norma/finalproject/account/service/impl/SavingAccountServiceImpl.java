@@ -7,6 +7,7 @@ import org.norma.finalproject.account.repository.SavingAccountRepository;
 import org.norma.finalproject.account.service.SavingAccountService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,13 +32,18 @@ public class SavingAccountServiceImpl implements SavingAccountService {
     }
 
     @Override
-    public void deleteByParent(SavingAccount savingAccount) {
+    public void deleteSavingAccount(SavingAccount savingAccount) {
         savingAccountRepository.delete(savingAccount);
     }
 
     @Override
     public Optional<SavingAccount> findById(long accountID) {
         return savingAccountRepository.findById(accountID);
+    }
+
+    @Override
+    public List<SavingAccount> getAllByMaturityDateInToday() {
+        return savingAccountRepository.getAllSavingAccountMaturityDateInToday();
     }
 
 

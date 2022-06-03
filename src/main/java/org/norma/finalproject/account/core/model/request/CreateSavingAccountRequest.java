@@ -3,7 +3,7 @@ package org.norma.finalproject.account.core.model.request;
 import lombok.Getter;
 import lombok.Setter;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
-import org.norma.finalproject.account.entity.enums.PurposeCumulative;
+import org.norma.finalproject.account.entity.enums.PurposeSaving;
 import org.norma.finalproject.account.entity.enums.Maturity;
 
 import javax.validation.constraints.Min;
@@ -24,7 +24,7 @@ public class CreateSavingAccountRequest {
     private CurrencyType currencyType;
 
     @NotNull
-    private PurposeCumulative purposeCumulative;
+    private PurposeSaving purposeSaving;
 
     @NotNull
     @Min(0)

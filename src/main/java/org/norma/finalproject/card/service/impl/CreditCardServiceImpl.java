@@ -6,6 +6,7 @@ import org.norma.finalproject.card.repository.CreditCardRepository;
 import org.norma.finalproject.card.service.CreditCardService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,5 +31,10 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Override
     public void delete(CreditCard creditCard) {
         creditCardRepository.delete(creditCard);
+    }
+
+    @Override
+    public List<CreditCard> findAllCutoffDateInToday() {
+        return creditCardRepository.findAllCutoffDateInToday();
     }
 }

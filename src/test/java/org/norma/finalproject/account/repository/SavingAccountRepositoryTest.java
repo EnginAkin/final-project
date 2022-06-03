@@ -11,9 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class SavingAccountRepositoryTest {
@@ -32,6 +33,28 @@ class SavingAccountRepositoryTest {
         checkingAccountRepository.deleteAll();
     }
 
+    @Test
+    public void given_when_then(){
+        SavingAccount savingAccount1=new SavingAccount();
+        savingAccount1.setAccountName("1");
+        savingAccount1.setIbanNo("1");
+        savingAccount1.setAccountNo("1");
+        savingAccount1.setMaturityDate(new Date());
+
+        SavingAccount savingAccount2=new SavingAccount();
+        savingAccount2.setAccountName("12");
+        savingAccount2.setIbanNo("12");
+        savingAccount2.setAccountNo("12");
+        Calendar maturity = Calendar.getInstance();
+        maturity.add(Calendar.MONTH, 3);
+        savingAccount2.setMaturityDate(maturity.getTime());
+        underTest.saveAll(List.of(savingAccount1,savingAccount2));
+
+        List<SavingAccount> maturityDateInToday = underTest.getAllSavingAccountMaturityDateInToday();
+
+        Assertions.assertThat(maturityDateInToday.size()).isEqualTo(1);
+
+    }
     @Test
     public void givenCustomerId_whenFindAllByCustomerId_thenReturnsSavingAccountList(){
         // given
@@ -60,6 +83,10 @@ class SavingAccountRepositoryTest {
         // then
         Assertions.assertThat(savingAccounts).isNotNull();
     }
+
+
+
+
 
     @Test
     public void givenInvalidCustomerId_whenFindAllByCustomerId_thenReturnsSavingAccountList(){

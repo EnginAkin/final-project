@@ -141,7 +141,11 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
     private CreditCardAccount createCreditAccount(){
         CreditCardAccount creditCardAccount=new CreditCardAccount();
         creditCardAccount.setTotalDebt(BigDecimal.ZERO);
-        creditCardAccount.setCutOffDate(new Date());
+
+        Calendar cutOffDay = Calendar.getInstance();
+        cutOffDay.add(Calendar.DAY_OF_MONTH, 30); // 3 year expiry date
+
+        creditCardAccount.setCutOffDate(cutOffDay.getTime());
         creditCardAccount.setLastExtractDebt(BigDecimal.ZERO);
         LocalDate localDate=creditCardAccount.getCutOffDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         localDate=localDate.plusDays(10);

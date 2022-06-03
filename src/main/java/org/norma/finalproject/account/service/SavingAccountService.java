@@ -13,8 +13,10 @@ public interface SavingAccountService {
     List<SavingAccount> getAllAccountsByCustomerId(Long customerId);
     Optional<SavingAccount> getByParentId(Long parentAccountID);
 
-    void deleteByParent(SavingAccount savingAccount);
+    void deleteSavingAccount(SavingAccount savingAccount);
 
     Optional<SavingAccount> findById(long accountID);
+
+    List<SavingAccount> getAllByMaturityDateInToday();
 
 }

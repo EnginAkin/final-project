@@ -1,5 +1,5 @@
 package org.norma.finalproject.account.entity.enums;
 
-public enum PurposeCumulative {
+public enum PurposeSaving {
     EDUCATION, BUSINESS, TRADE
 }

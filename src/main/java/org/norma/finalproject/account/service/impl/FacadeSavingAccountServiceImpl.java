@@ -140,7 +140,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         if(optionalSavingAccount.get().getBalance().compareTo(BigDecimal.ZERO)>0){
             throw new AccountBalanceGreatherThenZeroException(Message.ACCOUNT_HAS_BALANCE_DELETE_EXCEPTION);
         }
-        savingAccountService.deleteByParent(optionalSavingAccount.get());
+        savingAccountService.deleteSavingAccount(optionalSavingAccount.get());
     }
 
     @Override
@@ -152,7 +152,7 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         if(optionalSavingAccount.get().getBalance().compareTo(BigDecimal.ZERO)>0){
             throw new AccountBalanceGreatherThenZeroException(Message.ACCOUNT_HAS_BALANCE_DELETE_EXCEPTION);
         }
-        savingAccountService.deleteByParent(optionalSavingAccount.get());
+        savingAccountService.deleteSavingAccount(optionalSavingAccount.get());
         return new GeneralSuccessfullResponse("Successfully deleted");
     }
 
