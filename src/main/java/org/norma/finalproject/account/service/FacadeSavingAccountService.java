@@ -20,8 +20,6 @@ public interface FacadeSavingAccountService {
 
     GeneralResponse getAccountActivities(Long customerID, long accountID, ActivityFilter filter) throws CustomerNotFoundException, CheckingAccountNotFoundException, ActivitiesNotFoundException, SavingAccountOperationException, SavingAccountNotFound;
 
-    void deleteSavingAccountByCheckingId(Long checkingId) throws SavingAccountNotFound, AccountBalanceGreatherThenZeroException;
-
     GeneralResponse deleteById(Long customerID, long accountID) throws SavingAccountNotFound, AccountBalanceGreatherThenZeroException;
 
     GeneralResponse getAccountByAccountID(Long customerID, long accountID) throws CustomerNotFoundException, SavingAccountNotFound;

@@ -1,8 +1,8 @@
 package org.norma.finalproject.common.core.utils;
 
-public  class Message {
+public  class Messages {
 
-    private Message(){
+    private Messages(){
         throw new UnsupportedOperationException();
     }
 

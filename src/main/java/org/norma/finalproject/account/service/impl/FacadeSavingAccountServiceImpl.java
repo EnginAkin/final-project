@@ -24,7 +24,7 @@ import org.norma.finalproject.card.core.model.request.ActivityFilter;
 import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
-import org.norma.finalproject.common.core.utils.Message;
+import org.norma.finalproject.common.core.utils.Messages;
 import org.norma.finalproject.common.core.utils.Utils;
 import org.norma.finalproject.customer.core.exception.ActivitiesNotFoundException;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
@@ -61,23 +61,30 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
     @Override
     @Transactional
     public GeneralResponse create(Long customerID, CreateSavingAccountRequest createSavingAccountRequest) throws CustomerNotFoundException, CheckingAccountNotFoundException, SavingAccountOperationException, AmountNotValidException, TransferOperationException, DebitCardNotFoundException {
+        log.debug("create account started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
+            log.error("Customer not found.");
+
             throw new CustomerNotFoundException();
         }
         Optional<CheckingAccount> parentCheckingAccount = checkingAccountService.findAccountByAccountNumber(createSavingAccountRequest.getParentAccountNumber());
         if (parentCheckingAccount.isEmpty()) {
-            throw new CheckingAccountNotFoundException(Message.CHECKING_ACCOUNT_NOT_FOUND+"By "+createSavingAccountRequest.getParentAccountNumber());
+            log.error(Messages.CHECKING_ACCOUNT_NOT_FOUND);
+            throw new CheckingAccountNotFoundException(Messages.CHECKING_ACCOUNT_NOT_FOUND + "By " + createSavingAccountRequest.getParentAccountNumber());
         }
         if (parentCheckingAccount.get().getCurrencyType() != createSavingAccountRequest.getCurrencyType()) {
-            throw new SavingAccountOperationException(Message.SAVING_ACCOUNT_OPERATION_NOT_MATCHED_CURRENCY_TYPE_EXCEPTION + createSavingAccountRequest.getCurrencyType());
+            log.error(Messages.SAVING_ACCOUNT_OPERATION_NOT_MATCHED_CURRENCY_TYPE_EXCEPTION);
+            throw new SavingAccountOperationException(Messages.SAVING_ACCOUNT_OPERATION_NOT_MATCHED_CURRENCY_TYPE_EXCEPTION + createSavingAccountRequest.getCurrencyType());
         }
         boolean checkUsedParentAccountForSavingAccount = savingAccountService.isUsedParentAccountForSavingAccount(optionalCustomer.get().getId(), parentCheckingAccount.get().getId());
         if (checkUsedParentAccountForSavingAccount) {
-            throw new SavingAccountOperationException(Message.SAVING_ACCOUNT_OPERATION_PARENT_USED_FOR_SAVING_ACCOUNT_EXCEPTION);
+            log.error(Messages.SAVING_ACCOUNT_OPERATION_PARENT_USED_FOR_SAVING_ACCOUNT_EXCEPTION);
+            throw new SavingAccountOperationException(Messages.SAVING_ACCOUNT_OPERATION_PARENT_USED_FOR_SAVING_ACCOUNT_EXCEPTION);
         }
         if (createSavingAccountRequest.getOpeningBalance().compareTo(parentCheckingAccount.get().getBalance()) > 0) {
-            throw new SavingAccountOperationException(Message.SAVING_ACCOUNT_OPERATION_PARENT_BALANCE_NOT_ENOUGH_EXCEPTION);
+            log.error(Messages.SAVING_ACCOUNT_OPERATION_PARENT_BALANCE_NOT_ENOUGH_EXCEPTION);
+            throw new SavingAccountOperationException(Messages.SAVING_ACCOUNT_OPERATION_PARENT_BALANCE_NOT_ENOUGH_EXCEPTION);
         }
         SavingAccount savingAccount = savingAccountMapper.createSavingAccountToEntity(createSavingAccountRequest);
         savingAccount.setCustomer(optionalCustomer.get());
@@ -87,87 +94,92 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
 
         SavingAccount savedAccount = savingAccountService.save(savingAccount);
         // Transfer to save account from checking account
-        IbanTransferRequest transferRequest = new IbanTransferRequest(parentCheckingAccount.get().getIbanNo(), savingAccount.getIbanNo(),createSavingAccountRequest.getOpeningBalance(),"Opening balance", TransferType.OTHER);
+        IbanTransferRequest transferRequest = new IbanTransferRequest(parentCheckingAccount.get().getIbanNo(), savingAccount.getIbanNo(), createSavingAccountRequest.getOpeningBalance(), "Opening balance", TransferType.OTHER);
         ibanTransferBase.transfer(customerID, transferRequest); // transfer with iban
+        log.info("Create saving account successfully.");
         return new GeneralDataResponse<>(savingAccountMapper.toDto(savedAccount));
     }
 
     @Override
     public GeneralResponse getAccounts(Long customerID) throws CustomerNotFoundException {
+        log.debug("get accounts started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
+            log.error("Customer not found.");
             throw new CustomerNotFoundException();
         }
         List<SavingAccount> savingAccountList = savingAccountService.getAllAccountsByCustomerId(customerID);
         List<SavingAccountDto> response = savingAccountList.stream().map(savingAccountMapper::toDto).collect(Collectors.toList());
+        log.info("Customer accounts returned.");
         return new GeneralDataResponse<>(response);
     }
 
     @Override
     public GeneralResponse getAccountActivities(Long customerID, long accountID, ActivityFilter filter) throws CustomerNotFoundException, ActivitiesNotFoundException, SavingAccountOperationException, SavingAccountNotFound {
+        log.debug("get account activities started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
+            log.error("Customer not found.");
             throw new CustomerNotFoundException();
         }
-        Optional<SavingAccount> optionalSavingAccount=savingAccountService.findById(accountID);
-        if(optionalSavingAccount.isEmpty()){
+        Optional<SavingAccount> optionalSavingAccount = savingAccountService.findById(accountID);
+        if (optionalSavingAccount.isEmpty()) {
+            log.error("Saving account not found.");
             throw new SavingAccountNotFound();
         }
 
-        boolean checkOwnersAccountIsCustomer = checkOwnersAccountIsCustomer(optionalCustomer.get(),accountID);
-        if(!checkOwnersAccountIsCustomer){
-            throw new SavingAccountOperationException(Message.SAVING_ACCOUNT_OPERATION_ACTIVITIES_NOT_FOUND_EXCEPTION);
+        boolean checkOwnersAccountIsCustomer = checkOwnersAccountIsCustomer(optionalCustomer.get(), accountID);
+        if (!checkOwnersAccountIsCustomer) {
+            log.error(Messages.SAVING_ACCOUNT_OPERATION_ACTIVITIES_NOT_FOUND_EXCEPTION);
+            throw new SavingAccountOperationException(Messages.SAVING_ACCOUNT_OPERATION_ACTIVITIES_NOT_FOUND_EXCEPTION);
         }
-        if(filter==null){
+        if (filter == null) {
             Date today = new Date();
-            Date aMonthAgo= Utils.get30DaysAgo(today); // get 30 day ago from today
-            filter=new ActivityFilter(aMonthAgo,today); //  default filter a month ago
+            Date aMonthAgo = Utils.get30DaysAgo(today); // get 30 day ago from today
+            filter = new ActivityFilter(aMonthAgo, today); //  default filter a month ago
         }
-        List<AccountActivity> accountActivities=optionalSavingAccount.get().getActivityWithFilterDate(filter);
+        List<AccountActivity> accountActivities = optionalSavingAccount.get().getActivityWithFilterDate(filter);
         if (accountActivities.isEmpty()) {
+            log.error("activities not found.");
             throw new ActivitiesNotFoundException();
         }
         List<AccountActivityResponse> responseList = accountActivities.stream().map(accountActivityMapper::toDto).toList();
+        log.info("get account activities. ended.");
         return new GeneralDataResponse<>(responseList);
     }
 
     @Override
-    public void deleteSavingAccountByCheckingId(Long checkingID) throws SavingAccountNotFound, AccountBalanceGreatherThenZeroException {
-        Optional<SavingAccount> optionalSavingAccount = savingAccountService.getByParentId(checkingID);
-        if(optionalSavingAccount.isEmpty()){
-            throw new SavingAccountNotFound();
-        }
-        if(optionalSavingAccount.get().getBalance().compareTo(BigDecimal.ZERO)>0){
-            throw new AccountBalanceGreatherThenZeroException(Message.ACCOUNT_HAS_BALANCE_DELETE_EXCEPTION);
-        }
-        savingAccountService.deleteSavingAccount(optionalSavingAccount.get());
-    }
-
-    @Override
     public GeneralResponse deleteById(Long customerID, long accountID) throws SavingAccountNotFound, AccountBalanceGreatherThenZeroException {
+        log.debug("delete by id started.");
         Optional<SavingAccount> optionalSavingAccount = savingAccountService.findById(accountID);
-        if(optionalSavingAccount.isEmpty()){
+        if (optionalSavingAccount.isEmpty()) {
+            log.error("saving account not found.");
             throw new SavingAccountNotFound();
         }
-        if(optionalSavingAccount.get().getBalance().compareTo(BigDecimal.ZERO)>0){
-            throw new AccountBalanceGreatherThenZeroException(Message.ACCOUNT_HAS_BALANCE_DELETE_EXCEPTION);
+        if (optionalSavingAccount.get().getBalance().compareTo(BigDecimal.ZERO) > 0) {
+            log.error(Messages.ACCOUNT_HAS_BALANCE_DELETE_EXCEPTION);
+            throw new AccountBalanceGreatherThenZeroException(Messages.ACCOUNT_HAS_BALANCE_DELETE_EXCEPTION);
         }
         savingAccountService.deleteSavingAccount(optionalSavingAccount.get());
+        log.info("successfully deleted.");
         return new GeneralSuccessfullResponse("Successfully deleted");
     }
 
     @Override
     public GeneralResponse getAccountByAccountID(Long customerID, long accountID) throws CustomerNotFoundException, SavingAccountNotFound {
+        log.debug("get account by account id started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
+            log.error("customer not found.");
             throw new CustomerNotFoundException();
         }
-
         Optional<SavingAccount> optionalSavingAccount = savingAccountService.findById(accountID);
-        if(optionalSavingAccount.isEmpty()){
+        if (optionalSavingAccount.isEmpty()) {
+            log.error("Saving account not found.");
             throw new SavingAccountNotFound();
         }
         SavingAccountDto dto = savingAccountMapper.toDto(optionalSavingAccount.get());
+        log.debug("get account by account id ended.");
         return new GeneralDataResponse<>(dto);
 
     }

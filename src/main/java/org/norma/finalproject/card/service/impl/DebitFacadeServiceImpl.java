@@ -21,7 +21,7 @@ import org.norma.finalproject.card.service.DebitFacadeService;
 import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
-import org.norma.finalproject.common.core.utils.Message;
+import org.norma.finalproject.common.core.utils.Messages;
 import org.norma.finalproject.common.core.utils.Utils;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
@@ -53,11 +53,11 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
         }
         Optional<CheckingAccount> optionalCheckingAccount = checkingAccountService.findById(createDebitCardRequest.getParentCheckingAccountId());
         if(optionalCheckingAccount.isEmpty() || !(optionalCheckingAccount.get().getCustomer().getId().equals(customerID))){
-            throw new CheckingAccountNotFoundException(Message.CHECKING_ACCOUNT_NOT_FOUND);
+            throw new CheckingAccountNotFoundException(Messages.CHECKING_ACCOUNT_NOT_FOUND);
         }
         boolean existsDebitCardByCheckingAccountId = debitCardService.existsDebitCardByCheckingAccountId(createDebitCardRequest.getParentCheckingAccountId());
         if (existsDebitCardByCheckingAccountId){
-            throw new DebitCardOperationException(Message.DEBIT_CARD_OPERATION_ONE_ACCOUNT_MUST_ONE_CARD_EXCEPTION);
+            throw new DebitCardOperationException(Messages.DEBIT_CARD_OPERATION_ONE_ACCOUNT_MUST_ONE_CARD_EXCEPTION);
         }
 
         DebitCard debitCard = new DebitCard();
