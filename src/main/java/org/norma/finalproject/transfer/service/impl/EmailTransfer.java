@@ -6,6 +6,7 @@ import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.account.service.BaseAccountService;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.common.core.result.GeneralResponse;
+import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
@@ -47,10 +48,13 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
         if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        Optional<Account> optionalFromAccount = accountService.findById(emailTransferRequest.getFromAccountId());
-        boolean fromAccountIDOwnerIsCustomer = checkAccountIDOwnerIsCustomer(optionalCustomer.get(), emailTransferRequest.getFromAccountId());
-        if (optionalFromAccount.isEmpty() || !fromAccountIDOwnerIsCustomer) {
-            throw new TransferOperationException("Account not found with : " + emailTransferRequest.getFromAccountId());
+        Optional<Account> optionalFromAccount = accountService.findAccountByIbanNumber(emailTransferRequest.getFromAccountIban());
+        if (optionalFromAccount.isEmpty()) {
+            throw new TransferOperationException("Sender account not found.");
+        }
+        boolean fromAccountIDOwnerIsCustomer = checkAccountIDOwnerIsCustomer(optionalCustomer.get(), optionalFromAccount.get().getId());
+        if (!fromAccountIDOwnerIsCustomer) {
+            throw new TransferOperationException("Account not found.");
         }
         Optional<CheckingAccount> optionalToAccount = checkingAccountService.findCheckingAccountByEmail(emailTransferRequest.getToEmail());
         if (optionalToAccount.isEmpty()) {
@@ -60,11 +64,12 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
         if (optionalFromAccount.get().getBalance().compareTo(emailTransferRequest.getAmount()) < 0) {
             throw new TransferOperationException("Account balance not enough for transfer");
         }
-        sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), emailTransferRequest.getAmount(), emailTransferRequest.getDescription());
+        // call base method
+        this.sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), emailTransferRequest.getAmount(), emailTransferRequest.getDescription());
 
         Transfer transfer = transferMapper.toEntity(new IbanTransferRequest(optionalFromAccount.get().getIbanNo(),optionalToAccount.get().getIbanNo(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription(),emailTransferRequest.getTransferType()));
         transferService.save(transfer);
-        return null;
+        return new GeneralSuccessfullResponse("Transfer successfully.");
     }
 
     private boolean checkAccountIDOwnerIsCustomer(Customer customer, long accountId) {

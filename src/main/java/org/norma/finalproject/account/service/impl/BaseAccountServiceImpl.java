@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BaseAccountServiceImpl implements BaseAccountService {
     private final AccountRepository repository;
-    private final DebitCardService debitCardService;
+
 
 
     @Override
@@ -51,17 +51,7 @@ public class BaseAccountServiceImpl implements BaseAccountService {
         return repository.findById(id);
     }
 
-    @Override
-    public void refresh(Account account)  {
-        if (account.getAccountType().equals(AccountType.CHECKING)) {
-            Optional<DebitCard> optionalDebitCard = debitCardService.findByParentCheckingAccount(account.getId());
-            if(optionalDebitCard.isPresent()){
-                optionalDebitCard.get().setBalance(account.getBalance());
-                debitCardService.save(optionalDebitCard.get());
-            }
 
-        }
-    }
 
 
 }

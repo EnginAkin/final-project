@@ -21,8 +21,15 @@ import java.util.Date;
 public abstract class TransferBase<T> {
     private final BaseAccountService accountService;
     private final FacadeExchangeService exchangeService;
+    /*
+        Çalışma mantığı
+        ------<>------
+        temel olarak iban üzerinden transfer yapılır ama transfer yöntemleri implemente edilebilir.
+        email üzerinden transfer yapılmak istenirse transfer abstract metodunu emaile göre şekillendirip kullanıcı ibanları bulunduktan sonra
+        temel sendTransferWithIban metoduna ibanlar gönderilir.
+     */
 
-    public abstract GeneralResponse transfer(long customerId, T request) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException, DebitCardNotFoundException;
+    public abstract GeneralResponse transfer(long customerId, T request) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException;
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void sendTransferWithIban(String fromAccountIban, String toAccountIban, BigDecimal amount, String description) throws AmountNotValidException, TransferOperationException {

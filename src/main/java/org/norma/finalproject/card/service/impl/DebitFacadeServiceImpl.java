@@ -1,6 +1,7 @@
 package org.norma.finalproject.card.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.core.exception.CheckingAccountNotFoundException;
 import org.norma.finalproject.account.core.mapper.AccountActivityMapper;
 import org.norma.finalproject.account.core.model.response.AccountActivityResponse;
@@ -34,6 +35,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DebitFacadeServiceImpl implements DebitFacadeService {
 
     private final CustomerService customerService;
@@ -45,21 +47,23 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
 
 
     @Override
-    public GeneralDataResponse create(long customerID,CreateDebitCardRequest createDebitCardRequest) throws DebitCardOperationException, CheckingAccountNotFoundException, CustomerNotFoundException {
-
+    public GeneralDataResponse create(long customerID, CreateDebitCardRequest createDebitCardRequest) throws DebitCardOperationException, CheckingAccountNotFoundException, CustomerNotFoundException {
+        log.debug("create debit card started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
-        if(optionalCustomer.isEmpty()){
+        if (optionalCustomer.isEmpty()) {
+            log.error("Customer not found.");
             throw new CustomerNotFoundException();
         }
         Optional<CheckingAccount> optionalCheckingAccount = checkingAccountService.findById(createDebitCardRequest.getParentCheckingAccountId());
-        if(optionalCheckingAccount.isEmpty() || !(optionalCheckingAccount.get().getCustomer().getId().equals(customerID))){
+        if (optionalCheckingAccount.isEmpty() || !(optionalCheckingAccount.get().getCustomer().getId().equals(customerID))) {
+            log.error(Messages.CHECKING_ACCOUNT_NOT_FOUND);
             throw new CheckingAccountNotFoundException(Messages.CHECKING_ACCOUNT_NOT_FOUND);
         }
         boolean existsDebitCardByCheckingAccountId = debitCardService.existsDebitCardByCheckingAccountId(createDebitCardRequest.getParentCheckingAccountId());
-        if (existsDebitCardByCheckingAccountId){
+        if (existsDebitCardByCheckingAccountId) {
+            log.error(Messages.DEBIT_CARD_OPERATION_ONE_ACCOUNT_MUST_ONE_CARD_EXCEPTION);
             throw new DebitCardOperationException(Messages.DEBIT_CARD_OPERATION_ONE_ACCOUNT_MUST_ONE_CARD_EXCEPTION);
         }
-
         DebitCard debitCard = new DebitCard();
         debitCard.setCardNumber(uniqueNoCreator.creatAccountNo());
         debitCard.setBalance(optionalCheckingAccount.get().getBalance());
@@ -75,90 +79,111 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
         debitCard.setExpiryDate(expiry.getTime());
         DebitCard savedDebitCard = debitCardService.save(debitCard);
         DebitCardResponse debitCardResponse = debitCardMapper.toDto(savedDebitCard);
+        log.debug("create debit card ended.");
         return new GeneralDataResponse(debitCardResponse);
 
 
     }
 
     @Override
-    public GeneralResponse getDebitCardActivities(Long customerID, long debitCardID,ActivityFilter filter) throws CustomerNotFoundException, DebitCardNotFoundException {
+    public GeneralResponse getDebitCardActivities(Long customerID, long debitCardID, ActivityFilter filter) throws CustomerNotFoundException, DebitCardNotFoundException {
+        log.debug("Get debit card activities started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
+            log.error("Customer not found.");
             throw new CustomerNotFoundException();
         }
-        Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardID(customerID,debitCardID);
+        Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardID(customerID, debitCardID);
         if (optionalDebitCard.isEmpty()) {
+            log.error("Debit card not found.");
             throw new DebitCardNotFoundException();
         }
-        if(filter==null){
+        if (filter == null) {
             Date today = new Date();
-            Date aMonthAgo= Utils.get30DaysAgo(today); // get 30 day ago from today
-            filter=new ActivityFilter(aMonthAgo,today); //  default filter a month ago
+            Date aMonthAgo = Utils.get30DaysAgo(today); // get 30 day ago from today
+            filter = new ActivityFilter(aMonthAgo, today); //  default filter a month ago
         }
-        List<AccountActivity> accountActivities=optionalDebitCard.get().getCheckingAccount().getActivityWithFilterDate(filter);
+        List<AccountActivity> accountActivities = optionalDebitCard.get().getCheckingAccount().getActivityWithFilterDate(filter);
         List<AccountActivityResponse> responseList = accountActivities.stream().map(accountActivityMapper::toDto).toList();
+        log.info("End of the debit card activities.");
         return new GeneralDataResponse<>(responseList);
     }
 
     @Override
     public GeneralDataResponse getByID(Long customerID, long debitID) throws DebitCardNotFoundException {
+        log.debug("Get debit card by id started.");
         Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardID(customerID, debitID);
-        if(optionalDebitCard.isEmpty()){
+        if (optionalDebitCard.isEmpty()) {
+            log.error("Debit card not found.");
             throw new DebitCardNotFoundException();
         }
         DebitCardResponse debitCardResponse = debitCardMapper.toDto(optionalDebitCard.get());
+        log.debug("Get debit card by id ended.");
         return new GeneralDataResponse(debitCardResponse);
     }
 
     @Override
     public GeneralDataResponse getAllCustomerDebitCards(Long customerID) throws CustomerNotFoundException, DebitCardNotFoundException {
+        log.debug("Get all customer Debit Cards by id started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
+            log.error("Customer not found.");
             throw new CustomerNotFoundException();
         }
         List<DebitCard> debitCards = debitCardService.getAllCustomersDebitCards(customerID);
         if (debitCards.isEmpty()) {
+            log.error("Debit card not found.");
             throw new DebitCardNotFoundException();
         }
         List<DebitCardResponse> orders = debitCards.stream()
                 .map(debitCardMapper::toDto)
                 .toList();
+        log.debug("Get all customer Debit Cards by id ended.");
         return new GeneralDataResponse<>(orders);
     }
+
     @Override
     public GeneralResponse update(Long customerID, long debitCardID, UpdateDebitCardRequest updateDebitCardRequest) throws CustomerNotFoundException, DebitCardOperationException {
+
+        log.debug("Update Debit Card started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
+            log.error("Customer not found.");
             throw new CustomerNotFoundException();
         }
-        Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardID(customerID,debitCardID);
+        Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardID(customerID, debitCardID);
         if (optionalDebitCard.isEmpty()) {
+            log.error("Debit card not found.");
             throw new DebitCardOperationException("debit card not found.");
         }
         optionalDebitCard.get().setPassword(updateDebitCardRequest.getPassword());
         debitCardService.save(optionalDebitCard.get());
+        log.debug("Update Debit Card ended.");
         return new GeneralSuccessfullResponse("Update successfull");
     }
 
 
-
     @Override
     public GeneralResponse deleteDebitCardById(Long customerID, long debitCardID) throws CustomerNotFoundException, DebitCardOperationException {
+        log.debug("Delete debit card by id started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
         if (optionalCustomer.isEmpty()) {
+            log.error("Customer not found.");
             throw new CustomerNotFoundException();
         }
-        Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardID(customerID,debitCardID);
+        Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardID(customerID, debitCardID);
         if (optionalDebitCard.isEmpty()) {
+            log.error("Debit card not found.");
             throw new DebitCardOperationException("debit card not found.");
         }
-        if(optionalDebitCard.get().getBalance().compareTo(BigDecimal.ZERO)>0){
+        if (optionalDebitCard.get().getBalance().compareTo(BigDecimal.ZERO) > 0) {
+            log.error("Debit card has balance so cannot deleted..");
             throw new DebitCardOperationException("Debit card has a balance.");
         }
         debitCardService.delete(optionalDebitCard.get());
+        log.debug("Delete debit card by id ended..");
         return new GeneralSuccessfullResponse("Delete debit card successfully");
     }
 
 }
 
-// 1. useer   iban TR3300006100522441796955166

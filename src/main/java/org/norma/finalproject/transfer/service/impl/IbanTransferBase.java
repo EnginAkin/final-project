@@ -3,6 +3,7 @@ package org.norma.finalproject.transfer.service.impl;
 import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.account.service.BaseAccountService;
+import org.norma.finalproject.card.service.DebitCardService;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
@@ -13,6 +14,7 @@ import org.norma.finalproject.exchange.service.FacadeExchangeService;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
 import org.norma.finalproject.transfer.core.mapper.TransferMapper;
 import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
+import org.norma.finalproject.transfer.entity.Transfer;
 import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.norma.finalproject.transfer.service.TransferService;
 import org.springframework.stereotype.Component;
@@ -31,7 +33,7 @@ public class IbanTransferBase extends TransferBase<IbanTransferRequest> {
     private final TransferMapper transferMapper;
     private final FacadeExchangeService exchangeService;
 
-    public IbanTransferBase(CustomerService customerService, BaseAccountService accountService, TransferService transferService, TransferMapper transferMapper, FacadeExchangeService exchangeService) {
+    public IbanTransferBase(CustomerService customerService, BaseAccountService accountService, TransferService transferService, TransferMapper transferMapper, DebitCardService debitCardService, FacadeExchangeService exchangeService) {
         super(accountService, exchangeService);
         this.customerService = customerService;
         this.accountService = accountService;
@@ -51,25 +53,32 @@ public class IbanTransferBase extends TransferBase<IbanTransferRequest> {
         if (optionalFromAccount.isEmpty()) {
             throw new TransferOperationException("Customer dont have " + transferRequest.getFromIban() + " Account ");
         }
+        Account fromAccount=optionalFromAccount.get();
         boolean checkIbanNumberOwnerIsCustomer= checkIbanNumberOwnerIsCustomer(optionalCustomer.get(),optionalFromAccount.get().getIbanNo());
         if(!checkIbanNumberOwnerIsCustomer){
             throw new TransferOperationException("Customer not owner " + transferRequest.getFromIban() + " Account ");
         }
-        if (optionalFromAccount.get().getBalance().compareTo(transferRequest.getAmount()) < 0) {
+        if (fromAccount.getBalance().compareTo(transferRequest.getAmount()) < 0) {
             throw new TransferOperationException("There is not enough money in the account");
         }
         Optional<Account> optionalToAccount = accountService.findAccountByIbanNumber(transferRequest.getToIban());
+
         if (optionalToAccount.isEmpty()) {
             throw new TransferOperationException("Cross account not found");
         }
+        Account toAccount=optionalToAccount.get();
+
         // allowed saving -> checking And checking ->checking  . Not allowed saving-saving
         if (optionalFromAccount.get().getAccountType().equals(AccountType.SAVING)) {
-            if (!(optionalToAccount.get().getAccountType().equals(AccountType.CHECKING))) {
+            if (!(toAccount.getAccountType().equals(AccountType.CHECKING))) {
                 throw new TransferOperationException("You can transfer only parent checking account.");
             }
         }
-        sendTransferWithIban(optionalFromAccount.get().getIbanNo(), optionalToAccount.get().getIbanNo(), transferRequest.getAmount(), transferRequest.getDescription());
-        accountService.refresh(optionalFromAccount.get());// hesaba bağlı kart var ise içindeki tutar refresh edilmeli.
+        // call base iban transfer method.
+        this.sendTransferWithIban(fromAccount.getIbanNo(), toAccount.getIbanNo(), transferRequest.getAmount(), transferRequest.getDescription());
+        IbanTransferRequest ibanTransferRequest=new IbanTransferRequest(fromAccount.getIbanNo(),toAccount.getIbanNo(),transferRequest.getAmount(),transferRequest.getDescription(),transferRequest.getTransferType());
+        Transfer transfer = transferMapper.toEntity(ibanTransferRequest);
+        transferService.save(transfer);
         return new GeneralSuccessfullResponse("Transfer successfull.");
     }
 

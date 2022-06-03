@@ -12,5 +12,4 @@ public interface BaseAccountService {
     Optional<Account> findAccountByIbanNumber(String iban);
     Optional<Account> findById(long id);
 
-    void refresh(Account account) ;
 }

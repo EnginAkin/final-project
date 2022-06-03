@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class EmailTransferRequest {
 
     @NotNull
-    private long fromAccountId;
+    private String fromAccountIban;
     @NotNull
     private String toEmail;
     @NotNull

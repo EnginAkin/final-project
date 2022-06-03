@@ -53,4 +53,6 @@ public class Account {
         return activities.stream().filter(accountActivity -> accountActivity.getDate().before(filter.getToDate()) &&
                 accountActivity.getDate().after(filter.getFromDate())).toList();
     }
+
+
 }
