@@ -79,8 +79,8 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         if (customer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
-        boolean checkHasMoneyInDepositAccounts = this.checkHasMoneyInDepositAccounts(customer.get());
-        if (checkHasMoneyInDepositAccounts) {
+        boolean checkHasMoneyInCustomerAccounts = this.checkHasMoneyInCustomerAccounts(customer.get());
+        if (checkHasMoneyInCustomerAccounts) {
             throw new CustomerDeleteException(CustomerConstant.DELETE_CUSTOMER_OPERATION_HAS_BALANCE_EXCEPTION);
         }
         customerService.delete(customer.get());
@@ -92,7 +92,7 @@ public class FacadeCustomerServiceImpl implements FacadeCustomerService {
         return new GeneralDataResponse<>(customerService.getall());
     }
 
-    public boolean checkHasMoneyInDepositAccounts(Customer customer) {
+    public boolean checkHasMoneyInCustomerAccounts(Customer customer) {
         return customer.getCheckingAccounts().stream().
                 anyMatch(checkingAccount -> checkingAccount.getBalance().compareTo(BigDecimal.ZERO) > 0)
                 || customer.getSavingAccounts().stream().

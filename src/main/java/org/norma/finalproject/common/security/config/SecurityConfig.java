@@ -2,7 +2,6 @@ package org.norma.finalproject.common.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.common.security.filter.CustomAuthenticationFilter;
-import org.norma.finalproject.common.security.jwt.JWTHelper;
 import org.norma.finalproject.common.security.user.CustomUserDetailsService;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.springframework.beans.factory.annotation.Autowired;

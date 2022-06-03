@@ -188,7 +188,7 @@ class FacadeCustomerServiceImplTest {
         customer.setPassword("old password");
         customer.setTelephone("old telephone");
         BDDMockito.given(customerService.findByCustomerById(customerId)).willReturn(Optional.of(customer));
-        BDDMockito.given(underTest.checkHasMoneyInDepositAccounts(customer)).willReturn(false);
+        BDDMockito.given(underTest.checkHasMoneyInCustomerAccounts(customer)).willReturn(false);
         doNothing().when(customerService).delete(customer);
         // when
         GeneralResponse response = underTest.delete(customerId);
@@ -224,7 +224,7 @@ class FacadeCustomerServiceImplTest {
         customer.setPassword("old password");
         customer.setTelephone("old telephone");
         BDDMockito.given(customerService.findByCustomerById(customerId)).willReturn(Optional.of(customer));
-        BDDMockito.given(underTest.checkHasMoneyInDepositAccounts(customer)).willReturn(true);
+        BDDMockito.given(underTest.checkHasMoneyInCustomerAccounts(customer)).willReturn(true);
         // when
         CustomerDeleteException exception = assertThrows(CustomerDeleteException.class, () -> {
             underTest.delete(customerId);

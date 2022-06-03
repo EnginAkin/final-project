@@ -1,4 +1,4 @@
-package org.norma.finalproject.common.security.jwt;
+package org.norma.finalproject.common.security.jwt.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -14,9 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.common.security.token.entity.JWTToken;
 import org.norma.finalproject.common.security.token.core.exception.TokenNotFoundException;
 import org.norma.finalproject.common.security.token.service.TokenService;
+import org.norma.finalproject.common.security.token.service.impl.TokenServiceImpl;
+import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -29,15 +30,17 @@ import java.util.*;
 public class JWTHelper {
 
     private final TokenService tokenService;
-    @Value("${norma.final.project.jwt.secret-key}")
-    private String secretKey;
-    @Value("${norma.final.project.jwt.expires-in}")
-    private long expiresIn;
+
+    //@Value("${norma.final.project.jwt.secret-key}")
+    private String secretKey="normasecretkey";
+
+    //@Value("${norma.final.project.jwt.expires-in}")
+    private long expiresIn=30000000L;
 
 
 
 
-    public  String generate(String identity, List<String> roles) {
+    public String generate(String identity, List<String> roles) {
         if (!StringUtils.hasLength(identity)) {
             throw new IllegalArgumentException("Identifier no cannot be null");
         }

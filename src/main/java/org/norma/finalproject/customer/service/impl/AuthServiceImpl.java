@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;
-import org.norma.finalproject.common.security.jwt.JWTHelper;
+import org.norma.finalproject.common.security.jwt.impl.JWTHelper;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.norma.finalproject.customer.core.exception.LoginFailedException;
 import org.norma.finalproject.customer.core.model.response.LoginResponse;
