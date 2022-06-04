@@ -15,6 +15,7 @@ import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.SavingAccount;
 import org.norma.finalproject.account.entity.base.AccountActivity;
+import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.account.service.AccountActivityService;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.account.service.FacadeSavingAccountService;

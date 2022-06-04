@@ -1,20 +1,16 @@
-package org.norma.finalproject.card.integration;
+package org.norma.finalproject.account.integration;
+
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.lang.annotation.Before;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
 import org.norma.finalproject.account.entity.CheckingAccount;
+import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.account.repository.CheckingAccountRepository;
-import org.norma.finalproject.card.core.model.request.CreateDebitCardRequest;
-import org.norma.finalproject.card.core.model.response.DebitCardResponse;
-import org.norma.finalproject.card.entity.DebitCard;
-import org.norma.finalproject.card.entity.enums.CardStatus;
-import org.norma.finalproject.card.repository.DebitCardRepository;
 import org.norma.finalproject.common.security.token.entity.JWTToken;
 import org.norma.finalproject.common.security.token.repository.TokenRepository;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
@@ -34,18 +30,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
-/*
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class DebitCardIT {
-    //TODO daha sonra yapılacak.
+public class CheckingAccountIT {
+
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+
     @Autowired
     private CheckingAccountRepository checkingAccountRepository;
     @Autowired
@@ -55,15 +51,15 @@ public class DebitCardIT {
     @Autowired
     private TokenRepository tokenRepository;
     @Autowired
-    private DebitCardRepository debitCardRepository;
-    @Autowired
     private PasswordEncoder encoder;
     private Customer customer=new Customer();
     private String tokenValue;
-    private CheckingAccount checkingAccount;
-
     @BeforeEach
-    public  void setup() {
+    public void setup() {
+        customerRepository.deleteAll();
+        roleRepository.deleteAll();
+        tokenRepository.deleteAll();
+
         customer.setIdentityNumber("11111111111");
         customer.setUserNumber("11111111111");
         customer.setTelephone("0000000");
@@ -74,11 +70,7 @@ public class DebitCardIT {
         Role role = new Role(CustomerConstant.ROLE_USER);
         roleRepository.save(role);
         customer.setRoles(Set.of(role));
-        checkingAccount=createCheckingAccount();
-        customer.setCheckingAccounts(List.of(checkingAccount));
         customerRepository.save(customer);
-        checkingAccount.setCustomer(customer);
-        checkingAccountRepository.save(checkingAccount);
 
         tokenValue = JWT.create()
                 .withIssuedAt(new Date())
@@ -89,75 +81,79 @@ public class DebitCardIT {
         JWTToken token = new JWTToken();
         token.setToken(tokenValue);
         tokenRepository.save(token);
+    }
+
+    @Test
+    public void givenCreateCheckingAccountRequestWithoutJWT_thenReturnUnauthorized() throws Exception {
+        CreateCheckingAccountRequest request=new CreateCheckingAccountRequest();
+        request.setBranchName("FATIH");
+        request.setBankCode("50");
+        request.setBankCode("000601");
+        request.setCurrencyType(CurrencyType.TRY);
+
+
+            ResultActions actions = mockMvc.perform(
+                    MockMvcRequestBuilders.post("/api/v1/accounts/checking")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request))
+            );
+            actions.andDo(MockMvcResultHandlers.print())
+                    .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    public void givenCreateCheckingAccountRequest_whenCreate_thenReturn201() throws Exception {
+        // given
+        CreateCheckingAccountRequest request=new CreateCheckingAccountRequest();
+        request.setBranchName("FATIH");
+        request.setBranchCode("51");
+        request.setBankCode("000601");
+        request.setCurrencyType(CurrencyType.TRY);
+        // when
+        ResultActions actions = mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/accounts/checking")
+                        .header("authorization", "Bearer "+tokenValue)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        // then
+        actions.andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isCreated());
 
     }
 
-
     @Test
-    public void accessCreateDebitCardUnauthorizedWithoutJwtToken() throws Exception {
+    public void givenAccountIdWithoutJWT_thenReturnUnauthorized() throws Exception {
+
         ResultActions actions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/cards/debits")
+                MockMvcRequestBuilders.get("/api/v1/accounts/checking/"+1)
         );
         actions.andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
-
     @Test
-    public void givenCreateDebitCardRequest_whenCreate_thenReturn201() throws Exception {
+    public void givenAccountId_whenGetById_thenReturn200() throws Exception{
         // given
-
-        CreateDebitCardRequest debitCardRequest=new CreateDebitCardRequest();
-        debitCardRequest.setParentCheckingAccountId(checkingAccount.getId());
-        debitCardRequest.setPassword("1111");
+        CheckingAccount checkingAccount=new CheckingAccount();
+        checkingAccount.setBankCode("000000");
+        checkingAccount.setBranchCode("000000");
+        checkingAccount.setAccountName("account");
+        checkingAccount.setIbanNo("000000");
+        checkingAccount.setBranchName("branch");
+        checkingAccount.setAccountNo("000000");
+        checkingAccount.setBlocked(true);
+        checkingAccount.setCustomer(customer);
+        checkingAccountRepository.save(checkingAccount);
         // when
         ResultActions actions = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/cards/debits")
+                MockMvcRequestBuilders.get("/api/v1/accounts/checking/"+checkingAccount.getId())
                         .header("authorization", "Bearer "+tokenValue)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(debitCardRequest))
         );
         // then
         actions.andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.isSuccessful", CoreMatchers.is(true)));
-    }
-/*
-    @Test
-    public void givenCardId_whenDeleteDebitCardById_thenReturn200() throws Exception {
-        DebitCard debitCard=new DebitCard();
-        debitCard.setCheckingAccount(checkingAccount);
-        debitCard.setCardNumber("11111");
-        debitCard.setCvv("11111");
-        debitCard.setStatus(CardStatus.ACTIVE);
-        debitCard.setPassword("1111");
-        debitCard.setExpiryDate(new Date());
-        debitCardRepository.save(debitCard);
-
-        ResultActions actions = mockMvc.perform(
-                MockMvcRequestBuilders.delete("/api/v1/cards/debits/"+debitCard.getId())
-                        .header("authorization", "Bearer "+tokenValue)
-        );
-        actions.andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.isSuccessful", CoreMatchers.is(true)));
+
     }
 
-
-
-
-
-    private CheckingAccount createCheckingAccount() {
-
-        CheckingAccount checkingAccount = new CheckingAccount();
-        checkingAccount.setAccountNo("1111");
-        checkingAccount.setIbanNo("1111");
-        checkingAccount.setBranchCode("00");
-        checkingAccount.setBlocked(false);
-        checkingAccount.setBankCode("000000");
-        checkingAccount.setAccountName("account name");
-        checkingAccount.setBranchName("FATIH");
-        return checkingAccount;
-    }
 }
- */
-
