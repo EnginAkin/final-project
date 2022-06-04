@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CreditLimitCalculatorByIncome<T> implements CreditLimitCalculator<BigDecimal> {
+public class CreditLimitCalculatorByIncome implements CreditLimitCalculator<BigDecimal> {
     private final CreditRateService creditRateService;
 
     @Override
