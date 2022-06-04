@@ -20,7 +20,7 @@ public interface DebitCardService {
 
     boolean existsDebitCardByCheckingAccountId(long parentCheckingAccountID);
     Optional<DebitCard> findByParentCheckingAccount(long parentId);
-    void deleteByCheckingAccount(long parentId);
+    void deleteByCheckingAccountId(long parentId);
 
     void delete(DebitCard debitCard);
 }

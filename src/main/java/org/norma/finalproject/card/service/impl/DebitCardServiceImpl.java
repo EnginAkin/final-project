@@ -49,7 +49,7 @@ public class DebitCardServiceImpl implements DebitCardService {
     }
 
     @Override
-    public void deleteByCheckingAccount(long parentId) {
+    public void deleteByCheckingAccountId(long parentId) {
         Optional<DebitCard> optionalDebitCard = findByParentCheckingAccount(parentId);
         if(optionalDebitCard.isEmpty()){
             return;
