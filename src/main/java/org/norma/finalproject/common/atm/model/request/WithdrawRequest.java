@@ -1,4 +1,4 @@
-package org.norma.finalproject.card.atm.model.request;
+package org.norma.finalproject.common.atm.model.request;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class DepositRequest {
+public class WithdrawRequest {
 
     private String cardNumber;
     private String cardPassword;
     @Min(0)
-    private BigDecimal depositAmount;
+    private BigDecimal withdrawAmount;
 
 }

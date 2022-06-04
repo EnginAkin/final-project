@@ -14,7 +14,7 @@ public interface DebitFacadeService {
 
    GeneralDataResponse create(long customerID,CreateDebitCardRequest createDebitCardRequest) throws DebitCardOperationException, DebitCardNotFoundException, CheckingAccountNotFoundException, CustomerNotFoundException;
 
-   GeneralDataResponse getByID(Long id, long debitID) throws CustomerNotFoundException, DebitCardNotFoundException;
+   GeneralDataResponse getDebitCardByID(Long id, long debitID) throws CustomerNotFoundException, DebitCardNotFoundException;
 
    GeneralDataResponse getAllCustomerDebitCards(Long customerID) throws CustomerNotFoundException, DebitCardNotFoundException;
 

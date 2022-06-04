@@ -1,4 +1,4 @@
-package org.norma.finalproject.card.shop.service.impl;
+package org.norma.finalproject.common.shop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.account.entity.base.AccountActivity;
@@ -7,17 +7,15 @@ import org.norma.finalproject.card.core.exception.CreditCardNotFoundException;
 import org.norma.finalproject.card.core.exception.CreditCardOperationException;
 import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.card.core.exception.DebitCardOperationException;
-import org.norma.finalproject.card.shop.core.model.request.DoShoppingRequestWithCreditCard;
-import org.norma.finalproject.card.shop.core.model.request.DoShoppingRequestWithDebitCard;
+import org.norma.finalproject.common.shop.core.model.request.DoShoppingRequestWithCreditCard;
+import org.norma.finalproject.common.shop.core.model.request.DoShoppingRequestWithDebitCard;
 import org.norma.finalproject.card.entity.CreditCard;
 import org.norma.finalproject.card.entity.DebitCard;
 import org.norma.finalproject.card.entity.ExtractOfCard;
 import org.norma.finalproject.card.entity.base.CreditCardActivity;
-import org.norma.finalproject.card.entity.enums.SpendCategory;
-import org.norma.finalproject.card.repository.CreditCardAccountRepository;
 import org.norma.finalproject.card.service.CreditCardService;
 import org.norma.finalproject.card.service.DebitCardService;
-import org.norma.finalproject.card.shop.service.ShoppingService;
+import org.norma.finalproject.common.shop.service.ShoppingService;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
 import org.norma.finalproject.common.entity.enums.ActionStatus;

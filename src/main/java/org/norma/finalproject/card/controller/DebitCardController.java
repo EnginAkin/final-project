@@ -10,6 +10,7 @@ import org.norma.finalproject.card.service.DebitFacadeService;
 import org.norma.finalproject.common.core.exception.BusinessException;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ public class DebitCardController {
 
     private final DebitFacadeService debitFacadeService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateDebitCardRequest createDebitCardRequest) throws BusinessException {
         return debitFacadeService.create(userDetail.getUser().getId(), createDebitCardRequest);
@@ -30,7 +32,7 @@ public class DebitCardController {
 
     @GetMapping("/{debitCardID}")
     public GeneralResponse getByID(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long debitCardID) throws BusinessException {
-        return debitFacadeService.getByID(userDetail.getUser().getId(), debitCardID);
+        return debitFacadeService.getDebitCardByID(userDetail.getUser().getId(), debitCardID);
     }
 
     @PatchMapping("/{debitCardID}")

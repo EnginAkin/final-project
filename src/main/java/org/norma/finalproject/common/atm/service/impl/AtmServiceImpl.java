@@ -1,11 +1,11 @@
-package org.norma.finalproject.card.atm.service.impl;
+package org.norma.finalproject.common.atm.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.account.entity.base.AccountActivity;
 import org.norma.finalproject.account.service.BaseAccountService;
-import org.norma.finalproject.card.atm.model.request.DepositRequest;
-import org.norma.finalproject.card.atm.model.request.WithdrawRequest;
-import org.norma.finalproject.card.atm.service.AtmService;
+import org.norma.finalproject.common.atm.model.request.DepositRequest;
+import org.norma.finalproject.common.atm.model.request.WithdrawRequest;
+import org.norma.finalproject.common.atm.service.AtmService;
 import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
 import org.norma.finalproject.card.core.exception.DebitCardOperationException;
 import org.norma.finalproject.card.core.mapper.DebitCardMapper;
@@ -14,7 +14,6 @@ import org.norma.finalproject.card.entity.DebitCard;
 import org.norma.finalproject.card.service.DebitCardService;
 import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;
-import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
 import org.norma.finalproject.common.entity.enums.ActionStatus;
 import org.springframework.stereotype.Service;
 

@@ -1,10 +1,10 @@
-package org.norma.finalproject.card.shop.controller;
+package org.norma.finalproject.common.shop.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.norma.finalproject.card.shop.core.model.request.DoShoppingRequestWithCreditCard;
-import org.norma.finalproject.card.shop.core.model.request.DoShoppingRequestWithDebitCard;
-import org.norma.finalproject.card.shop.service.ShoppingService;
+import org.norma.finalproject.common.shop.core.model.request.DoShoppingRequestWithCreditCard;
+import org.norma.finalproject.common.shop.core.model.request.DoShoppingRequestWithDebitCard;
+import org.norma.finalproject.common.shop.service.ShoppingService;
 import org.norma.finalproject.common.core.exception.BusinessException;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.springframework.web.bind.annotation.PostMapping;

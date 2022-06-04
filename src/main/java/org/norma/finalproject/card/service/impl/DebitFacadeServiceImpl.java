@@ -109,8 +109,12 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
     }
 
     @Override
-    public GeneralDataResponse getByID(Long customerID, long debitID) throws DebitCardNotFoundException {
+    public GeneralDataResponse getDebitCardByID(Long customerID, long debitID) throws DebitCardNotFoundException, CustomerNotFoundException {
         log.debug("Get debit card by id started.");
+        Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
+        if(optionalCustomer.isEmpty()){
+            throw new CustomerNotFoundException();
+        }
         Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardID(customerID, debitID);
         if (optionalDebitCard.isEmpty()) {
             log.error("Debit card not found.");

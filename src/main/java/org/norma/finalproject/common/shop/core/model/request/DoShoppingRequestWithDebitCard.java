@@ -1,4 +1,4 @@
-package org.norma.finalproject.card.shop.core.model.request;
+package org.norma.finalproject.common.shop.core.model.request;
 
 
 import lombok.Getter;
