@@ -8,7 +8,12 @@ import org.norma.finalproject.card.service.CreditRateService;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-
+/**
+ *
+ * @author Engin Akin
+ * @since version v1.0.0
+ * @version v1.0.0
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j

@@ -14,7 +14,12 @@ import org.norma.finalproject.card.service.DebitCardService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+/**
+ *
+ * @author Engin Akin
+ * @since version v1.0.0
+ * @version v1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 public class BaseAccountServiceImpl implements BaseAccountService {

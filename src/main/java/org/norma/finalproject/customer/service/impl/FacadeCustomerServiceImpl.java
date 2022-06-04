@@ -24,7 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-
+/**
+ *
+ * @author Engin Akin
+ * @since version v1.0.0
+ * @version v1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j

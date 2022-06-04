@@ -32,7 +32,12 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 
-
+/**
+ *
+ * @author Engin Akin
+ * @since version v1.0.0
+ * @version v1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j

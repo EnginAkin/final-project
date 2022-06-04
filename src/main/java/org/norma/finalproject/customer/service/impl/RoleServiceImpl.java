@@ -11,7 +11,12 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
-
+/**
+ *
+ * @author Engin Akin
+ * @since version v1.0.0
+ * @version v1.0.0
+ */
 
 @Service
 @RequiredArgsConstructor

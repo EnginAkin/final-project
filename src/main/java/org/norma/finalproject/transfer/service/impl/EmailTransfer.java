@@ -1,6 +1,7 @@
 package org.norma.finalproject.transfer.service.impl;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.account.service.BaseAccountService;
@@ -22,8 +23,14 @@ import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-
+/**
+ *
+ * @author Engin Akin
+ * @since version v1.0.0
+ * @version v1.0.0
+ */
 @Component("transfer-email")
+@Slf4j
 public class EmailTransfer extends TransferBase<EmailTransferRequest> {
     private final BaseAccountService accountService;
     private final CustomerService customerService;
@@ -44,24 +51,30 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
 
     @Override
     public GeneralResponse transfer(long customerId, EmailTransferRequest emailTransferRequest) throws CustomerNotFoundException, TransferOperationException, AmountNotValidException {
+        log.debug("Transfer for email proprocessing started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerId);
         if (optionalCustomer.isEmpty()) {
+            log.error("Customer not found.");
             throw new CustomerNotFoundException();
         }
         Optional<Account> optionalFromAccount = accountService.findAccountByIbanNumber(emailTransferRequest.getFromAccountIban());
         if (optionalFromAccount.isEmpty()) {
+            log.error("Sender account not found.");
             throw new TransferOperationException("Sender account not found.");
         }
         boolean fromAccountIDOwnerIsCustomer = checkAccountIDOwnerIsCustomer(optionalCustomer.get(), optionalFromAccount.get().getId());
         if (!fromAccountIDOwnerIsCustomer) {
+            log.error("Account not found.");
             throw new TransferOperationException("Account not found.");
         }
         Optional<CheckingAccount> optionalToAccount = checkingAccountService.findCheckingAccountByEmail(emailTransferRequest.getToEmail());
         if (optionalToAccount.isEmpty()) {
+            log.error(emailTransferRequest.getToEmail() + " Not found.");
             throw new TransferOperationException(emailTransferRequest.getToEmail() + " Not found.");
         }
 
         if (optionalFromAccount.get().getBalance().compareTo(emailTransferRequest.getAmount()) < 0) {
+            log.error("Account balance not enough for transfer");
             throw new TransferOperationException("Account balance not enough for transfer");
         }
         // call base method
@@ -70,6 +83,8 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
         Transfer transfer = transferMapper.toEntity(new IbanTransferRequest(optionalFromAccount.get().getIbanNo(),optionalToAccount.get().getIbanNo(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription(),emailTransferRequest.getTransferType()));
         transfer.setCurrencyType(optionalFromAccount.get().getCurrencyType());
         transferService.save(transfer);
+        log.debug("Transfer for email ended.");
+
         return new GeneralSuccessfullResponse("Transfer successfully.");
     }
 

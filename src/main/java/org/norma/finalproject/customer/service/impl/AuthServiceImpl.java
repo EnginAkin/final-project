@@ -19,7 +19,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
-
+/**
+ *
+ * @author Engin Akin
+ * @since version v1.0.0
+ * @version v1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j

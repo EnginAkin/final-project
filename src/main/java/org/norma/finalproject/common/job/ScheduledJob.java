@@ -17,7 +17,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-
+/**
+ * It gives credit card new extract which extract of day in today and Saving
+ * account interest every night at 23:59.
+ *
+ * @author Engin Akin
+ * @since version v1.0.0
+ * @version v1.0.0
+ */
 @Component
 @EnableScheduling
 @RequiredArgsConstructor

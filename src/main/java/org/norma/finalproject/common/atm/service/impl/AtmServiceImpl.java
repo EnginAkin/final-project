@@ -19,7 +19,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
-
+/**
+ *   for deposit and withdraw money
+ *
+ * @author Engin Akin
+ * @since version v1.0.0
+ * @version v1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 public class AtmServiceImpl implements AtmService {
