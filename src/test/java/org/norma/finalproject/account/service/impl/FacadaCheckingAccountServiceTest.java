@@ -1,4 +1,4 @@
-package org.norma.finalproject.account.service;
+package org.norma.finalproject.account.service.impl;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,6 +14,8 @@ import org.norma.finalproject.account.core.model.response.CreateDepositAccountRe
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
+import org.norma.finalproject.account.service.CheckingAccountService;
+import org.norma.finalproject.account.service.FacadeSavingAccountService;
 import org.norma.finalproject.account.service.impl.FacadeCheckingAccountServiceImpl;
 import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;
@@ -182,16 +184,5 @@ public class FacadaCheckingAccountServiceTest {
         return checkingAccountRequest;
     }
 
-    /*
-     @Test
-    public void given_when_then(){
-        // given
 
-        // when
-
-        // then
-
-
-    }
-     */
 }

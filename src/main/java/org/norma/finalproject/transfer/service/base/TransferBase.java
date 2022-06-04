@@ -49,6 +49,9 @@ public abstract class TransferBase<T> {
         accountService.update(fromAccount); // lock balance for security
 
         BigDecimal checkLockedBalance = fromAccount.getBalance().subtract(fromAccount.getLockedBalance());
+        if(checkLockedBalance.compareTo(BigDecimal.ZERO)<0){
+            return; // locked balance grather than main balance.
+        }
 
         AccountActivity fromAccountActivity = new AccountActivity();
         fromAccountActivity.setAccount(fromAccount);

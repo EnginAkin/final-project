@@ -1,4 +1,4 @@
-package org.norma.finalproject.account.service;
+package org.norma.finalproject.account.service.impl;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
