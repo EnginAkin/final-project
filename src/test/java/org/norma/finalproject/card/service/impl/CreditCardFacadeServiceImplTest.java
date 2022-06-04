@@ -1,4 +1,4 @@
-package org.norma.finalproject.card.service;
+package org.norma.finalproject.card.service.impl;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,6 +19,8 @@ import org.norma.finalproject.card.entity.CreditCard;
 import org.norma.finalproject.card.entity.CreditCardAccount;
 import org.norma.finalproject.card.entity.base.CreditCardActivity;
 import org.norma.finalproject.card.entity.enums.SpendCategory;
+import org.norma.finalproject.card.service.CreditCardService;
+import org.norma.finalproject.card.service.CreditLimitCalculator;
 import org.norma.finalproject.card.service.impl.CreditCardFacadeServiceImpl;
 import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;

@@ -13,5 +13,5 @@ public interface CreditCardService {
 
     void delete(CreditCard creditCard);
 
-    List<CreditCard> findAllCutoffDateInToday();
+    List<CreditCard> findAllCreditCardsCutoffDateInToday();
 }

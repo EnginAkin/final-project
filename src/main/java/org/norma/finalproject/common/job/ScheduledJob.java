@@ -44,7 +44,7 @@ public class ScheduledJob {
     @Transactional
     public void performTaskUsingCronExtractOfCreditCardProcess() {
         log.debug("Credit card extract scheduled task started.");
-        List<CreditCard> allCreditCardCutoffDateInToday = creditCardService.findAllCutoffDateInToday();
+        List<CreditCard> allCreditCardCutoffDateInToday = creditCardService.findAllCreditCardsCutoffDateInToday();
         if(!allCreditCardCutoffDateInToday.isEmpty()){
             allCreditCardCutoffDateInToday.forEach(this::creditCardExtractOfProcess);
         }

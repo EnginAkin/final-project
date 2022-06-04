@@ -34,7 +34,7 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Override
-    public List<CreditCard> findAllCutoffDateInToday() {
+    public List<CreditCard> findAllCreditCardsCutoffDateInToday() {
         return creditCardRepository.findAllCutoffDateInToday();
     }
 }
