@@ -10,6 +10,7 @@ import org.norma.finalproject.common.core.exception.BusinessException;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.security.user.CustomUserDetail;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class CreditCardController {
 
     private final CreditCardFacadeService creditCardFacadeService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody @Valid CreateCreditCardRequest createCreditCardRequest) throws BusinessException {
         return creditCardFacadeService.create(userDetail.getUser().getId(),createCreditCardRequest);

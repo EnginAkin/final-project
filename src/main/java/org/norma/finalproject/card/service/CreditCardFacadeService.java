@@ -3,6 +3,7 @@ package org.norma.finalproject.card.service;
 import org.norma.finalproject.card.core.exception.CreditCardNotFoundException;
 import org.norma.finalproject.card.core.exception.CreditCardOperationException;
 import org.norma.finalproject.card.core.model.request.CreateCreditCardRequest;
+import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 
@@ -12,7 +13,7 @@ public interface CreditCardFacadeService {
 
     GeneralResponse getCurrentTermTransactions(Long userID, long creditCardID) throws CustomerNotFoundException, CreditCardNotFoundException, CreditCardOperationException;
 
-    GeneralResponse getCustomerCreditCards(Long userID) throws CustomerNotFoundException;
+    GeneralDataResponse getCustomerCreditCards(Long userID) throws CustomerNotFoundException;
 
     GeneralResponse getCreditCardDebt(Long userID, long creditCardID) throws CustomerNotFoundException, CreditCardOperationException, CreditCardNotFoundException;
 

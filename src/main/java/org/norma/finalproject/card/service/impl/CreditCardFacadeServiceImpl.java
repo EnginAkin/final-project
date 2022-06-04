@@ -28,6 +28,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
+/**
+ * implementation of credit card facade service for credit card crud process
+ *
+ * @author Engin Akin
+ * @since version v1.0.0
+ * @version v1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -67,7 +74,7 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
         creditCardAccount.setAvailableBalance(creditLimit);
         creditCard.setCreditCardAccount(creditCardAccount);
         CreditCard savedCreditCard = creditCardService.save(creditCard);
-        CreditCardResponse creditCardResponse = creditCardMapper.toCreditCardResponse(savedCreditCard);
+        CreditCardResponse creditCardResponse = creditCardMapper.toCreditCardActivityResponse(savedCreditCard);
         log.debug("Create credit card ended..");
         return new GeneralDataResponse<>(creditCardResponse);
     }
@@ -89,21 +96,21 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
             log.error("Credit not found in customers credit cards.");
             throw new CreditCardOperationException("Credit not found in customers credit cards.");
         }
-        List<CreditCardActivityResponse> responseList = optionalCreditCard.get().getCreditCardAccount().getCurrentTermExtract().getCreditCardActivities().stream().map(creditCardMapper::toCreditCardResponse).toList();
+        List<CreditCardActivityResponse> responseList = optionalCreditCard.get().getCreditCardAccount().getCurrentTermExtract().getCreditCardActivities().stream().map(creditCardMapper::toCreditCardActivityResponse).toList();
         log.debug("get current term transaction ended.");
         return new GeneralDataResponse(responseList);
 
     }
 
     @Override
-    public GeneralResponse getCustomerCreditCards(Long userID) throws CustomerNotFoundException {
+    public GeneralDataResponse getCustomerCreditCards(Long userID) throws CustomerNotFoundException {
         log.debug("Get customer credit cards started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(userID);
         if(optionalCustomer.isEmpty()){
             log.error("Customer not found");
             throw new CustomerNotFoundException();
         }
-        List<CreditCardResponse> creditCardResponses = optionalCustomer.get().getCreditCards().stream().map(creditCardMapper::toCreditCardResponse).toList();
+        List<CreditCardResponse> creditCardResponses = optionalCustomer.get().getCreditCards().stream().map(creditCardMapper::toCreditCardActivityResponse).toList();
         log.debug("Get customer credit cards ended.");
         return new GeneralDataResponse(creditCardResponses);
     }

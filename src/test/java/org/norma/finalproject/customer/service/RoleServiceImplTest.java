@@ -20,7 +20,6 @@ class RoleServiceImplTest {
     private RoleRepository roleRepository;
     @InjectMocks
     private RoleServiceImpl underTest;
-
     @Test
     public void givenUserRole_whenGetRoleByName_thenReturnsRoleObject(){
         // given

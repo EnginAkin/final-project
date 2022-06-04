@@ -6,7 +6,7 @@ import org.norma.finalproject.card.entity.CreditCard;
 import org.norma.finalproject.card.entity.base.CreditCardActivity;
 
 public interface CreditCardMapper {
-    CreditCardResponse toCreditCardResponse(CreditCard creditCard);
-    CreditCardActivityResponse toCreditCardResponse(CreditCardActivity activity);
+    CreditCardResponse toCreditCardActivityResponse(CreditCard creditCard);
+    CreditCardActivityResponse toCreditCardActivityResponse(CreditCardActivity activity);
 
 }

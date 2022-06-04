@@ -67,10 +67,10 @@ public class CustomerIT {
         roleRepository.deleteAll();
         tokenRepository.deleteAll();
 
-        customer.setIdentityNumber("TEST-FOR-SECURITY");
-        customer.setUserNumber("TEST-FOR-SECURITY");
+        customer.setIdentityNumber("11111111111");
+        customer.setUserNumber("11111111111");
         customer.setTelephone("0000000");
-        customer.setPassword(encoder.encode("oldpassword"));
+        customer.setPassword(encoder.encode("000000"));
         customer.setName("TEST-FOR-SECURITY");
         customer.setSurname("TEST-FOR-SECURITY");
         customer.setEmail("TEST-FOR-SECURITY");
@@ -113,7 +113,7 @@ public class CustomerIT {
         //given
         UpdateCustomerRequest updateCustomerRequest=new UpdateCustomerRequest();
         updateCustomerRequest.setTelephone("1111");
-        updateCustomerRequest.setPassword("newpassword");
+        updateCustomerRequest.setPassword("111111");
         ResultActions actions = mockMvc.perform(
                 MockMvcRequestBuilders.put("/api/v1/customers/update")
                         .header("authorization", "Bearer "+tokenValue)
@@ -131,7 +131,7 @@ public class CustomerIT {
         //given
         UpdateCustomerRequest updateCustomerRequest=new UpdateCustomerRequest();
         updateCustomerRequest.setTelephone("1111");
-        updateCustomerRequest.setPassword("oldpassword"); // same password throw error
+        updateCustomerRequest.setPassword("000000"); // same password throw error
         // when
         ResultActions actions = mockMvc.perform(
                 MockMvcRequestBuilders.put("/api/v1/customers/update")
@@ -192,7 +192,7 @@ public class CustomerIT {
         calendar.set(2000,03,03);
         customerInfoDto.setBirthDay(calendar.getTime());
         customerInfoDto.setEmail("norma@gmail.com");
-        customerInfoDto.setIdentityNumber("11111111111");
+        customerInfoDto.setIdentityNumber("11111111122");
         customerInfoDto.setTelephone("1111111111");
         customerInfoDto.setPassword("111111");
         customerInfoDto.setIncome(BigDecimal.TEN);

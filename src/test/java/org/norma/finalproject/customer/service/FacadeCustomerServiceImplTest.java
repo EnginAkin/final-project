@@ -234,12 +234,6 @@ class FacadeCustomerServiceImplTest {
 
     }
 
-    /*
-    when(mock.isOk()).thenReturn(true);
-    when(mock.isOk()).thenThrow(exception);
-    doThrow(exception).when(mock).someVoidMethod();
-     */
-
     private CreateCheckingAccountRequest getCreateCheckingAccountRequest() {
         CreateCheckingAccountRequest request=new CreateCheckingAccountRequest();
         request.setBankCode("000000");

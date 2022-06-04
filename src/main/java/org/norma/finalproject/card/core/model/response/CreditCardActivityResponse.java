@@ -2,6 +2,7 @@ package org.norma.finalproject.card.core.model.response;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.norma.finalproject.card.entity.enums.SpendCategory;
 
 import javax.persistence.Temporal;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+@ToString
 public class CreditCardActivityResponse {
 
     private Long id;

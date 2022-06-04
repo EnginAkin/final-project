@@ -105,7 +105,6 @@ class CustomerServiceImplTest {
         Assertions.assertThat(optionalCustomer).isEmpty();
 
     }
-
     @Test
     public void givenValidEmail_whenFindCustomerByEmail_thenReturns(){
         // given
@@ -123,7 +122,6 @@ class CustomerServiceImplTest {
 
         // then
         Assertions.assertThat(optionalCustomer).isNotEmpty();
-
     }
     @Test
     public void givenCustomerList_whenGetall_thenReturnsCustomerList(){
@@ -158,20 +156,4 @@ class CustomerServiceImplTest {
         Assertions.assertThat(customerList.size()).isEqualTo(3);
 
     }
-    /*
-
-
-     @Test
-    public void given_when_then(){
-    // given
-
-    // when
-
-    // then
-
-
-    }
-     */
-
-
 }
