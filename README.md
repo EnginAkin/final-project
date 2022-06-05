@@ -96,4 +96,4 @@ $ mvn spring-boot:run
 ![presentation](screen-shoots/table-diagrams/database-diagram.png)
 
 ### Test sonuçları
-![presentation](screen-shoots/test-coverage/coverage-project.png)
+![presentation](screen-shoots/test-coverage/coverage-project.PNG)
