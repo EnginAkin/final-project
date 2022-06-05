@@ -115,7 +115,7 @@ public class CustomerIT {
         updateCustomerRequest.setTelephone("1111");
         updateCustomerRequest.setPassword("111111");
         ResultActions actions = mockMvc.perform(
-                MockMvcRequestBuilders.put("/api/v1/customers/update")
+                MockMvcRequestBuilders.patch("/api/v1/customers/update")
                         .header("authorization", "Bearer "+tokenValue)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateCustomerRequest))
@@ -134,7 +134,7 @@ public class CustomerIT {
         updateCustomerRequest.setPassword("000000"); // same password throw error
         // when
         ResultActions actions = mockMvc.perform(
-                MockMvcRequestBuilders.put("/api/v1/customers/update")
+                MockMvcRequestBuilders.patch("/api/v1/customers/update")
                         .header("authorization", "Bearer "+tokenValue)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateCustomerRequest))

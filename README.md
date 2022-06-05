@@ -33,7 +33,7 @@ $ mvn clean install
 $ mvn spring-boot:run
 ```
 
-#### Kullanıcıların erişebildiği kaynakları şoyle sıralayabiliriz.
+#### Kullanıcılara sunulan hizmetler
 * üyelik
 * kullanıcı bilgilerini güncelleme
 * kullanıcı silme
@@ -93,7 +93,7 @@ $ mvn spring-boot:run
 ---------
 ### Database Diagrams
 
-
-
 ![presentation](screen-shoots/table-diagrams/database-diagram.png)
 
+### Test sonuçları
+![presentation](screen-shoots/test-coverage/coverage-project.png)
