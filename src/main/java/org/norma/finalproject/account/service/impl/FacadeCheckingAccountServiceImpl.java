@@ -10,10 +10,12 @@ import org.norma.finalproject.account.core.model.response.AccountActivityRespons
 import org.norma.finalproject.account.core.model.response.CheckingAccountResponse;
 import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
+import org.norma.finalproject.account.entity.SavingAccount;
 import org.norma.finalproject.account.entity.base.AccountActivity;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.account.service.*;
 import org.norma.finalproject.card.core.model.request.ActivityFilter;
+import org.norma.finalproject.card.service.DebitCardService;
 import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.common.core.result.GeneralSuccessfullResponse;
@@ -24,6 +26,8 @@ import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.service.CustomerService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -40,7 +44,8 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
 
     private final CustomerService customerService;
     private final CheckingAccountService checkingAccountService;
-    private final FacadeSavingAccountService facadeSavingAccountService;
+    private final SavingAccountService savingAccountService;
+    private final DebitCardService debitCardService;
     private final UniqueNoCreator uniqueNoCreator;
     private final CheckingAccountMapper checkingAccountMapper;
     private final AccountActivityMapper accountActivityMapper;
@@ -158,6 +163,7 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
     public GeneralResponse deleteById(long customerID, long accountID) throws CustomerNotFoundException, DeleteAccountHasBalanceException, CannotDeleteBlockedAccounException, SavingAccountNotFound, AccountBalanceGreatherThenZeroException, CheckingAccountNotFoundException {
         log.debug("checking account delete by id is  started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
@@ -181,28 +187,18 @@ public class FacadeCheckingAccountServiceImpl implements FacadeCheckinAccountSer
         if (checkingAccount.get().getBalance().compareTo(BigDecimal.ZERO) > 0) {
             throw new DeleteAccountHasBalanceException(Messages.ACCOUNT_HAS_BALANCE_DELETE_EXCEPTION);
         }
-        /*
-        try{
-            checkingAccountService.deleteCustomerCheckingAccountById(accountID);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        // TODO bir cehcking hesap silindiğinde ona bağlı kart da silinir.
-TODO BU KISIM DÜZGÜN ÇALIŞMIYOR BU KISIMDA SAVİNG ACCOUNT OLMAYINCA HATA VERİYOR . BANKA KARTLARI DA SİLİNMELİ
-        try{
-            facadeSavingAccountService.deleteSavingAccountByCheckingId(checkingAccount.get().getId());
-            checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get());
-            checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get());
-
-        }catch (AccountBalanceGreatherThenZeroException balanceException){
-            log.info("Checking account has money in Saving account so you can't delete it.");
-            throw new AccountBalanceGreatherThenZeroException("Checking account has money in Saving account so you can't delete it.");
-        }
-        catch (SavingAccountNotFound savingAccountNotFound){
-            checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get());
+        // hesaba bağlı birikimli  varmı varsa sil
+        Optional<SavingAccount> optionalSavingAccount = savingAccountService.getByParentId(checkingAccount.get().getId());
+        if(optionalSavingAccount.isPresent() && optionalSavingAccount.get().getBalance().compareTo(BigDecimal.ZERO)==0){
+            savingAccountService.deleteSavingAccount(optionalSavingAccount.get());
         }
 
- */
+        boolean existsDebitCard = debitCardService.existsDebitCardByCheckingAccountId(checkingAccount.get().getId());
+        if(existsDebitCard){
+            debitCardService.deleteByCheckingAccountId(checkingAccount.get().getId());
+        }
+
+        checkingAccountService.deleteCustomerCheckingAccountById(checkingAccount.get().getId());
         return new GeneralSuccessfullResponse(Messages.CHECKING_ACCOUNT_DELETED_SUCCESSFULLY);
     }
 
