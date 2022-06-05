@@ -47,7 +47,10 @@ public class CustomerController {
 
     }
 
-
+/*
+ 1. hesap TRY TR3300006108322085465286169 1000
+ 2. hesap usd  TR3300000303345420223971662 0
+ */
 
 
 
