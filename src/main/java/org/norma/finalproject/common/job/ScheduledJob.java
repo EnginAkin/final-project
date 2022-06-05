@@ -33,7 +33,6 @@ public class ScheduledJob {
 
     private final SavingAccountService savingAccountService;
     private final CreditCardService creditCardService;
-    private double monthlyInterestRate = 2.65; // interest rate monthly
 
 
     @Scheduled(cron = "0 59 23 * * *")// every day 23:59 ::00 given interest saving account.
@@ -84,6 +83,7 @@ public class ScheduledJob {
     }
 
     private double CalculateInterest(int period, double principal) {
+        double monthlyInterestRate = 2.65;
         double multiplier = Math.pow(1.0 + monthlyInterestRate / 100.0, period) - 1.0;
         return multiplier * principal;
     }

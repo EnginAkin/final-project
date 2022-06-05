@@ -22,7 +22,7 @@ public class ExtractOfCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal paymentAmount=BigDecimal.ZERO;
+    private BigDecimal totalExtractDebt=BigDecimal.ZERO;
 
     private boolean isCurrentTerm=true;
 

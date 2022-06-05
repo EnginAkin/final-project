@@ -27,14 +27,12 @@ public class CheckingAccountController {
     private final FacadeCheckinAccountService facadeCheckinAccountService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(tags = "Deposit Controller", description = "Create a deposit account By customer.")
     @PostMapping
     public GeneralResponse create(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
                                   @RequestBody @Valid CreateCheckingAccountRequest createCheckingAccountRequest) throws BusinessException {
         return facadeCheckinAccountService.create(userDetail.getUser().getId(), createCheckingAccountRequest);
     }
 
-    @Operation(tags = "Checking Controller", description = "Delete a checking account by Customer.")
     @DeleteMapping("/{accountID}")
     public GeneralResponse deleteByAccountId(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
                                              @PathVariable long accountID) throws BusinessException {
@@ -61,7 +59,6 @@ public class CheckingAccountController {
     }
 
     @RolesAllowed(CustomerConstant.ROLE_ADMIN)
-    @Operation(tags = "Deposit Controller", description = "Blocked a deposit account by ADMIN.")
     @PatchMapping("/{accountId}/block")
     public GeneralResponse blockedAccount(@PathVariable long accountId) throws BusinessException {
         return facadeCheckinAccountService.blockAccount(accountId);
