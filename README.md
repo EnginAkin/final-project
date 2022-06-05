@@ -41,19 +41,22 @@ $ mvn spring-boot:run
 * üyelik
 * kullanıcı bilgilerini güncelleme
 * kullanıcı silme
-* giriş 
+* giriş yap
+* çıkış yap
 * vadesiz hesap oluşturma
 * vadesiz hesabın hesap hareketlerini detaylı görüntüleme
+* vadesiz hesabın hesap hareketlerini filtreli (tarih aralığı)görüntüleme
 * vadeli birikim hesabı oluşturma
 * vadeli hesabın hesap hareketlerini detaylı görüntüleme
+* vadeli hesabın hesap hareketlerini filtreli (tarih aralığı)görüntüleme
 * vadeli birikimli hesaptan verilen vade ile para biriktirme (faiz)
-* banka kartı başvurusunda bulunma
-* kredi kartı başvurusunda bulunma
+* banka kartı oluşturma
+* kredi kartı oluşturma
 * banka kartı ile alışveriş , para yatırma ve çekme işlemleri
 * kredi kartı ile alışveriş yapma
 * kredi kartının güncel ve önceki ekstreden kalan borçları görüntüleme
 * kredi kartlarının detaylı hesap hareketlerini görüntüleme
-* hesapları arasında para transferi yapma
+* hesaplar arasında para transferi yapma
 * iban üzerinden ve email üzerinden transfer yapma
 * farklı türlerde açılmış hesaplar arasında güncel kurdan anlık para transferi
 ---
