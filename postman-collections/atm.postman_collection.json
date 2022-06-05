@@ -1,0 +1,72 @@
+{
+	"info": {
+		"_postman_id": "b8c02bcb-6508-4038-96c3-b036d99c97df",
+		"name": "atm",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14959976"
+	},
+	"item": [
+		{
+			"name": "deposit atm debit card",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cardNumber\":\"6804950585425874\",\r\n    \"cardPassword\":\"123456\",\r\n    \"depositAmount\":20\r\n    \r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/api/v1/atm/deposit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"atm",
+						"deposit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "withdraw",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cardNumber\":\"8641821533182989\",\r\n    \"cardPassword\":\"123456\",\r\n    \"withdrawAmount\":150\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/api/v1/atm/withdraws",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"atm",
+						"withdraws"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

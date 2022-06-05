@@ -1,14 +1,22 @@
 version : '3.1'
 
 services:
-    postgresql:
-      image: postgres
-      restart: always
-      ports:
-        - 5432:5432
-      environment:
-        POSTGRES_PASSWORD: 1234
-
+  engbank:
+    container_name: engbank
+    image: engbank:0.0.1
+    build: ./
+    ports:
+      - "8080:8082"
+    depends_on:
+      - postgresqldb
+  postgresqldb:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=norma
 
 
 

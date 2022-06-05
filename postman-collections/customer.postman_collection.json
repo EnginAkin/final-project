@@ -1,0 +1,142 @@
+{
+	"info": {
+		"_postman_id": "e105bc66-fdca-4fa9-893a-0de685e51601",
+		"name": "customer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14959976"
+	},
+	"item": [
+		{
+			"name": "sign-in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"customerInfo\":{\r\n        \"identityNumber\":\"11111111112\",\r\n        \"name\":\"engin\",\r\n        \"surname\":\"akin\",\r\n        \"email\":\"engin2@gmail.com\",\r\n         \"password\":\"deneme\",\r\n        \"birthDay\":\"1999-03-19\",\r\n        \"telephone\":\"1111111112\",\r\n        \"income\":1000\r\n    },\r\n    \"address\":{\r\n            \"addressType\":\"WORK\",\r\n            \"country\":\"TURKEY\",\r\n            \"city\":\"MERSIN\",\r\n            \"state\":\"AKDENIZ\",\r\n            \"district\":\"CILEK\",\r\n            \"streetNumber\":\"6390\"\r\n    },\r\n    \"checkingAccount\":{\r\n            \"bankCode\":\"000061\",\r\n            \"branchName\":\"FATIH\",\r\n            \"branchCode\":\"50\",\r\n            \"currencyType\":\"TRY\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/customers/sing-up",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						"sing-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update_customer_with_id",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"identity\":\"11111111112\",\r\n    \"password\":\"deneme\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/authentication/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"authentication",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete customer by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM1MzMwNjEsImlhdCI6MTY1MzUwMzA2MX0.-KwrAvrQQAL90eJxGrHg-Pvn1DEL4vkVumhaZ3WWu9zHI0KBZe7QSB83gYHrGKTuZq5dKNdTpLozfcNJfPXC4A",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8082/api/v1/customers/delete",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM1OTU3MTUsImlhdCI6MTY1MzU2NTcxNX0.1w5pber8I2Udpv1H1KXOlc_Z76jJAz5Zx0bFTwRmBOYps1iwhlKQ0VcPWtAKcPvI3FPhni_tSZ-crlR3duUIIw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/api/v1/authentication/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"authentication",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

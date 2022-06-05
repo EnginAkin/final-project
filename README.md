@@ -61,7 +61,12 @@ $ mvn spring-boot:run
 * farklı türlerde açılmış hesaplar arasında güncel kurdan anlık para transferi
 ---
 
+
 ## Swagger 
+
+### Postman Collection 
+**/postman-collections** dizininden import edip endpointleri test edebilirsiniz.
+
 
 ### Customer endpoints
 ![presentation](screen-shoots/swagger-end-points/user-end-points.PNG)
