@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class CreateSavingAccountRequest {
 
     @NotNull
-    private String parentAccountNumber; // id ile değiştir
+    private String parentAccountNumber;
 
     @NotNull
     private String accountName;

@@ -1,7 +1,6 @@
 package org.norma.finalproject.transfer.service.impl;
 
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -30,12 +29,11 @@ import org.norma.finalproject.transfer.service.TransferService;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
-class EmailTransferTest {
+class TransferWithEmailTest {
     @Mock
     private BaseAccountService accountService;
     @Mock
@@ -51,7 +49,7 @@ class EmailTransferTest {
 
     @Spy
     @InjectMocks
-    private EmailTransfer underTest;
+    private TransferWithEmail underTest;
 
     @Test
     public void givenCustomerIdAndEmailTransferRequest_whenTransfer_thenReturnSuccessfully() throws AmountNotValidException, CustomerNotFoundException, TransferOperationException {

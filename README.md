@@ -2,7 +2,14 @@
 
 ## Proje tanıtımı
 
-Bir banka sistemi olarak tanımlayabiliriz.Kullanıcıların tüm banka işlemlerini tek uygulamada topladık.
+Online bankacılık sistemi, banka şubesine gitmeden internet erişimi olan bir bilgisayar aracılığı ile 
+yapılan bir backend uygulaması olup birçok bankacılık işlemini kapsar.
+Müşterilere verilen 4 temel hizmet vardır.
+
+* Müşteri yönetimi
+* Hesap yönetimi
+* Kart yönetimi
+* Transfer yönetimi
 
 ### Projede kullanılan teknolojiler
 * Java 17
@@ -20,6 +27,8 @@ Bir banka sistemi olarak tanımlayabiliriz.Kullanıcıların tüm banka işlemle
 ### Uygulamayı localde başlatmak için komut  dizisi
 ```
 git clone https://github.com/EnginAkin/final-project.git
+$ cd ./compose
+$ docker-compose up
 $ mvn clean install
 $ mvn spring-boot:run
 ```
@@ -41,6 +50,7 @@ $ mvn spring-boot:run
 * kredi kartının güncel ve önceki ekstreden kalan borçları görüntüleme
 * kredi kartlarının detaylı hesap hareketlerini görüntüleme
 * hesapları arasında para transferi yapma
+* iban üzerinden ve email üzerinden transfer yapma
 * farklı türlerde açılmış hesaplar arasında güncel kurdan anlık para transferi
 
 ## Swagger 
@@ -86,3 +96,4 @@ $ mvn spring-boot:run
 
 
 ![presentation](screen-shoots/table-diagrams/database-diagram.png)
+

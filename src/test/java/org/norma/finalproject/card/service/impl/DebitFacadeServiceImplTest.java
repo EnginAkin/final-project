@@ -21,7 +21,6 @@ import org.norma.finalproject.card.core.model.request.UpdateDebitCardRequest;
 import org.norma.finalproject.card.core.model.response.DebitCardResponse;
 import org.norma.finalproject.card.entity.DebitCard;
 import org.norma.finalproject.card.entity.enums.CardStatus;
-import org.norma.finalproject.card.repository.DebitCardRepository;
 import org.norma.finalproject.card.service.DebitCardService;
 import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;

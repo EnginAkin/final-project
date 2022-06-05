@@ -1,22 +1,13 @@
-version : '20.10'
+version : '3.1'
+
 services:
-  engbank:
-    image: engbank:0.0.1
-    ports:
-      - 9091:8082
-
-  postgresql:
-    image: docker.io/bitnami/postgresql:14
-    ports:
-      - '5432:5432'
-    volumes:
-      - 'postgresql_data:/bitnami/postgresql'
-    environment:
-      - 'ALLOW_EMPTY_PASSWORD=yes'
-
-volumes:
-  postgresql_data:
-    driver: local
+    postgresql:
+      image: postgres
+      restart: always
+      ports:
+        - 5432:5432
+      environment:
+        POSTGRES_PASSWORD: 1234
 
 
 

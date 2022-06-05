@@ -31,6 +31,7 @@ public class Account {
     private BigDecimal balance=BigDecimal.ZERO;
     private BigDecimal lockedBalance=BigDecimal.ZERO;
 
+
     @Enumerated(EnumType.STRING)
     private CurrencyType currencyType;
 

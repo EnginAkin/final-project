@@ -4,7 +4,6 @@ package org.norma.finalproject.transfer.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.base.Account;
-import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.account.service.BaseAccountService;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.common.core.result.GeneralResponse;
@@ -32,7 +31,7 @@ import java.util.Optional;
  */
 @Component("transfer-email")
 @Slf4j
-public class EmailTransfer extends TransferBase<EmailTransferRequest> {
+public class TransferWithEmail extends TransferBase<EmailTransferRequest> {
     private final BaseAccountService accountService;
     private final CustomerService customerService;
     private final FacadeExchangeService exchangeService;
@@ -40,7 +39,7 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
     private final TransferMapper transferMapper;
     private final TransferService transferService;
 
-    public EmailTransfer(BaseAccountService accountService, CustomerService customerService, FacadeExchangeService exchangeService, CheckingAccountService checkingAccountService, TransferMapper transferMapper, TransferService transferService) {
+    public TransferWithEmail(BaseAccountService accountService, CustomerService customerService, FacadeExchangeService exchangeService, CheckingAccountService checkingAccountService, TransferMapper transferMapper, TransferService transferService) {
         super(accountService, exchangeService);
         this.accountService = accountService;
         this.customerService = customerService;
@@ -83,8 +82,7 @@ public class EmailTransfer extends TransferBase<EmailTransferRequest> {
         this.sendTransferWithIban(fromAccount.getIbanNo(), optionalToAccount.get().getIbanNo(), emailTransferRequest.getAmount(), emailTransferRequest.getDescription());
 
         Transfer transfer = transferMapper.toEntity(new IbanTransferRequest(fromAccount.getIbanNo(),optionalToAccount.get().getIbanNo(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription(),emailTransferRequest.getTransferType()));
-        CurrencyType currencyType=fromAccount.getCurrencyType();
-        transfer.setCurrencyType(currencyType);
+        transfer.setCurrencyType(fromAccount.getCurrencyType());
         transferService.save(transfer);
         log.debug("Transfer for email ended.");
 

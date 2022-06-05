@@ -34,7 +34,7 @@ public class CustomerController {
     }
 
     @Operation(tags = "Customer Controller", description = "Update Customer By Customer")
-    @PutMapping(path = "/update")
+    @PatchMapping(path = "/update")
     public GeneralResponse update(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody UpdateCustomerRequest updateCustomerRequest) throws UpdateCustomerSamePasswordException, CustomerNotFoundException {
         return facadeCustomerService.update(userDetail.getUser().getId(),updateCustomerRequest);
     }

@@ -33,12 +33,7 @@ public class CheckingAccountController {
         return facadeCheckinAccountService.create(userDetail.getUser().getId(), createCheckingAccountRequest);
     }
 
-    @DeleteMapping("/{accountID}")
-    public GeneralResponse deleteByAccountId(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
-                                             @PathVariable long accountID) throws BusinessException {
-        return facadeCheckinAccountService.deleteById(userDetail.getUser().getId(), accountID);
 
-    }
 
     @GetMapping
     public GeneralResponse getAllCustomersCheckingAccounts(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws BusinessException {
@@ -64,6 +59,12 @@ public class CheckingAccountController {
         return facadeCheckinAccountService.blockAccount(accountId);
 
     }
+    @DeleteMapping("/{accountID}")
+    public GeneralResponse deleteByAccountId(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
+                                             @PathVariable long accountID) throws BusinessException {
+        return facadeCheckinAccountService.deleteById(userDetail.getUser().getId(), accountID);
 
+    }
 
 }
+

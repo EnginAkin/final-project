@@ -30,7 +30,7 @@ import java.util.Optional;
  */
 @Component("transfer-iban")
 @Slf4j
-public class IbanTransferBase extends TransferBase<IbanTransferRequest> {
+public class TransferWithIban extends TransferBase<IbanTransferRequest> {
 
     private final CustomerService customerService;
     private final BaseAccountService accountService;
@@ -40,7 +40,7 @@ public class IbanTransferBase extends TransferBase<IbanTransferRequest> {
     private final TransferMapper transferMapper;
     private final FacadeExchangeService exchangeService;
 
-    public IbanTransferBase(CustomerService customerService, BaseAccountService accountService, TransferService transferService, TransferMapper transferMapper, DebitCardService debitCardService, FacadeExchangeService exchangeService) {
+    public TransferWithIban(CustomerService customerService, BaseAccountService accountService, TransferService transferService, TransferMapper transferMapper, DebitCardService debitCardService, FacadeExchangeService exchangeService) {
         super(accountService, exchangeService);
         this.customerService = customerService;
         this.accountService = accountService;
