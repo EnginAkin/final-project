@@ -23,5 +23,4 @@ public class DoShoppingRequestWithCreditCard {
     private String description;
 
 
-
 }

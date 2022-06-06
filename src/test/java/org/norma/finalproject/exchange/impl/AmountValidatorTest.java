@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.exchange.core.validator.impl.AmountValidator;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class CreditCardMapperImpl implements CreditCardMapper {
     @Override
     public CreditCardResponse toCreditCardActivityResponse(CreditCard creditCard) {
-        CreditCardResponse creditCardResponse=new CreditCardResponse();
+        CreditCardResponse creditCardResponse = new CreditCardResponse();
         creditCardResponse.setCardNumber(creditCard.getCardNumber());
         creditCardResponse.setPassword(creditCard.getPassword());
         creditCardResponse.setAvailableBalance(creditCard.getCreditCardAccount().getAvailableBalance());
@@ -29,7 +29,7 @@ public class CreditCardMapperImpl implements CreditCardMapper {
 
     @Override
     public CreditCardActivityResponse toCreditCardActivityResponse(CreditCardActivity activity) {
-        CreditCardActivityResponse response=new CreditCardActivityResponse();
+        CreditCardActivityResponse response = new CreditCardActivityResponse();
         response.setAmount(activity.getAmount());
         response.setCrossAccount(activity.getCrossAccount());
         response.setId(activity.getId());

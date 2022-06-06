@@ -54,30 +54,30 @@ class TransferWithEmailTest {
     @Test
     public void givenCustomerIdAndEmailTransferRequest_whenTransfer_thenReturnSuccessfully() throws AmountNotValidException, CustomerNotFoundException, TransferOperationException {
         // given
-        Long validCustomerId=1L;
-        EmailTransferRequest transferRequest=new EmailTransferRequest();
+        Long validCustomerId = 1L;
+        EmailTransferRequest transferRequest = new EmailTransferRequest();
         transferRequest.setToEmail("enginakin@gmail.com");
         transferRequest.setTransferType(TransferType.OTHER);
         transferRequest.setAmount(BigDecimal.ZERO);
         transferRequest.setDescription("transfer");
-        Account fromAccount=createAccount();
+        Account fromAccount = createAccount();
         fromAccount.setId(1L);
         fromAccount.setCurrencyType(CurrencyType.TRY);
         transferRequest.setFromAccountIban(fromAccount.getIbanNo());
-        CheckingAccount toAccount=new CheckingAccount();
+        CheckingAccount toAccount = new CheckingAccount();
         toAccount.setBalance(BigDecimal.TEN);
         toAccount.setId(2L);
-        Customer customer=new Customer();
-        String validEmail="norma.test@gmail.com";
+        Customer customer = new Customer();
+        String validEmail = "norma.test@gmail.com";
         customer.setEmail(validEmail);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
-        Transfer transfer=new Transfer();
+        Transfer transfer = new Transfer();
         BDDMockito.given(customerService.findByCustomerById(validCustomerId)).willReturn(Optional.of(customer));
         BDDMockito.given(accountService.findAccountByIbanNumber(transferRequest.getFromAccountIban())).willReturn(Optional.of(fromAccount));
-        BDDMockito.given(underTest.checkAccountIDOwnerIsCustomer(customer,fromAccount.getId())).willReturn(true);
+        BDDMockito.given(underTest.checkAccountIDOwnerIsCustomer(customer, fromAccount.getId())).willReturn(true);
         BDDMockito.given(checkingAccountService.findCheckingAccountByEmail(transferRequest.getToEmail())).willReturn(Optional.of(toAccount));
-        doNothing().when(underTest).sendTransferWithIban(fromAccount.getIbanNo(),toAccount.getIbanNo(),transferRequest.getAmount(),transferRequest.getDescription());
+        doNothing().when(underTest).sendTransferWithIban(fromAccount.getIbanNo(), toAccount.getIbanNo(), transferRequest.getAmount(), transferRequest.getDescription());
         BDDMockito.given(transferMapper.toEntity(any())).willReturn(transfer);
         // when
         GeneralResponse response = underTest.transfer(validCustomerId, transferRequest);
@@ -85,8 +85,8 @@ class TransferWithEmailTest {
         Assertions.assertThat(response.getIsSuccessful()).isTrue();
     }
 
-    private Account createAccount(){
-        Account account=new Account();
+    private Account createAccount() {
+        Account account = new Account();
         account.setAccountName("account");
         account.setAccountNo("11111111");
         account.setIbanNo("1111111");
@@ -94,7 +94,6 @@ class TransferWithEmailTest {
         account.setCurrencyType(CurrencyType.TRY);
         return account;
     }
-
 
 
 }

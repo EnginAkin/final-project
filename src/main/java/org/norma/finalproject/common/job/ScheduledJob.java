@@ -22,8 +22,8 @@ import java.util.List;
  * account interest every night at 23:59.
  *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 @Component
 @EnableScheduling
@@ -40,7 +40,7 @@ public class ScheduledJob {
     public void performTaskUsingCronGivenInterestToSavingAccount() {
         log.debug("Saving account scheduled task started.");
         List<SavingAccount> maturityDateInTodaySavingAccount = savingAccountService.getAllByMaturityDateInToday();
-        if(!maturityDateInTodaySavingAccount.isEmpty()){
+        if (!maturityDateInTodaySavingAccount.isEmpty()) {
             maturityDateInTodaySavingAccount.forEach(this::savingAccountInterestProcess);
         }
         log.debug("Saving account scheduled task ended.");
@@ -51,7 +51,7 @@ public class ScheduledJob {
     public void performTaskUsingCronExtractOfCreditCardProcess() {
         log.debug("Credit card extract scheduled task started.");
         List<CreditCard> allCreditCardCutoffDateInToday = creditCardService.findAllCreditCardsCutoffDateInToday();
-        if(!allCreditCardCutoffDateInToday.isEmpty()){
+        if (!allCreditCardCutoffDateInToday.isEmpty()) {
             allCreditCardCutoffDateInToday.forEach(this::creditCardExtractOfProcess);
         }
         log.debug("Credit card extract scheduled task ended.");
@@ -64,7 +64,7 @@ public class ScheduledJob {
         creditCard.getCreditCardAccount().setCutOffDate(nextCutOffTerm.getTime());
         creditCard.getCreditCardAccount().setLastExtractDebt(creditCard.getCreditCardAccount().getTotalDebt());
         creditCard.getCreditCardAccount().setAvailableBalance(creditCard.getCreditCardAccount().getTotalCreditLimit());
-        ExtractOfCard extract=new ExtractOfCard();
+        ExtractOfCard extract = new ExtractOfCard();
         extract.setExtractTerm(new Date());
         extract.setCurrentTerm(true);
         extract.setCreditCardAccount(creditCard.getCreditCardAccount());
@@ -73,7 +73,7 @@ public class ScheduledJob {
 
     private void savingAccountInterestProcess(SavingAccount savingAccount) {
         BigDecimal balance = savingAccount.getBalance();
-        int period=savingAccount.getMaturity().getValue()/30; // convert month
+        int period = savingAccount.getMaturity().getValue() / 30; // convert month
         double interest = CalculateInterest(period, balance.doubleValue());
         savingAccount.setBalance(balance.add(BigDecimal.valueOf(interest)));
         // next maturity date

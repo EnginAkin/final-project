@@ -2,7 +2,6 @@ package org.norma.finalproject.account.entity.base;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.common.entity.enums.ActionStatus;
 
 import javax.persistence.*;

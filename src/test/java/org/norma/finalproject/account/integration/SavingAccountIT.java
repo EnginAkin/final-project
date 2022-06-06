@@ -59,8 +59,9 @@ public class SavingAccountIT {
     private TokenRepository tokenRepository;
     @Autowired
     private PasswordEncoder encoder;
-    private Customer customer=new Customer();
+    private Customer customer = new Customer();
     private String tokenValue;
+
     @BeforeEach
     public void setup() {
         customerRepository.deleteAll();
@@ -104,7 +105,7 @@ public class SavingAccountIT {
     @Test
     public void givenCreateSavingAccountRequest_whenCreate_thenReturun200() throws Exception {
         // given
-        CheckingAccount checkingAccount=new CheckingAccount();
+        CheckingAccount checkingAccount = new CheckingAccount();
         checkingAccount.setBankCode("000000");
         checkingAccount.setBranchCode("000000");
         checkingAccount.setAccountName("account");
@@ -116,7 +117,7 @@ public class SavingAccountIT {
         checkingAccount.setBlocked(true);
         checkingAccount.setCustomer(customer);
         checkingAccountRepository.save(checkingAccount);
-        CreateSavingAccountRequest request=new CreateSavingAccountRequest();
+        CreateSavingAccountRequest request = new CreateSavingAccountRequest();
         request.setCurrencyType(CurrencyType.TRY);
         request.setAccountName("saving account");
         request.setPurposeSaving(PurposeSaving.EDUCATION);
@@ -126,7 +127,7 @@ public class SavingAccountIT {
         request.setParentAccountNumber(checkingAccount.getAccountNo());
         ResultActions actions = mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/v1/accounts/saving")
-                    .header("authorization", "Bearer "+tokenValue)
+                        .header("authorization", "Bearer " + tokenValue)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );
@@ -138,7 +139,7 @@ public class SavingAccountIT {
     public void getSavingAccountByIDWithoutJWT_thenReturnUnauthorized() throws Exception {
 
         ResultActions actions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/accounts/saving/"+1)
+                MockMvcRequestBuilders.get("/api/v1/accounts/saving/" + 1)
         );
         actions.andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
@@ -147,7 +148,7 @@ public class SavingAccountIT {
     @Test
     public void givenAccountId_whenGetSavingAccountByID_thenReturn200() throws Exception {
         // given
-        CheckingAccount checkingAccount=new CheckingAccount();
+        CheckingAccount checkingAccount = new CheckingAccount();
         checkingAccount.setBankCode("000000");
         checkingAccount.setBranchCode("000000");
         checkingAccount.setAccountName("account");
@@ -159,7 +160,7 @@ public class SavingAccountIT {
         checkingAccount.setBlocked(true);
         checkingAccount.setCustomer(customer);
         checkingAccountRepository.save(checkingAccount);
-        SavingAccount savingAccount=new SavingAccount();
+        SavingAccount savingAccount = new SavingAccount();
         savingAccount.setParentAccount(checkingAccount);
         savingAccount.setIbanNo("11111111");
         savingAccount.setAccountNo("1111");
@@ -167,8 +168,8 @@ public class SavingAccountIT {
         savingAccountRepository.save(savingAccount);
         // when
         ResultActions actions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/accounts/saving/"+savingAccount.getId())
-                        .header("authorization", "Bearer "+tokenValue)
+                MockMvcRequestBuilders.get("/api/v1/accounts/saving/" + savingAccount.getId())
+                        .header("authorization", "Bearer " + tokenValue)
 
         );
         // then

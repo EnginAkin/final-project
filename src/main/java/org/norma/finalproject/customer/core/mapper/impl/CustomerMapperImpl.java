@@ -2,7 +2,6 @@ package org.norma.finalproject.customer.core.mapper.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.customer.core.mapper.CustomerMapper;
-import org.norma.finalproject.customer.core.model.CustomerInfoDto;
 import org.norma.finalproject.customer.core.model.request.CreateCustomerRequest;
 import org.norma.finalproject.customer.entity.Address;
 import org.norma.finalproject.customer.entity.Customer;
@@ -16,6 +15,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CustomerMapperImpl implements CustomerMapper {
     private final PasswordEncoder passwordEncoder;
+
     @Override
     public Customer customerInfoDtoToCustomer(CreateCustomerRequest createCustomerRequest) {
         Customer customer = Customer.builder().name(createCustomerRequest.getCustomerInfo().getName())

@@ -37,7 +37,7 @@ public class Utils {
         return cal;
     }
 
-    public static BigDecimal calculateSuccessRate(BigDecimal amount, BigDecimal target){
+    public static BigDecimal calculateSuccessRate(BigDecimal amount, BigDecimal target) {
         return amount.multiply(BigDecimal.valueOf(100)).divide(target);
     }
 

@@ -11,16 +11,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.norma.finalproject.common.security.token.entity.JWTToken;
 import org.norma.finalproject.common.security.token.core.exception.TokenNotFoundException;
+import org.norma.finalproject.common.security.token.entity.JWTToken;
 import org.norma.finalproject.common.security.token.service.TokenService;
-import org.norma.finalproject.common.security.token.service.impl.TokenServiceImpl;
-import org.norma.finalproject.customer.core.utilities.CustomerConstant;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -32,12 +30,10 @@ public class JWTHelper {
     private final TokenService tokenService;
 
     //@Value("${norma.final.project.jwt.secret-key}")
-    private String secretKey="normasecretkey";
+    private String secretKey = "normasecretkey";
 
     //@Value("${norma.final.project.jwt.expires-in}")
-    private long expiresIn=30000000L;
-
-
+    private long expiresIn = 30000000L;
 
 
     public String generate(String identity, List<String> roles) {
@@ -65,6 +61,7 @@ public class JWTHelper {
         JWTToken JWTTokenObject = tokenService.getToken(token);
         return JWT.decode(JWTTokenObject.getToken()).getSubject();
     }
+
     public void deleteTokenForLogout(String token) throws TokenNotFoundException {
         tokenService.delete(token);
     }
@@ -74,14 +71,12 @@ public class JWTHelper {
             JWTToken JWTTokenObject = tokenService.getToken(tokenValue);
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
             jwtVerifier.verify(JWTTokenObject.getToken());
-        }catch (TokenExpiredException tokenExpiredException) {
-            deleteTokenForLogout(tokenValue);
+        } catch (TokenExpiredException tokenExpiredException) {
+            deleteTokenForLogout(tokenValue); // delete token
             log.error("JWT Token TokenExpiredException occurred!");
             throw new TokenExpiredException("JWT Token expired");
         }
     }
-
-
 
 
 }

@@ -8,11 +8,11 @@ import org.norma.finalproject.card.service.CreditRateService;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+
 /**
- *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 @Component
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ public class CreditLimitCalculatorByIncome implements CreditLimitCalculator<BigD
     private final CreditRateService creditRateService;
 
     @Override
-    public BigDecimal getCreditLimit(BigDecimal income,BigDecimal desiredCreditLimit) {
+    public BigDecimal getCreditLimit(BigDecimal income, BigDecimal desiredCreditLimit) {
         log.debug("get credit limit started.");
         CreditRateType creditRate = creditRateService.getCreditRate(income);
         if (creditRate.equals(CreditRateType.VERY_GOOD)) {

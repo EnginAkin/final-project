@@ -12,8 +12,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CreditCardRepositoryTest {
@@ -23,19 +21,19 @@ class CreditCardRepositoryTest {
 
 
     @Test
-    public void whenFindAllCutoffDateInToday_thenReturnCreditCardList(){
+    public void whenFindAllCutoffDateInToday_thenReturnCreditCardList() {
         // given
-        CreditCardAccount account=new CreditCardAccount();
+        CreditCardAccount account = new CreditCardAccount();
         account.setCutOffDate(new Date());
 
-        CreditCard creditCard=new CreditCard();
+        CreditCard creditCard = new CreditCard();
         creditCard.setCreditCardAccount(account);
         underTest.save(creditCard);
 
-        CreditCardAccount account1=new CreditCardAccount();
+        CreditCardAccount account1 = new CreditCardAccount();
         account1.setCutOffDate(new Date());
 
-        CreditCard creditCard1=new CreditCard();
+        CreditCard creditCard1 = new CreditCard();
         creditCard1.setCreditCardAccount(account1);
         underTest.save(creditCard1);
         // when
@@ -46,13 +44,13 @@ class CreditCardRepositoryTest {
     }
 
     @Test
-    public void givenCardNumberwhenFindByCardNumber_thenReturnCreditCard(){
+    public void givenCardNumberwhenFindByCardNumber_thenReturnCreditCard() {
         // given
-        CreditCardAccount account=new CreditCardAccount();
+        CreditCardAccount account = new CreditCardAccount();
         account.setCutOffDate(new Date());
 
-        CreditCard creditCard=new CreditCard();
-        String cardNumber="1111111111";
+        CreditCard creditCard = new CreditCard();
+        String cardNumber = "1111111111";
         creditCard.setCardNumber(cardNumber);
         creditCard.setCreditCardAccount(account);
         underTest.save(creditCard);

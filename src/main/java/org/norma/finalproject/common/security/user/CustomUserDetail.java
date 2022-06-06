@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.norma.finalproject.common.entity.User;
-import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.entity.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +20,7 @@ public class CustomUserDetail implements UserDetails {
     private final User user;
 
     private String token;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return user.getRoles().stream().map(this::createSimpleGrantedAuthorities).collect(Collectors.toList());

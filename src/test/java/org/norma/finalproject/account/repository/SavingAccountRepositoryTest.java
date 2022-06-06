@@ -27,42 +27,43 @@ class SavingAccountRepositoryTest {
     private CheckingAccountRepository checkingAccountRepository;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         underTest.deleteAll();
         customerRepository.deleteAll();
         checkingAccountRepository.deleteAll();
     }
 
     @Test
-    public void given_when_then(){
-        SavingAccount savingAccount1=new SavingAccount();
+    public void given_when_then() {
+        SavingAccount savingAccount1 = new SavingAccount();
         savingAccount1.setAccountName("1");
         savingAccount1.setIbanNo("1");
         savingAccount1.setAccountNo("1");
         savingAccount1.setMaturityDate(new Date());
 
-        SavingAccount savingAccount2=new SavingAccount();
+        SavingAccount savingAccount2 = new SavingAccount();
         savingAccount2.setAccountName("12");
         savingAccount2.setIbanNo("12");
         savingAccount2.setAccountNo("12");
         Calendar maturity = Calendar.getInstance();
         maturity.add(Calendar.MONTH, 3);
         savingAccount2.setMaturityDate(maturity.getTime());
-        underTest.saveAll(List.of(savingAccount1,savingAccount2));
+        underTest.saveAll(List.of(savingAccount1, savingAccount2));
 
         List<SavingAccount> maturityDateInToday = underTest.getAllSavingAccountMaturityDateInToday();
 
         Assertions.assertThat(maturityDateInToday.size()).isEqualTo(1);
 
     }
+
     @Test
-    public void givenCustomerId_whenFindAllByCustomerId_thenReturnsSavingAccountList(){
+    public void givenCustomerId_whenFindAllByCustomerId_thenReturnsSavingAccountList() {
         // given
-        Customer customer=new Customer();
+        Customer customer = new Customer();
         customer.setName("engin");
         customer.setPassword("123");
         customerRepository.save(customer);
-        CheckingAccount checkingAccount=new CheckingAccount();
+        CheckingAccount checkingAccount = new CheckingAccount();
         checkingAccount.setBankCode("000000");
         checkingAccount.setBranchCode("000000");
         checkingAccount.setBranchName("FATIH");
@@ -72,7 +73,7 @@ class SavingAccountRepositoryTest {
         checkingAccount.setIbanNo("11");
         checkingAccount.setCustomer(customer);
         checkingAccountRepository.save(checkingAccount);
-        SavingAccount savingAccount=new SavingAccount();
+        SavingAccount savingAccount = new SavingAccount();
         savingAccount.setAccountName("1");
         savingAccount.setIbanNo("1");
         savingAccount.setAccountNo("1");
@@ -85,13 +86,10 @@ class SavingAccountRepositoryTest {
     }
 
 
-
-
-
     @Test
-    public void givenInvalidCustomerId_whenFindAllByCustomerId_thenReturnsSavingAccountList(){
+    public void givenInvalidCustomerId_whenFindAllByCustomerId_thenReturnsSavingAccountList() {
         // given
-        long invalidCustomerId=10l;
+        long invalidCustomerId = 10l;
         // when
         List<SavingAccount> savingAccounts = underTest.findAllByCustomer_Id(invalidCustomerId);
         // then

@@ -3,16 +3,12 @@ package org.norma.finalproject.customer.integration;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
-import org.norma.finalproject.common.entity.User;
-import org.norma.finalproject.common.repository.UserRepository;
 import org.norma.finalproject.common.security.token.entity.JWTToken;
 import org.norma.finalproject.common.security.token.repository.TokenRepository;
 import org.norma.finalproject.customer.core.model.AddressDto;
@@ -39,7 +35,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -103,7 +98,7 @@ public class CustomerIT {
     public void givenCustomerJwtToken_whenDelete_thenReturn200Ok() throws Exception {
         ResultActions actions = mockMvc.perform(
                 MockMvcRequestBuilders.delete("/api/v1/customers/delete")
-                        .header("authorization", "Bearer "+tokenValue));
+                        .header("authorization", "Bearer " + tokenValue));
         actions.andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -111,12 +106,12 @@ public class CustomerIT {
     @Test
     public void givenCustomerWithJwtToken_whenUpdate_thenReturnGeneralSuccessfullResponse() throws Exception {
         //given
-        UpdateCustomerRequest updateCustomerRequest=new UpdateCustomerRequest();
+        UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest();
         updateCustomerRequest.setTelephone("1111");
         updateCustomerRequest.setPassword("111111");
         ResultActions actions = mockMvc.perform(
                 MockMvcRequestBuilders.patch("/api/v1/customers/update")
-                        .header("authorization", "Bearer "+tokenValue)
+                        .header("authorization", "Bearer " + tokenValue)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateCustomerRequest))
         );
@@ -129,13 +124,13 @@ public class CustomerIT {
     @Test
     public void giveninvalidUpdatedCustomer_whenUpdate_thenReturnGeneralBadRequest() throws Exception {
         //given
-        UpdateCustomerRequest updateCustomerRequest=new UpdateCustomerRequest();
+        UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest();
         updateCustomerRequest.setTelephone("1111");
         updateCustomerRequest.setPassword("000000"); // same password throw error
         // when
         ResultActions actions = mockMvc.perform(
                 MockMvcRequestBuilders.patch("/api/v1/customers/update")
-                        .header("authorization", "Bearer "+tokenValue)
+                        .header("authorization", "Bearer " + tokenValue)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateCustomerRequest))
         );
@@ -149,7 +144,7 @@ public class CustomerIT {
     @Test
     public void givenCreateCustomerRequest_whenCreate_thenReturn201() throws Exception {
         //given
-        CreateCustomerRequest createCustomerRequest=createCustomerRequest();
+        CreateCustomerRequest createCustomerRequest = createCustomerRequest();
         // when
         ResultActions actions = mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/v1/customers/sing-up")
@@ -166,9 +161,9 @@ public class CustomerIT {
     @Test
     public void givenCreateCustomerRequestInvalidBirthday_whenCreate_thenReturn400() throws Exception {
         //given
-        CreateCustomerRequest createCustomerRequest=createCustomerRequest();
-        Calendar calendar=Calendar.getInstance();
-        calendar.set(2020,2,2);
+        CreateCustomerRequest createCustomerRequest = createCustomerRequest();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2020, 2, 2);
         createCustomerRequest.getCustomerInfo().setBirthDay(calendar.getTime());
         // when
         ResultActions actions = mockMvc.perform(
@@ -183,13 +178,13 @@ public class CustomerIT {
 
     }
 
-    private CreateCustomerRequest createCustomerRequest(){
-        CreateCustomerRequest createCustomerRequest=new CreateCustomerRequest();
-        CustomerInfoDto customerInfoDto=new CustomerInfoDto();
+    private CreateCustomerRequest createCustomerRequest() {
+        CreateCustomerRequest createCustomerRequest = new CreateCustomerRequest();
+        CustomerInfoDto customerInfoDto = new CustomerInfoDto();
         customerInfoDto.setSurname("norma");
         customerInfoDto.setName("norma");
-        Calendar calendar=Calendar.getInstance();
-        calendar.set(2000,03,03);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2000, 03, 03);
         customerInfoDto.setBirthDay(calendar.getTime());
         customerInfoDto.setEmail("norma@gmail.com");
         customerInfoDto.setIdentityNumber("11111111122");
@@ -197,7 +192,7 @@ public class CustomerIT {
         customerInfoDto.setPassword("111111");
         customerInfoDto.setIncome(BigDecimal.TEN);
 
-        AddressDto addressDto=new AddressDto();
+        AddressDto addressDto = new AddressDto();
         addressDto.setStreetNumber("norma");
         addressDto.setDistrict("norma");
         addressDto.setState("norma");
@@ -206,7 +201,7 @@ public class CustomerIT {
         addressDto.setCity("norma");
 
 
-        CreateCheckingAccountRequest createCheckingAccountRequest=new CreateCheckingAccountRequest();
+        CreateCheckingAccountRequest createCheckingAccountRequest = new CreateCheckingAccountRequest();
         createCheckingAccountRequest.setCurrencyType(CurrencyType.TRY);
         createCheckingAccountRequest.setBranchCode("11");
         createCheckingAccountRequest.setBankCode("000000");

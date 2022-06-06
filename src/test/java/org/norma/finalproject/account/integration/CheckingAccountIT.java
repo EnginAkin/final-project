@@ -52,8 +52,9 @@ public class CheckingAccountIT {
     private TokenRepository tokenRepository;
     @Autowired
     private PasswordEncoder encoder;
-    private Customer customer=new Customer();
+    private Customer customer = new Customer();
     private String tokenValue;
+
     @BeforeEach
     public void setup() {
         customerRepository.deleteAll();
@@ -85,26 +86,26 @@ public class CheckingAccountIT {
 
     @Test
     public void givenCreateCheckingAccountRequestWithoutJWT_thenReturnUnauthorized() throws Exception {
-        CreateCheckingAccountRequest request=new CreateCheckingAccountRequest();
+        CreateCheckingAccountRequest request = new CreateCheckingAccountRequest();
         request.setBranchName("FATIH");
         request.setBankCode("50");
         request.setBankCode("000601");
         request.setCurrencyType(CurrencyType.TRY);
 
 
-            ResultActions actions = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/v1/accounts/checking")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request))
-            );
-            actions.andDo(MockMvcResultHandlers.print())
-                    .andExpect(MockMvcResultMatchers.status().isForbidden());
+        ResultActions actions = mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/accounts/checking")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        actions.andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void givenCreateCheckingAccountRequest_whenCreate_thenReturn201() throws Exception {
         // given
-        CreateCheckingAccountRequest request=new CreateCheckingAccountRequest();
+        CreateCheckingAccountRequest request = new CreateCheckingAccountRequest();
         request.setBranchName("FATIH");
         request.setBranchCode("51");
         request.setBankCode("000601");
@@ -112,7 +113,7 @@ public class CheckingAccountIT {
         // when
         ResultActions actions = mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/v1/accounts/checking")
-                        .header("authorization", "Bearer "+tokenValue)
+                        .header("authorization", "Bearer " + tokenValue)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );
@@ -126,15 +127,16 @@ public class CheckingAccountIT {
     public void givenAccountIdWithoutJWT_thenReturnUnauthorized() throws Exception {
 
         ResultActions actions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/accounts/checking/"+1)
+                MockMvcRequestBuilders.get("/api/v1/accounts/checking/" + 1)
         );
         actions.andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
+
     @Test
-    public void givenAccountId_whenGetById_thenReturn200() throws Exception{
+    public void givenAccountId_whenGetById_thenReturn200() throws Exception {
         // given
-        CheckingAccount checkingAccount=new CheckingAccount();
+        CheckingAccount checkingAccount = new CheckingAccount();
         checkingAccount.setBankCode("000000");
         checkingAccount.setBranchCode("000000");
         checkingAccount.setAccountName("account");
@@ -146,8 +148,8 @@ public class CheckingAccountIT {
         checkingAccountRepository.save(checkingAccount);
         // when
         ResultActions actions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/accounts/checking/"+checkingAccount.getId())
-                        .header("authorization", "Bearer "+tokenValue)
+                MockMvcRequestBuilders.get("/api/v1/accounts/checking/" + checkingAccount.getId())
+                        .header("authorization", "Bearer " + tokenValue)
         );
         // then
         actions.andDo(MockMvcResultHandlers.print())

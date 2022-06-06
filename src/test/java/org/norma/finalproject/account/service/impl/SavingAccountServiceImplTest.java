@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class SavingAccountServiceImplTest {
@@ -27,14 +26,16 @@ class SavingAccountServiceImplTest {
     private SavingAccountRepository savingAccountRepository;
     @InjectMocks
     private SavingAccountServiceImpl underTest;
+
     @BeforeEach
-    public void setup(){
+    public void setup() {
         savingAccountRepository.deleteAll();
     }
+
     @Test
-    public void givenSavingAccount_whenSave_thenReturnSavedAccount(){
+    public void givenSavingAccount_whenSave_thenReturnSavedAccount() {
         // given
-        SavingAccount savingAccount=createSavingAccount();
+        SavingAccount savingAccount = createSavingAccount();
         BDDMockito.given(savingAccountRepository.save(savingAccount)).willReturn(savingAccount);
         // when
         SavingAccount savedAccount = underTest.save(savingAccount);
@@ -44,10 +45,10 @@ class SavingAccountServiceImplTest {
     }
 
     @Test
-    public void givenParentAccountId_whenGetByParentId_thenReturnSavingAccount(){
+    public void givenParentAccountId_whenGetByParentId_thenReturnSavingAccount() {
         // given
-        SavingAccount savingAccount=createSavingAccount();
-        CheckingAccount checkingAccount=new CheckingAccount();
+        SavingAccount savingAccount = createSavingAccount();
+        CheckingAccount checkingAccount = new CheckingAccount();
         checkingAccount.setId(1L);
         checkingAccount.setAccountName("account name");
         checkingAccount.setAccountNo("111111");
@@ -59,12 +60,13 @@ class SavingAccountServiceImplTest {
         // then
         assertThat(optionalSavingAccount).isNotEmpty();
     }
+
     @Test
-    public void givenCustomerID_whenGetAllAccountsByCustomerId_thenReturnListObjects(){
+    public void givenCustomerID_whenGetAllAccountsByCustomerId_thenReturnListObjects() {
         // given
-        SavingAccount savingAccount1=createSavingAccount();
-        SavingAccount savingAccount2=createSavingAccount();
-        List<SavingAccount> savingAccountList= List.of(savingAccount1,savingAccount2);
+        SavingAccount savingAccount1 = createSavingAccount();
+        SavingAccount savingAccount2 = createSavingAccount();
+        List<SavingAccount> savingAccountList = List.of(savingAccount1, savingAccount2);
         BDDMockito.given(savingAccountRepository.findAllByCustomer_Id(1L)).willReturn(savingAccountList);
         // when
         List<SavingAccount> responseList = underTest.getAllAccountsByCustomerId(1L);
@@ -72,8 +74,9 @@ class SavingAccountServiceImplTest {
         assertThat(responseList).isNotNull();
         assertThat(responseList.size()).isEqualTo(2);
     }
-    private SavingAccount createSavingAccount(){
-        SavingAccount savingAccount=new SavingAccount();
+
+    private SavingAccount createSavingAccount() {
+        SavingAccount savingAccount = new SavingAccount();
         savingAccount.setAccountName("account name");
         savingAccount.setIbanNo("111");
         savingAccount.setAccountNo("111");

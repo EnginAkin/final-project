@@ -7,9 +7,7 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.norma.finalproject.exchange.core.constant.ExchangeConstant;
 import org.norma.finalproject.exchange.core.model.Exchange;
-import org.norma.finalproject.exchange.service.ExchangeService;
 import org.norma.finalproject.exchange.service.impl.ExchangeServiceImpl;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,8 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class ExchangeServiceImplTest {

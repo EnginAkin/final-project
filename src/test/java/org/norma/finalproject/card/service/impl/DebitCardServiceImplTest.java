@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,9 +26,9 @@ class DebitCardServiceImplTest {
     private DebitCardServiceImpl underTest;
 
     @Test
-    public void givenDebitCard_whenSave_thenReturnSavedDebitCard(){
+    public void givenDebitCard_whenSave_thenReturnSavedDebitCard() {
         // given
-        DebitCard debitCard=createDebitCard();
+        DebitCard debitCard = createDebitCard();
         BDDMockito.given(debitCardRepository.save(debitCard)).willReturn(debitCard);
         // when
         DebitCard savedDebitCard = underTest.save(debitCard);
@@ -41,13 +40,13 @@ class DebitCardServiceImplTest {
     }
 
     @Test
-    public void givenCustomerId_whenGetAllCustomersDebitCards_thenReturnListDebitCards(){
+    public void givenCustomerId_whenGetAllCustomersDebitCards_thenReturnListDebitCards() {
         // given
-        DebitCard debitCard1=createDebitCard();
-        DebitCard debitCard2=createDebitCard();
-        DebitCard debitCard3=createDebitCard();
-        Long customerID=1L;
-        List<DebitCard> debitCards=List.of(debitCard1,debitCard2,debitCard3);
+        DebitCard debitCard1 = createDebitCard();
+        DebitCard debitCard2 = createDebitCard();
+        DebitCard debitCard3 = createDebitCard();
+        Long customerID = 1L;
+        List<DebitCard> debitCards = List.of(debitCard1, debitCard2, debitCard3);
         BDDMockito.given(debitCardRepository.findAllByCheckingAccount_Customer_Id(customerID)).willReturn(debitCards);
         // when
         List<DebitCard> allCustomersDebitCards = underTest.getAllCustomersDebitCards(customerID);
@@ -55,24 +54,26 @@ class DebitCardServiceImplTest {
         // then
         Assertions.assertThat(allCustomersDebitCards.size()).isEqualTo(debitCards.size());
     }
-    @Test
-    public void givenCustomerIDAndDebitCardID_whenFindDebitCardWithCustomerIDAndCardID_thenReturnDebitCard(){
-        // given
-        Long customerId=1L;
-        Long debitCardId=1L;
 
-        DebitCard debitCard=createDebitCard();
+    @Test
+    public void givenCustomerIDAndDebitCardID_whenFindDebitCardWithCustomerIDAndCardID_thenReturnDebitCard() {
+        // given
+        Long customerId = 1L;
+        Long debitCardId = 1L;
+
+        DebitCard debitCard = createDebitCard();
         debitCard.setId(debitCardId);
-        BDDMockito.given(debitCardRepository.findDebitCardByCheckingAccount_Customer_IdAndId(customerId,debitCardId)).willReturn(Optional.of(debitCard));
+        BDDMockito.given(debitCardRepository.findDebitCardByCheckingAccount_Customer_IdAndId(customerId, debitCardId)).willReturn(Optional.of(debitCard));
         // when
         Optional<DebitCard> optionalDebitCard = underTest.findDebitCardWithCustomerIDAndCardID(customerId, debitCardId);
         // then
         Assertions.assertThat(optionalDebitCard).isNotEmpty();
     }
+
     @Test
-    public void givenDebitCardNumber_whenFindDebitCardWithCardNumber_thenReturnDebitCard(){
+    public void givenDebitCardNumber_whenFindDebitCardWithCardNumber_thenReturnDebitCard() {
         // given
-        DebitCard debitCard=createDebitCard();
+        DebitCard debitCard = createDebitCard();
         BDDMockito.given(debitCardRepository.findDebitCardByCardNumber(debitCard.getCardNumber())).willReturn(Optional.of(debitCard));
         // when
         Optional<DebitCard> optionalDebitCard = underTest.findDebitCardWithCardNumber(debitCard.getCardNumber());
@@ -81,20 +82,21 @@ class DebitCardServiceImplTest {
     }
 
     @Test
-    public void givenCheckingAccountId_whenExistsDebitCardByCheckingAccountId_thenReturnTrue(){
+    public void givenCheckingAccountId_whenExistsDebitCardByCheckingAccountId_thenReturnTrue() {
         // given
-        Long parentCheckingAccountId=1L;
+        Long parentCheckingAccountId = 1L;
         BDDMockito.given(debitCardRepository.existsByCheckingAccount_Id(parentCheckingAccountId)).willReturn(true);
         // when
         boolean existsDebitCardByCheckingAccountId = underTest.existsDebitCardByCheckingAccountId(parentCheckingAccountId);
         // then
         Assertions.assertThat(existsDebitCardByCheckingAccountId).isTrue();
     }
+
     @Test
-    public void givenCheckingAccountId_whenFindByParentCheckingAccount_thenReturnDebitCard(){
+    public void givenCheckingAccountId_whenFindByParentCheckingAccount_thenReturnDebitCard() {
         // given
-        Long parentCheckingAccountId=1L;
-        DebitCard debitCard=createDebitCard();
+        Long parentCheckingAccountId = 1L;
+        DebitCard debitCard = createDebitCard();
         BDDMockito.given(debitCardRepository.findDebitCardByCheckingAccount_Id(parentCheckingAccountId)).willReturn(Optional.of(debitCard));
         // when
         Optional<DebitCard> optionalDebitCard = underTest.findByParentCheckingAccount(parentCheckingAccountId);
@@ -103,16 +105,16 @@ class DebitCardServiceImplTest {
     }
 
     @Test
-    public void givenDebitCard_whenDelete_thenDelete(){
+    public void givenDebitCard_whenDelete_thenDelete() {
         // given
-        DebitCard debitCard=createDebitCard();
+        DebitCard debitCard = createDebitCard();
         doNothing().when(debitCardRepository).delete(debitCard);
         // when
         underTest.delete(debitCard);
     }
 
-    private DebitCard createDebitCard(){
-        DebitCard debitCard=new DebitCard();
+    private DebitCard createDebitCard() {
+        DebitCard debitCard = new DebitCard();
         debitCard.setCardNumber("1111");
         debitCard.setPassword("1111");
         debitCard.setCvv("1111");
@@ -120,9 +122,10 @@ class DebitCardServiceImplTest {
         debitCard.setExpiryDate(new Date());
         return debitCard;
     }
-    private Customer createCustomer(){
-        Customer customer=new Customer();
-        String invalidIdentityNumber="00000000000";
+
+    private Customer createCustomer() {
+        Customer customer = new Customer();
+        String invalidIdentityNumber = "00000000000";
         customer.setIdentityNumber("111111111111");
         customer.setName("ENGIN");
         customer.setSurname("AKIN");

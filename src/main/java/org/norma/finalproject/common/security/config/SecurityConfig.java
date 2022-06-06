@@ -22,9 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CustomUserDetailsService userDetailsService;
-    private final PasswordEncoder passwordEncoder;
-    private final CustomAuthenticationFilter authenticationFilter;
     private static final String[] AUTH_WHITELIST_FOR_SWAGGER = {
             // swagger 3 open api
             "/v3/api-docs/**",
@@ -36,11 +33,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/v1/shopping/**",
             "/api/v1/atm/**",
     };
-
     private static final String[] AUTH_WHITELIST_FOR_USER = {
             "/api/v1/customers/**",
             "/api/v1/accounts/**"
     };
+    private final CustomUserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
+    private final CustomAuthenticationFilter authenticationFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -64,8 +63,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-ui.html",
                 "/webjars/**");
     }
-
-
 
 
     @Autowired

@@ -12,12 +12,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+
 /**
  * this is facade exchange money
  *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class FacadeExchangeServiceImpl implements FacadeExchangeService {
     @Override
     public BigDecimal getExchangedAmount(CurrencyType to, CurrencyType from, BigDecimal amount) throws AmountNotValidException {
         amountValidator.validate(amount);
-        if(to.equals(from)){
+        if (to.equals(from)) {
             return amount; // if same currency return same amount
         }
         String url = ExchangeConstant.API_LAYER_URL + "/convert?to=" + to + "&from=" + from + "&amount=" + amount;

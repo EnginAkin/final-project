@@ -2,7 +2,6 @@ package org.norma.finalproject.customer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.norma.finalproject.customer.core.exception.CustomerAlreadyRegisterException;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.entity.Role;
@@ -14,11 +13,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 /**
- *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 @Service
 @Slf4j
@@ -30,7 +29,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final RoleService roleService;
 
     @Override
-    public Customer save(Customer customer)  {
+    public Customer save(Customer customer) {
         Role roleUser = roleService.getRoleByName(CustomerConstant.ROLE_USER);
         customer.setRoles(Set.of(roleUser));
         log.info("Customer successfull register  :{}", customer.getName());

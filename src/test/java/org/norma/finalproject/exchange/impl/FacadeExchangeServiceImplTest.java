@@ -35,7 +35,6 @@ class FacadeExchangeServiceImplTest {
     private FacadeExchangeServiceImpl facadeExchangeService;
 
 
-
     @Test
     void givenValidExchangeParameter_whenGetExchangedAmount_thenReturnExchangedAmount() throws AmountNotValidException, AmountNotValidException {
         // given
@@ -76,8 +75,6 @@ class FacadeExchangeServiceImplTest {
         Mockito.verify(exchangeService, Mockito.atMost(0)).getExchange(url, httpEntity);
 
     }
-
-
 
 
 }

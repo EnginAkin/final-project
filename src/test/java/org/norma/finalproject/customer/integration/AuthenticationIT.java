@@ -52,7 +52,7 @@ public class AuthenticationIT {
         customerRepository.deleteAll();
         roleRepository.deleteAll();
         tokenRepository.deleteAll();
-        Customer customer=new Customer();
+        Customer customer = new Customer();
         customer.setIdentityNumber("11111111111");
         customer.setUserNumber("11111111111");
         customer.setTelephone("0000000");
@@ -80,7 +80,7 @@ public class AuthenticationIT {
     @Test
     public void givenLoginFormRequest_whenLogin_thenReturn200() throws Exception {
         // given
-        LoginFormRequest loginFormRequest=new LoginFormRequest();
+        LoginFormRequest loginFormRequest = new LoginFormRequest();
         loginFormRequest.setUserNumber("11111111111");
         loginFormRequest.setPassword("000000");
         // when
@@ -99,7 +99,7 @@ public class AuthenticationIT {
     @Test
     public void givenLoginFormRequestWithInvalidPassword_whenLogin_thenReturn401() throws Exception {
         // given
-        LoginFormRequest loginFormRequest=new LoginFormRequest();
+        LoginFormRequest loginFormRequest = new LoginFormRequest();
         loginFormRequest.setUserNumber("11111111111");
         loginFormRequest.setPassword("111111");// wrong password
         // when
@@ -118,7 +118,7 @@ public class AuthenticationIT {
     @Test
     public void givenLoginFormRequestWithInvalidIdentity_whenLogin_thenReturn401() throws Exception {
         // given
-        LoginFormRequest loginFormRequest=new LoginFormRequest();
+        LoginFormRequest loginFormRequest = new LoginFormRequest();
         loginFormRequest.setUserNumber("00000000000");// wrong identity
         loginFormRequest.setPassword("000000");
         // when
@@ -133,14 +133,15 @@ public class AuthenticationIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.isSuccessful", CoreMatchers.is(false)));
 
     }
+
     @Test
     public void whenLogout_thenReturn200() throws Exception {
 
         // when
         ResultActions actions = mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/v1/authentication/logout")
-                        .header("authorization", "Bearer "+tokenValue)
-  );
+                        .header("authorization", "Bearer " + tokenValue)
+        );
         //then
         actions.andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())

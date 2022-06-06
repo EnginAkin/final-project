@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class DebitCardMapperImpl implements DebitCardMapper {
     @Override
     public DebitCardResponse toDto(DebitCard debitCard) {
-        DebitCardResponse response=new DebitCardResponse();
+        DebitCardResponse response = new DebitCardResponse();
         response.setCardNumber(debitCard.getCardNumber());
         response.setCvv(debitCard.getCvv());
         response.setBalance(debitCard.getCheckingAccount().getBalance());

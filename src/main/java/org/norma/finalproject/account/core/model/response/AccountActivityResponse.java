@@ -13,13 +13,13 @@ public class AccountActivityResponse {
 
     private String crossAccount;
 
-    @JsonInclude(JsonInclude.Include. NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String senderName;
-    @JsonInclude(JsonInclude.Include. NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String receiverName;
 
     private BigDecimal amount;
-    @JsonInclude(JsonInclude.Include. NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String description;
 
     private BigDecimal availableBalance;

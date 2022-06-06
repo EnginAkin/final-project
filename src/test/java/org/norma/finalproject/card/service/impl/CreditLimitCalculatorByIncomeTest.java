@@ -22,44 +22,44 @@ class CreditLimitCalculatorByIncomeTest {
     private CreditLimitCalculatorByIncome underTest;
 
     @Test
-    public void givenIncomeAndDesiredCreditLimit_whenGetCreditLimit_thenRetunModorateRisky(){
+    public void givenIncomeAndDesiredCreditLimit_whenGetCreditLimit_thenRetunModorateRisky() {
         // given
-        BigDecimal income=BigDecimal.valueOf(1000);
-        BigDecimal desiredCreditLimit=BigDecimal.valueOf(1000);
+        BigDecimal income = BigDecimal.valueOf(1000);
+        BigDecimal desiredCreditLimit = BigDecimal.valueOf(1000);
         BDDMockito.given(creditRateService.getCreditRate(income)).willReturn(CreditRateType.MODERATE_RISKY);
         // when
         BigDecimal creditLimit = underTest.getCreditLimit(income, desiredCreditLimit);
         //then
-        BigDecimal expectedCreditLimit=desiredCreditLimit.multiply(BigDecimal.valueOf(0.5));
+        BigDecimal expectedCreditLimit = desiredCreditLimit.multiply(BigDecimal.valueOf(0.5));
         Assertions.assertThat(creditLimit).isEqualTo(expectedCreditLimit);
     }
 
 
     @Test
-    public void givenIncomeAndDesiredCreditLimit_whenGetCreditLimit_thenRetunVeryRisky(){
+    public void givenIncomeAndDesiredCreditLimit_whenGetCreditLimit_thenRetunVeryRisky() {
         // given
-        BigDecimal income=BigDecimal.valueOf(0);
-        BigDecimal desiredCreditLimit=BigDecimal.valueOf(1000);
+        BigDecimal income = BigDecimal.valueOf(0);
+        BigDecimal desiredCreditLimit = BigDecimal.valueOf(1000);
         BDDMockito.given(creditRateService.getCreditRate(income)).willReturn(CreditRateType.RISKY);
         // when
         BigDecimal creditLimit = underTest.getCreditLimit(income, desiredCreditLimit);
         //then
-        BigDecimal expectedCreditLimit=BigDecimal.ZERO;
+        BigDecimal expectedCreditLimit = BigDecimal.ZERO;
         Assertions.assertThat(creditLimit).isEqualTo(expectedCreditLimit);
 
 
     }
 
     @Test
-    public void givenIncomeAndDesiredCreditLimit_whenGetCreditLimit_thenRetunGood(){
+    public void givenIncomeAndDesiredCreditLimit_whenGetCreditLimit_thenRetunGood() {
         // given
-        BigDecimal income=BigDecimal.valueOf(30000);
-        BigDecimal desiredCreditLimit=BigDecimal.valueOf(1000);
+        BigDecimal income = BigDecimal.valueOf(30000);
+        BigDecimal desiredCreditLimit = BigDecimal.valueOf(1000);
         BDDMockito.given(creditRateService.getCreditRate(income)).willReturn(CreditRateType.GOOD);
         // when
         BigDecimal creditLimit = underTest.getCreditLimit(income, desiredCreditLimit);
         //then
-        BigDecimal expectedCreditLimit=desiredCreditLimit;
+        BigDecimal expectedCreditLimit = desiredCreditLimit;
         Assertions.assertThat(creditLimit).isEqualTo(expectedCreditLimit);
     }
 }

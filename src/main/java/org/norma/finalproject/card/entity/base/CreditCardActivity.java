@@ -2,7 +2,6 @@ package org.norma.finalproject.card.entity.base;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.norma.finalproject.card.entity.CreditCard;
 import org.norma.finalproject.card.entity.ExtractOfCard;
 import org.norma.finalproject.card.entity.enums.SpendCategory;
 

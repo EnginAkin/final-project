@@ -24,5 +24,4 @@ public class SavingAccountDto {
     private BigDecimal targetAmount;
 
 
-
 }

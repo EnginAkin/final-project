@@ -8,7 +8,9 @@ import java.util.Optional;
 
 public interface CheckingAccountRepository extends JpaRepository<CheckingAccount, Long> {
     List<CheckingAccount> findAllByCustomer_IdAndBlocked(long customerId, boolean blocked);
+
     Optional<CheckingAccount> findByAccountNo(String accountNo);
+
     Optional<CheckingAccount> findFirstByCustomer_Email(String email);
 
 

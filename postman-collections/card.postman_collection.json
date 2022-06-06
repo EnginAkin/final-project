@@ -1,352 +1,352 @@
 {
-	"info": {
-		"_postman_id": "69d0dc9f-a125-4623-a3e7-c5840d9ddedb",
-		"name": "card",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "14959976"
-	},
-	"item": [
-		{
-			"name": "debit_Card",
-			"item": [
-				{
-					"name": "create debit card",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM4NTA4NTUsImlhdCI6MTY1MzgyMDg1NX0.Jqz9ynaF-HS3mU6kZPujSt2btA2iHuyd7tZwnxZQT9fgT0XuGmv9eBN5wyH9_NJGxh_zALXnhE3tSlScGQFoEA",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"parentCheckingAccountId\":1,\r\n    \"password\":\"123456\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8082/api/v1/cards/debits",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"api",
-								"v1",
-								"cards",
-								"debits"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get_debit_card_by_id",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM0MjE3OTIsImlhdCI6MTY1MzM5MTc5Mn0.1V7B5F8WABjtjvxKY8FJUU3LUQwcCvjRcSV0xB0V2hI2SYduHGRohSK-MAyB3vIh46_adHsYqzyQq5NABlnucg",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8082/api/v1/cards/debits/5",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"api",
-								"v1",
-								"cards",
-								"debits",
-								"5"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all debit card  in customer",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM4NTA4NTUsImlhdCI6MTY1MzgyMDg1NX0.Jqz9ynaF-HS3mU6kZPujSt2btA2iHuyd7tZwnxZQT9fgT0XuGmv9eBN5wyH9_NJGxh_zALXnhE3tSlScGQFoEA",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8082/api/v1/cards/debits",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"api",
-								"v1",
-								"cards",
-								"debits"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "get debit card activities",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM4NTA4NTUsImlhdCI6MTY1MzgyMDg1NX0.Jqz9ynaF-HS3mU6kZPujSt2btA2iHuyd7tZwnxZQT9fgT0XuGmv9eBN5wyH9_NJGxh_zALXnhE3tSlScGQFoEA",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8082/api/v1/cards/debits/1/activities",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"api",
-								"v1",
-								"cards",
-								"debits",
-								"1",
-								"activities"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "credit_card",
-			"item": [
-				{
-					"name": "create credit card",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyODMwMDQsImlhdCI6MTY1NDI1MzAwNH0.MsSRrCAUZXz0BU_uWtKk4IMdiS1o_9W_SmjbR-w1hnblVm-XjMkFXMTVCJlouJj9xl4lrAhKAv5vXTRTVD2Xww",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"password\":\"1234\",\r\n    \"creditCardLimit\":5000,\r\n    \"cutOffDate\":\"2022-06-02\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8082/api/v1/cards/credits",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"api",
-								"v1",
-								"cards",
-								"credits"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get current term transactions",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyODMwMDQsImlhdCI6MTY1NDI1MzAwNH0.MsSRrCAUZXz0BU_uWtKk4IMdiS1o_9W_SmjbR-w1hnblVm-XjMkFXMTVCJlouJj9xl4lrAhKAv5vXTRTVD2Xww",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "localhost:8082/api/v1/cards/credits/1/current-term-transactions",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"api",
-								"v1",
-								"cards",
-								"credits",
-								"1",
-								"current-term-transactions"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get users credit cards",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyODMwMDQsImlhdCI6MTY1NDI1MzAwNH0.MsSRrCAUZXz0BU_uWtKk4IMdiS1o_9W_SmjbR-w1hnblVm-XjMkFXMTVCJlouJj9xl4lrAhKAv5vXTRTVD2Xww",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8082/api/v1/cards/credits",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"api",
-								"v1",
-								"cards",
-								"credits"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get credit card debt",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyODMwMDQsImlhdCI6MTY1NDI1MzAwNH0.MsSRrCAUZXz0BU_uWtKk4IMdiS1o_9W_SmjbR-w1hnblVm-XjMkFXMTVCJlouJj9xl4lrAhKAv5vXTRTVD2Xww",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8082/api/v1/cards/credits/1/debt",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"api",
-								"v1",
-								"cards",
-								"credits",
-								"1",
-								"debt"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete credit cart",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyMDM1NTYsImlhdCI6MTY1NDE3MzU1Nn0.JCVPJB9qgoo_GXKVQgCdIwJ-xU9wkwXPNsieaiQNUfhuIPVmPcyzS2QmFb-0VWmQc7jwWtpeyx7qhDtFfU8h6A",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:8082/api/v1/cards/credits/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"api",
-								"v1",
-								"cards",
-								"credits",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	]
+  "info": {
+    "_postman_id": "69d0dc9f-a125-4623-a3e7-c5840d9ddedb",
+    "name": "card",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "14959976"
+  },
+  "item": [
+    {
+      "name": "debit_Card",
+      "item": [
+        {
+          "name": "create debit card",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM4NTA4NTUsImlhdCI6MTY1MzgyMDg1NX0.Jqz9ynaF-HS3mU6kZPujSt2btA2iHuyd7tZwnxZQT9fgT0XuGmv9eBN5wyH9_NJGxh_zALXnhE3tSlScGQFoEA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"parentCheckingAccountId\":1,\r\n    \"password\":\"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8082/api/v1/cards/debits",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "v1",
+                "cards",
+                "debits"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_debit_card_by_id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM0MjE3OTIsImlhdCI6MTY1MzM5MTc5Mn0.1V7B5F8WABjtjvxKY8FJUU3LUQwcCvjRcSV0xB0V2hI2SYduHGRohSK-MAyB3vIh46_adHsYqzyQq5NABlnucg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8082/api/v1/cards/debits/5",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "v1",
+                "cards",
+                "debits",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all debit card  in customer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM4NTA4NTUsImlhdCI6MTY1MzgyMDg1NX0.Jqz9ynaF-HS3mU6kZPujSt2btA2iHuyd7tZwnxZQT9fgT0XuGmv9eBN5wyH9_NJGxh_zALXnhE3tSlScGQFoEA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8082/api/v1/cards/debits",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "v1",
+                "cards",
+                "debits"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "get debit card activities",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM4NTA4NTUsImlhdCI6MTY1MzgyMDg1NX0.Jqz9ynaF-HS3mU6kZPujSt2btA2iHuyd7tZwnxZQT9fgT0XuGmv9eBN5wyH9_NJGxh_zALXnhE3tSlScGQFoEA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8082/api/v1/cards/debits/1/activities",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "v1",
+                "cards",
+                "debits",
+                "1",
+                "activities"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "credit_card",
+      "item": [
+        {
+          "name": "create credit card",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyODMwMDQsImlhdCI6MTY1NDI1MzAwNH0.MsSRrCAUZXz0BU_uWtKk4IMdiS1o_9W_SmjbR-w1hnblVm-XjMkFXMTVCJlouJj9xl4lrAhKAv5vXTRTVD2Xww",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"password\":\"1234\",\r\n    \"creditCardLimit\":5000,\r\n    \"cutOffDate\":\"2022-06-02\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8082/api/v1/cards/credits",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "v1",
+                "cards",
+                "credits"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get current term transactions",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyODMwMDQsImlhdCI6MTY1NDI1MzAwNH0.MsSRrCAUZXz0BU_uWtKk4IMdiS1o_9W_SmjbR-w1hnblVm-XjMkFXMTVCJlouJj9xl4lrAhKAv5vXTRTVD2Xww",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "localhost:8082/api/v1/cards/credits/1/current-term-transactions",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "v1",
+                "cards",
+                "credits",
+                "1",
+                "current-term-transactions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get users credit cards",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyODMwMDQsImlhdCI6MTY1NDI1MzAwNH0.MsSRrCAUZXz0BU_uWtKk4IMdiS1o_9W_SmjbR-w1hnblVm-XjMkFXMTVCJlouJj9xl4lrAhKAv5vXTRTVD2Xww",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8082/api/v1/cards/credits",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "v1",
+                "cards",
+                "credits"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get credit card debt",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyODMwMDQsImlhdCI6MTY1NDI1MzAwNH0.MsSRrCAUZXz0BU_uWtKk4IMdiS1o_9W_SmjbR-w1hnblVm-XjMkFXMTVCJlouJj9xl4lrAhKAv5vXTRTVD2Xww",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8082/api/v1/cards/credits/1/debt",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "v1",
+                "cards",
+                "credits",
+                "1",
+                "debt"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete credit cart",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyMDM1NTYsImlhdCI6MTY1NDE3MzU1Nn0.JCVPJB9qgoo_GXKVQgCdIwJ-xU9wkwXPNsieaiQNUfhuIPVmPcyzS2QmFb-0VWmQc7jwWtpeyx7qhDtFfU8h6A",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:8082/api/v1/cards/credits/1",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "v1",
+                "cards",
+                "credits",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
 }

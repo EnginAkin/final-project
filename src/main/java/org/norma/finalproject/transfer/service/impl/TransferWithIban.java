@@ -16,17 +16,17 @@ import org.norma.finalproject.transfer.core.exception.TransferOperationException
 import org.norma.finalproject.transfer.core.mapper.TransferMapper;
 import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
 import org.norma.finalproject.transfer.entity.Transfer;
-import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.norma.finalproject.transfer.service.TransferService;
+import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
 /**
- *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 @Component("transfer-iban")
 @Slf4j
@@ -63,9 +63,9 @@ public class TransferWithIban extends TransferBase<IbanTransferRequest> {
             log.error("Customer dont have " + transferRequest.getFromIban() + " Account ");
             throw new TransferOperationException("Customer dont have " + transferRequest.getFromIban() + " Account ");
         }
-        Account fromAccount=optionalFromAccount.get();
-        boolean checkIbanNumberOwnerIsCustomer= checkIbanNumberOwnerIsCustomer(optionalCustomer.get(),optionalFromAccount.get().getIbanNo());
-        if(!checkIbanNumberOwnerIsCustomer){
+        Account fromAccount = optionalFromAccount.get();
+        boolean checkIbanNumberOwnerIsCustomer = checkIbanNumberOwnerIsCustomer(optionalCustomer.get(), optionalFromAccount.get().getIbanNo());
+        if (!checkIbanNumberOwnerIsCustomer) {
             log.error("Customer not owner " + transferRequest.getFromIban() + " Account ");
             throw new TransferOperationException("Customer not owner " + transferRequest.getFromIban() + " Account ");
         }
@@ -79,7 +79,7 @@ public class TransferWithIban extends TransferBase<IbanTransferRequest> {
             log.error("Cross account not found");
             throw new TransferOperationException("Cross account not found");
         }
-        Account toAccount=optionalToAccount.get();
+        Account toAccount = optionalToAccount.get();
 
         // allowed saving -> checking And checking ->checking  . Not allowed saving-saving
         if (optionalFromAccount.get().getAccountType().equals(AccountType.SAVING)) {
@@ -91,15 +91,13 @@ public class TransferWithIban extends TransferBase<IbanTransferRequest> {
         // call base iban transfer method.
         this.sendTransferWithIban(fromAccount.getIbanNo(), toAccount.getIbanNo(), transferRequest.getAmount(), transferRequest.getDescription());
 
-        IbanTransferRequest ibanTransferRequest=new IbanTransferRequest(fromAccount.getIbanNo(),toAccount.getIbanNo(),transferRequest.getAmount(),transferRequest.getDescription(),transferRequest.getTransferType());
+        IbanTransferRequest ibanTransferRequest = new IbanTransferRequest(fromAccount.getIbanNo(), toAccount.getIbanNo(), transferRequest.getAmount(), transferRequest.getDescription(), transferRequest.getTransferType());
         Transfer transfer = transferMapper.toEntity(ibanTransferRequest);
         transfer.setCurrencyType(fromAccount.getCurrencyType());
         transferService.save(transfer);
         log.debug("Transfer iban preprocessing ended.");
         return new GeneralSuccessfullResponse("Transfer successfull.");
     }
-
-
 
 
     private boolean checkIbanNumberOwnerIsCustomer(Customer customer, String ibanNumber) {

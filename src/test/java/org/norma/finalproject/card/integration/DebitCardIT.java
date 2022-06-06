@@ -1,41 +1,5 @@
 package org.norma.finalproject.card.integration;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.lang.annotation.Before;
-import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.norma.finalproject.account.entity.CheckingAccount;
-import org.norma.finalproject.account.repository.CheckingAccountRepository;
-import org.norma.finalproject.card.core.model.request.CreateDebitCardRequest;
-import org.norma.finalproject.card.core.model.response.DebitCardResponse;
-import org.norma.finalproject.card.entity.DebitCard;
-import org.norma.finalproject.card.entity.enums.CardStatus;
-import org.norma.finalproject.card.repository.DebitCardRepository;
-import org.norma.finalproject.common.security.token.entity.JWTToken;
-import org.norma.finalproject.common.security.token.repository.TokenRepository;
-import org.norma.finalproject.customer.core.utilities.CustomerConstant;
-import org.norma.finalproject.customer.entity.Customer;
-import org.norma.finalproject.customer.entity.Role;
-import org.norma.finalproject.customer.repository.CustomerRepository;
-import org.norma.finalproject.customer.repository.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 /*
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc

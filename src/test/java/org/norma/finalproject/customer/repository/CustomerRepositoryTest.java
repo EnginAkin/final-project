@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
 class CustomerRepositoryTest {
@@ -18,10 +17,10 @@ class CustomerRepositoryTest {
     private CustomerRepository underTest;
 
     @Test
-    public void givenInvalidIdentityNumber_whenFindByIdentityNumber_thenReturnsCustomerObject(){
+    public void givenInvalidIdentityNumber_whenFindByIdentityNumber_thenReturnsCustomerObject() {
         // given
-        Customer customer=new Customer();
-        String invalidIdentityNumber="00000000000";
+        Customer customer = new Customer();
+        String invalidIdentityNumber = "00000000000";
         customer.setIdentityNumber("111111111111");
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
@@ -32,11 +31,12 @@ class CustomerRepositoryTest {
         Assertions.assertThat(optionalCustomer).isEmpty();
 
     }
+
     @Test
-    public void givenValidIdentityNumber_whenFindByIdentityNumber_thenReturnsCustomerObject(){
+    public void givenValidIdentityNumber_whenFindByIdentityNumber_thenReturnsCustomerObject() {
         // given
-        Customer customer=new Customer();
-        String validIdentityNumber="111111111111";
+        Customer customer = new Customer();
+        String validIdentityNumber = "111111111111";
         customer.setIdentityNumber(validIdentityNumber);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
@@ -50,10 +50,10 @@ class CustomerRepositoryTest {
     }
 
     @Test
-    public void givenValidEmail_whenFindByEmail_thenReturnsCustomerObject(){
+    public void givenValidEmail_whenFindByEmail_thenReturnsCustomerObject() {
         // given
-        Customer customer=new Customer();
-        String validEmail="norma.test@gmail.com";
+        Customer customer = new Customer();
+        String validEmail = "norma.test@gmail.com";
         customer.setEmail(validEmail);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
@@ -67,10 +67,10 @@ class CustomerRepositoryTest {
     }
 
     @Test
-    public void givenInvalidEmail_whenFindByEmail_thenReturnsCustomerObject(){
+    public void givenInvalidEmail_whenFindByEmail_thenReturnsCustomerObject() {
         // given
-        Customer customer=new Customer();
-        String inValidEmail="norma.test@gmail.com";
+        Customer customer = new Customer();
+        String inValidEmail = "norma.test@gmail.com";
         customer.setEmail("invalidEmail");
         customer.setName("ENGIN");
         customer.setSurname("AKIN");

@@ -5,9 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.account.entity.base.AccountActivity;
 import org.norma.finalproject.account.service.BaseAccountService;
-import org.norma.finalproject.card.core.exception.DebitCardNotFoundException;
-import org.norma.finalproject.common.entity.enums.ActionStatus;
 import org.norma.finalproject.common.core.result.GeneralResponse;
+import org.norma.finalproject.common.entity.enums.ActionStatus;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.exchange.service.FacadeExchangeService;
@@ -49,7 +48,7 @@ public abstract class TransferBase<T> {
         accountService.update(fromAccount); // lock balance for security
 
         BigDecimal checkLockedBalance = fromAccount.getBalance().subtract(fromAccount.getLockedBalance());
-        if(checkLockedBalance.compareTo(BigDecimal.ZERO)<0){
+        if (checkLockedBalance.compareTo(BigDecimal.ZERO) < 0) {
             return; // locked balance grather than main balance.
         }
 

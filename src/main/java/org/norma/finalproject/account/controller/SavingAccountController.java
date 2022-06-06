@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
+
 @RestController
 @RequestMapping("api/v1/accounts/saving")
 @RequiredArgsConstructor
@@ -29,8 +31,9 @@ public class SavingAccountController {
     }
 
     @GetMapping("/{accountID}")
-    public GeneralResponse getSavingAccountByID(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable long accountID) throws BusinessException {
-        return facadeSavingAccountService.getAccountByAccountID(userDetail.getUser().getId(),accountID);
+    public GeneralResponse getSavingAccountByID(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
+                                                @PathVariable @Min(0) long accountID) throws BusinessException {
+        return facadeSavingAccountService.getAccountByAccountID(userDetail.getUser().getId(), accountID);
     }
 
     @GetMapping
@@ -40,14 +43,15 @@ public class SavingAccountController {
 
     @GetMapping("{accountID}/activities")
     public GeneralResponse getAccountActivity(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
-                                              @PathVariable long accountID,
+                                              @PathVariable @Min(0) long accountID,
                                               @RequestBody(required = false) ActivityFilter filter) throws BusinessException {
-        return facadeSavingAccountService.getAccountActivities(userDetail.getUser().getId(),accountID,filter);
+        return facadeSavingAccountService.getAccountActivities(userDetail.getUser().getId(), accountID, filter);
     }
 
     @DeleteMapping("/{accountID}")
-    public GeneralResponse deleteSavingAccount(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,@PathVariable long accountID) throws BusinessException {
-        return facadeSavingAccountService.deleteById(userDetail.getUser().getId(),accountID);
+    public GeneralResponse deleteSavingAccount(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
+                                               @PathVariable @Min(0) long accountID) throws BusinessException {
+        return facadeSavingAccountService.deleteById(userDetail.getUser().getId(), accountID);
     }
 
 }

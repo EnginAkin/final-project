@@ -32,8 +32,8 @@ import java.util.*;
  * implementation of credit card facade service for credit card crud process
  *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 @Service
 @RequiredArgsConstructor
@@ -49,17 +49,17 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
     public GeneralResponse create(long userID, CreateCreditCardRequest createCreditCardRequest) throws CustomerNotFoundException, CreditCardOperationException {
         log.debug("Create credit card started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(userID);
-        if(optionalCustomer.isEmpty()){
+        if (optionalCustomer.isEmpty()) {
             log.error("Customer not found");
             throw new CustomerNotFoundException();
         }
-        BigDecimal income=optionalCustomer.get().getIncome();
-        BigDecimal creditLimit = creditLimitCalculatorByIncome.getCreditLimit(income,createCreditCardRequest.getCreditCardLimit());
-        if(creditLimit.equals(BigDecimal.ZERO)){
+        BigDecimal income = optionalCustomer.get().getIncome();
+        BigDecimal creditLimit = creditLimitCalculatorByIncome.getCreditLimit(income, createCreditCardRequest.getCreditCardLimit());
+        if (creditLimit.equals(BigDecimal.ZERO)) {
             log.error("you are very risky so we cant give credit card");
             throw new CreditCardOperationException("you are very risky so we cant give credit card");
         }
-        CreditCard creditCard=new CreditCard();
+        CreditCard creditCard = new CreditCard();
         creditCard.setCardNumber(uniqueNoCreator.creatCardNumber());
         creditCard.setCustomer(optionalCustomer.get());
         Random random = new Random();
@@ -69,7 +69,7 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
         expiry.add(Calendar.YEAR, 3); // 3 year expiry date
         creditCard.setExpiryDate(expiry.getTime());
         creditCard.setPassword(createCreditCardRequest.getPassword());
-        CreditCardAccount  creditCardAccount=createCreditAccount(); // default create credit card account.
+        CreditCardAccount creditCardAccount = createCreditAccount(); // default create credit card account.
         creditCardAccount.setTotalCreditLimit(creditLimit);
         creditCardAccount.setAvailableBalance(creditLimit);
         creditCard.setCreditCardAccount(creditCardAccount);
@@ -83,16 +83,16 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
     public GeneralResponse getCurrentTermTransactions(Long userID, long creditCardId) throws CustomerNotFoundException, CreditCardNotFoundException, CreditCardOperationException {
         log.debug("get current term transaction started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(userID);
-        if(optionalCustomer.isEmpty()){
+        if (optionalCustomer.isEmpty()) {
             log.error("Customer not found");
             throw new CustomerNotFoundException();
         }
         Optional<CreditCard> optionalCreditCard = creditCardService.findCreditCardById(creditCardId);
-        if(optionalCreditCard.isEmpty()){
+        if (optionalCreditCard.isEmpty()) {
             log.error("Credit card not found");
             throw new CreditCardNotFoundException();
         }
-        if(!(optionalCreditCard.get().getCustomer().getId().equals(userID))){
+        if (!(optionalCreditCard.get().getCustomer().getId().equals(userID))) {
             log.error("Credit not found in customers credit cards.");
             throw new CreditCardOperationException("Credit not found in customers credit cards.");
         }
@@ -106,7 +106,7 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
     public GeneralDataResponse getCustomerCreditCards(Long userID) throws CustomerNotFoundException {
         log.debug("Get customer credit cards started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(userID);
-        if(optionalCustomer.isEmpty()){
+        if (optionalCustomer.isEmpty()) {
             log.error("Customer not found");
             throw new CustomerNotFoundException();
         }
@@ -119,22 +119,22 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
     public GeneralResponse getCreditCardDebt(Long userID, long creditCardID) throws CustomerNotFoundException, CreditCardOperationException, CreditCardNotFoundException {
         log.debug("Get Credit card debt started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(userID);
-        if(optionalCustomer.isEmpty()){
+        if (optionalCustomer.isEmpty()) {
             log.error("Customer not found");
             throw new CustomerNotFoundException();
         }
         Optional<CreditCard> optionalCreditCard = creditCardService.findCreditCardById(creditCardID);
-        if(optionalCreditCard.isEmpty()){
+        if (optionalCreditCard.isEmpty()) {
             log.error("Credit card not found");
             throw new CreditCardNotFoundException();
         }
-        if(!(optionalCreditCard.get().getCustomer().getId().equals(userID))){
+        if (!(optionalCreditCard.get().getCustomer().getId().equals(userID))) {
             log.error("Credit not found in customers credit cards.");
             throw new CreditCardOperationException("Credit not found in customers credit cards.");
         }
-        CreditCardAccount creditCardAccount=optionalCreditCard.get().getCreditCardAccount();
+        CreditCardAccount creditCardAccount = optionalCreditCard.get().getCreditCardAccount();
 
-        CreditCardDebtResponse debtResponse=new CreditCardDebtResponse();
+        CreditCardDebtResponse debtResponse = new CreditCardDebtResponse();
         debtResponse.setCurrentTermDebt(creditCardAccount.getTotalDebt().subtract(creditCardAccount.getLastExtractDebt()));
         debtResponse.setTotalDebt(creditCardAccount.getTotalDebt());
         debtResponse.setLastExtractDebt(creditCardAccount.getLastExtractDebt());
@@ -147,20 +147,20 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
     public GeneralResponse deleteCreditCard(Long userID, long creditCardId) throws CustomerNotFoundException, CreditCardNotFoundException, CreditCardOperationException {
         log.debug("Delete credit card started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(userID);
-        if(optionalCustomer.isEmpty()){
+        if (optionalCustomer.isEmpty()) {
             log.error("Customer not found");
             throw new CustomerNotFoundException();
         }
         Optional<CreditCard> optionalCreditCard = creditCardService.findCreditCardById(creditCardId);
-        if(optionalCreditCard.isEmpty()){
+        if (optionalCreditCard.isEmpty()) {
             log.error("Credit card not found");
             throw new CreditCardNotFoundException();
         }
-        if(!(optionalCreditCard.get().getCustomer().getId().equals(userID))){
+        if (!(optionalCreditCard.get().getCustomer().getId().equals(userID))) {
             log.error("Credit not found in customers credit cards.");
             throw new CreditCardOperationException("Credit not found in customers credit cards.");
         }
-        if(optionalCreditCard.get().getCreditCardAccount().getTotalDebt().compareTo(BigDecimal.ZERO)>0){
+        if (optionalCreditCard.get().getCreditCardAccount().getTotalDebt().compareTo(BigDecimal.ZERO) > 0) {
             log.error("Credit has a debt. you cannot delete credit card");
             throw new CreditCardOperationException("Credit has a debt. you cannot delete credit card.");
         }
@@ -169,8 +169,8 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
         return new GeneralSuccessfullResponse("Delete successfully");
     }
 
-    private CreditCardAccount createCreditAccount(){
-        CreditCardAccount creditCardAccount=new CreditCardAccount();
+    private CreditCardAccount createCreditAccount() {
+        CreditCardAccount creditCardAccount = new CreditCardAccount();
         creditCardAccount.setTotalDebt(BigDecimal.ZERO);
 
         Calendar cutOffDay = Calendar.getInstance();
@@ -178,8 +178,8 @@ public class CreditCardFacadeServiceImpl implements CreditCardFacadeService {
 
         creditCardAccount.setCutOffDate(cutOffDay.getTime());
         creditCardAccount.setLastExtractDebt(BigDecimal.ZERO);
-        LocalDate localDate=creditCardAccount.getCutOffDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        localDate=localDate.plusDays(10);
+        LocalDate localDate = creditCardAccount.getCutOffDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        localDate = localDate.plusDays(10);
         creditCardAccount.setPaymentDate(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));// set 10 days later payment date
         return creditCardAccount;
 

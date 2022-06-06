@@ -11,13 +11,10 @@ import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.entity.Customer;
 import org.norma.finalproject.customer.entity.Role;
 import org.norma.finalproject.customer.repository.CustomerRepository;
-import org.norma.finalproject.customer.service.RoleService;
 import org.norma.finalproject.customer.service.impl.CustomerServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceImplTest {
@@ -30,15 +27,15 @@ class CustomerServiceImplTest {
     private CustomerServiceImpl underTest;
 
     @Test
-    public void givenCustomer_whenSave_thenReturnsCustomerObject(){
+    public void givenCustomer_whenSave_thenReturnsCustomerObject() {
 
         //given
-        Customer customer=new Customer();
+        Customer customer = new Customer();
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
         customer.setEmail("engin@test.com");
         customer.setIdentityNumber("111111111");
-        Role role=new Role();
+        Role role = new Role();
         role.setName(CustomerConstant.ROLE_USER);
         BDDMockito.given(roleService.getRoleByName(CustomerConstant.ROLE_USER)).willReturn(role);
         BDDMockito.given(customerRepository.save(customer)).willReturn(customer);
@@ -49,14 +46,13 @@ class CustomerServiceImplTest {
         Assertions.assertThat(savedCustomer.getRoles().size()).isEqualTo(1);
 
 
-
     }
 
     @Test
-    public void givenValidIdentityNumber_whenFindCustomerByIdentity_thenReturnsCustomerObject(){
+    public void givenValidIdentityNumber_whenFindCustomerByIdentity_thenReturnsCustomerObject() {
         // given
-        String validIdentity="111111111";
-        Customer customer=new Customer();
+        String validIdentity = "111111111";
+        Customer customer = new Customer();
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
         customer.setEmail("engin@test.com");
@@ -74,16 +70,16 @@ class CustomerServiceImplTest {
 
 
     @Test
-    public void givenValidIdentityNumber_whenFindCustomerById_thenReturnsCustomerObject(){
+    public void givenValidIdentityNumber_whenFindCustomerById_thenReturnsCustomerObject() {
         // given
-        Customer customer=new Customer();
-        Long customerID=1L;
+        Customer customer = new Customer();
+        Long customerID = 1L;
         customer.setId(customerID);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
         customer.setEmail("engin@test.com");
         customer.setIdentityNumber("111111111");
-       BDDMockito.given(customerRepository.findById(customerID)).willReturn(Optional.of(customer));
+        BDDMockito.given(customerRepository.findById(customerID)).willReturn(Optional.of(customer));
 
         // when
         Optional<Customer> optionalCustomer = underTest.findByCustomerById(customerID);
@@ -93,10 +89,11 @@ class CustomerServiceImplTest {
         Assertions.assertThat(optionalCustomer.get().getId()).isEqualTo(customerID);
 
     }
+
     @Test
-    public void givenInvalidIdentityNumber_whenFindCustomerById_thenReturnsEmpty(){
+    public void givenInvalidIdentityNumber_whenFindCustomerById_thenReturnsEmpty() {
         // given
-        Long invalidID=2L;
+        Long invalidID = 2L;
         BDDMockito.given(customerRepository.findById(invalidID)).willReturn(Optional.empty());
         // when
         Optional<Customer> optionalCustomer = underTest.findByCustomerById(invalidID);
@@ -105,11 +102,12 @@ class CustomerServiceImplTest {
         Assertions.assertThat(optionalCustomer).isEmpty();
 
     }
+
     @Test
-    public void givenValidEmail_whenFindCustomerByEmail_thenReturns(){
+    public void givenValidEmail_whenFindCustomerByEmail_thenReturns() {
         // given
-        Customer customer=new Customer();
-        String validEmail="Valid@gmail.com";
+        Customer customer = new Customer();
+        String validEmail = "Valid@gmail.com";
         customer.setId(1L);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
@@ -123,28 +121,29 @@ class CustomerServiceImplTest {
         // then
         Assertions.assertThat(optionalCustomer).isNotEmpty();
     }
+
     @Test
-    public void givenCustomerList_whenGetall_thenReturnsCustomerList(){
+    public void givenCustomerList_whenGetall_thenReturnsCustomerList() {
         // given
-        Customer custome1=new Customer();
+        Customer custome1 = new Customer();
         custome1.setId(1L);
         custome1.setName("ENGIN");
         custome1.setSurname("AKIN");
         custome1.setEmail("email");
         custome1.setIdentityNumber("111111111");
-        Customer custome2=new Customer();
+        Customer custome2 = new Customer();
         custome2.setId(1L);
         custome2.setName("ENGIN");
         custome2.setSurname("AKIN");
         custome2.setEmail("email");
         custome2.setIdentityNumber("111111111");
-        Customer custome3=new Customer();
+        Customer custome3 = new Customer();
         custome3.setId(1L);
         custome3.setName("ENGIN");
         custome3.setSurname("AKIN");
         custome3.setEmail("email");
         custome3.setIdentityNumber("111111111");
-        List<Customer> customers=List.of(custome1,custome2,custome3);
+        List<Customer> customers = List.of(custome1, custome2, custome3);
         customerRepository.saveAll(customers);
         BDDMockito.given(customerRepository.findAll()).willReturn(customers);
 

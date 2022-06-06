@@ -7,7 +7,6 @@ import org.norma.finalproject.customer.core.model.AddressDto;
 import org.norma.finalproject.customer.core.model.CustomerInfoDto;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter

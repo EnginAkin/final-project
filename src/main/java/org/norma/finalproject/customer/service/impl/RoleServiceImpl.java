@@ -1,7 +1,6 @@
 package org.norma.finalproject.customer.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.norma.finalproject.customer.core.exception.RoleNotFoundException;
 import org.norma.finalproject.customer.core.utilities.CustomerConstant;
 import org.norma.finalproject.customer.entity.Role;
 import org.norma.finalproject.customer.repository.RoleRepository;
@@ -11,11 +10,11 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
+
 /**
- *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 
 @Service
@@ -30,13 +29,14 @@ public class RoleServiceImpl implements RoleService {
         return repository.findByName(role).get();
 
     }
+
     @PostConstruct
-    public void addRoleDatabase(){
+    public void addRoleDatabase() {
         Optional<Role> optionalRole = repository.findByName(CustomerConstant.ROLE_USER);
-        if(optionalRole.isEmpty()){
-            Role roleUser=new Role(CustomerConstant.ROLE_USER);
-            Role roleAdmin=new Role(CustomerConstant.ROLE_ADMIN);
-            repository.saveAll(List.of(roleAdmin,roleUser));
+        if (optionalRole.isEmpty()) {
+            Role roleUser = new Role(CustomerConstant.ROLE_USER);
+            Role roleAdmin = new Role(CustomerConstant.ROLE_ADMIN);
+            repository.saveAll(List.of(roleAdmin, roleUser));
         }
     }
 

@@ -11,10 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.account.entity.base.AccountActivity;
 import org.norma.finalproject.account.repository.AccountActivityRepository;
-import org.norma.finalproject.account.repository.AccountRepository;
-import org.norma.finalproject.account.service.impl.AccountActivityServiceImpl;
 import org.norma.finalproject.common.entity.enums.ActionStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -28,28 +25,28 @@ public class AccountActivityServiceTest {
     private AccountActivityServiceImpl underTest;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         activityRepository.deleteAll();
     }
 
     @Test
-    public void givenAccountId_whenGetAccountActivitiesByAccountID_thenReturnsActivitiesList(){
+    public void givenAccountId_whenGetAccountActivitiesByAccountID_thenReturnsActivitiesList() {
         // given
-        Account account=new Account();
+        Account account = new Account();
         account.setId(1L);
         account.setAccountName("account name");
         account.setAccountNo("11111");
 
-        AccountActivity activity1=new AccountActivity();
+        AccountActivity activity1 = new AccountActivity();
         activity1.setAccount(account);
         activity1.setDescription("description");
         activity1.setActionStatus(ActionStatus.INCOMING);
 
-        AccountActivity activity2=new AccountActivity();
+        AccountActivity activity2 = new AccountActivity();
         activity2.setAccount(account);
         activity2.setDescription("description2");
         activity2.setActionStatus(ActionStatus.INCOMING);
-        List<AccountActivity> activities=List.of(activity1,activity2);
+        List<AccountActivity> activities = List.of(activity1, activity2);
 
         BDDMockito.given(activityRepository.findAllByAccount_Id(account.getId())).willReturn(activities);
         // when
@@ -60,9 +57,9 @@ public class AccountActivityServiceTest {
     }
 
     @Test
-    public void givenInvalidAccountId_whenGetAccountActivitiesByAccountID_thenReturnsActivitiesList(){
+    public void givenInvalidAccountId_whenGetAccountActivitiesByAccountID_thenReturnsActivitiesList() {
         // given
-        Long invalidAccountId= 0L;
+        Long invalidAccountId = 0L;
         BDDMockito.given(activityRepository.findAllByAccount_Id(invalidAccountId)).willReturn(List.of());
         // when
         List<AccountActivity> responseActivities = underTest.getAccountActivitiesByAccountId(invalidAccountId);

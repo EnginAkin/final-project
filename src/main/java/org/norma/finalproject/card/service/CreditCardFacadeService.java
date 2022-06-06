@@ -9,7 +9,7 @@ import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 
 public interface CreditCardFacadeService {
 
-    GeneralResponse  create(long userID, CreateCreditCardRequest createCreditCardRequest) throws CustomerNotFoundException, CreditCardOperationException;
+    GeneralResponse create(long userID, CreateCreditCardRequest createCreditCardRequest) throws CustomerNotFoundException, CreditCardOperationException;
 
     GeneralResponse getCurrentTermTransactions(Long userID, long creditCardID) throws CustomerNotFoundException, CreditCardNotFoundException, CreditCardOperationException;
 

@@ -54,17 +54,17 @@ public class AppExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public GeneralResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException httpMessageNotReadableException)  {
+    public GeneralResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException httpMessageNotReadableException) {
         return new GeneralErrorResponse(httpMessageNotReadableException.getLocalizedMessage());
 
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public GeneralResponse handleValidationExceptions(MethodArgumentNotValidException methodArgumentNotValidException){
-        Map<String,String> validationErrors = new HashMap<String,String>();
+    public GeneralResponse handleValidationExceptions(MethodArgumentNotValidException methodArgumentNotValidException) {
+        Map<String, String> validationErrors = new HashMap<String, String>();
 
-        for(FieldError fieldError :methodArgumentNotValidException.getBindingResult().getFieldErrors()) {
+        for (FieldError fieldError : methodArgumentNotValidException.getBindingResult().getFieldErrors()) {
             validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
 
@@ -76,8 +76,6 @@ public class AppExceptionHandler {
         String errorMessage = new ArrayList<>(exception.getConstraintViolations()).get(0).getMessage();
         return new ErrorDataResponse<>(errorMessage);
     }
-
-
 
 
 }

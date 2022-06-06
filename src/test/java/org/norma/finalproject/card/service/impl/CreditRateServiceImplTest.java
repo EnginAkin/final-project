@@ -8,66 +8,67 @@ import org.norma.finalproject.card.entity.enums.CreditRateType;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(MockitoExtension.class)
 class CreditRateServiceImplTest {
 
-    private CreditRateServiceImpl underTest=new CreditRateServiceImpl();
+    private CreditRateServiceImpl underTest = new CreditRateServiceImpl();
 
     @Test
-    public void givenIncome_whenGetCreditRate_thenReturnRisky(){
+    public void givenIncome_whenGetCreditRate_thenReturnRisky() {
         // given
-        BigDecimal income=BigDecimal.valueOf(250);
+        BigDecimal income = BigDecimal.valueOf(250);
         // when
         CreditRateType creditRate = underTest.getCreditRate(income);
         // then
-        CreditRateType expectedRateType=CreditRateType.RISKY;
-        Assertions.assertThat(creditRate).isEqualTo(expectedRateType);
-
-    }
-    @Test
-    public void givenIncome_whenGetCreditRate_thenReturnModorateRisky(){
-        // given
-        BigDecimal income=BigDecimal.valueOf(750);
-        // when
-        CreditRateType creditRate = underTest.getCreditRate(income);
-        // then
-        CreditRateType expectedRateType=CreditRateType.MODERATE_RISKY;
+        CreditRateType expectedRateType = CreditRateType.RISKY;
         Assertions.assertThat(creditRate).isEqualTo(expectedRateType);
 
     }
 
     @Test
-    public void givenIncome_whenGetCreditRate_thenReturnOddsOnRisky(){
+    public void givenIncome_whenGetCreditRate_thenReturnModorateRisky() {
         // given
-        BigDecimal income=BigDecimal.valueOf(2500);
+        BigDecimal income = BigDecimal.valueOf(750);
         // when
         CreditRateType creditRate = underTest.getCreditRate(income);
         // then
-        CreditRateType expectedRateType=CreditRateType.ODDS_ON_RISKY;
+        CreditRateType expectedRateType = CreditRateType.MODERATE_RISKY;
         Assertions.assertThat(creditRate).isEqualTo(expectedRateType);
 
     }
+
     @Test
-    public void givenIncome_whenGetCreditRate_thenReturnGood(){
+    public void givenIncome_whenGetCreditRate_thenReturnOddsOnRisky() {
         // given
-        BigDecimal income=BigDecimal.valueOf(5000);
+        BigDecimal income = BigDecimal.valueOf(2500);
         // when
         CreditRateType creditRate = underTest.getCreditRate(income);
         // then
-        CreditRateType expectedRateType=CreditRateType.GOOD;
+        CreditRateType expectedRateType = CreditRateType.ODDS_ON_RISKY;
         Assertions.assertThat(creditRate).isEqualTo(expectedRateType);
 
     }
+
     @Test
-    public void givenIncome_whenGetCreditRate_thenReturnVeryGood(){
+    public void givenIncome_whenGetCreditRate_thenReturnGood() {
         // given
-        BigDecimal income=BigDecimal.valueOf(10000);
+        BigDecimal income = BigDecimal.valueOf(5000);
         // when
         CreditRateType creditRate = underTest.getCreditRate(income);
         // then
-        CreditRateType expectedRateType=CreditRateType.VERY_GOOD;
+        CreditRateType expectedRateType = CreditRateType.GOOD;
+        Assertions.assertThat(creditRate).isEqualTo(expectedRateType);
+
+    }
+
+    @Test
+    public void givenIncome_whenGetCreditRate_thenReturnVeryGood() {
+        // given
+        BigDecimal income = BigDecimal.valueOf(10000);
+        // when
+        CreditRateType creditRate = underTest.getCreditRate(income);
+        // then
+        CreditRateType expectedRateType = CreditRateType.VERY_GOOD;
         Assertions.assertThat(creditRate).isEqualTo(expectedRateType);
 
     }

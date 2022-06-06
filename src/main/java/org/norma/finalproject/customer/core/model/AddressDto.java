@@ -3,8 +3,6 @@ package org.norma.finalproject.customer.core.model;
 import lombok.*;
 import org.norma.finalproject.customer.entity.enums.AddressType;
 
-import javax.persistence.Entity;
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

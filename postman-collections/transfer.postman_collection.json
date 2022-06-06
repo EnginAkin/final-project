@@ -1,130 +1,130 @@
 {
-	"info": {
-		"_postman_id": "dca5a242-720e-4a8d-9acf-fcf08b332f0c",
-		"name": "transfer",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "14959976"
-	},
-	"item": [
-		{
-			"name": "transfer by iban",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM4NTA4NTUsImlhdCI6MTY1MzgyMDg1NX0.Jqz9ynaF-HS3mU6kZPujSt2btA2iHuyd7tZwnxZQT9fgT0XuGmv9eBN5wyH9_NJGxh_zALXnhE3tSlScGQFoEA",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"fromIban\": \"TR3300006100522441796955166\",\r\n    \"toIban\": \"TR3300006107374134529957779\",\r\n    \"amount\": 25,\r\n    \"description\": \"25 TRY harçlık gelmiştir. İBAN İLE\",\r\n    \"sendType\": \"OTHER\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8082/api/v1/transfers/iban",
-					"host": [
-						"localhost"
-					],
-					"port": "8082",
-					"path": [
-						"api",
-						"v1",
-						"transfers",
-						"iban"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "transfer by iban Copy",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM4NTA4NTUsImlhdCI6MTY1MzgyMDg1NX0.Jqz9ynaF-HS3mU6kZPujSt2btA2iHuyd7tZwnxZQT9fgT0XuGmv9eBN5wyH9_NJGxh_zALXnhE3tSlScGQFoEA",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"fromIban\": \"TR3300006100522441796955166\",\r\n    \"toIban\": \"TR3300006107374134529957779\",\r\n    \"amount\": 25,\r\n    \"description\": \"25 TRY harçlık gelmiştir. İBAN İLE\",\r\n    \"sendType\": \"OTHER\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8082/api/v1/transfers/iban",
-					"host": [
-						"localhost"
-					],
-					"port": "8082",
-					"path": [
-						"api",
-						"v1",
-						"transfers",
-						"iban"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "transfer by email",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMiIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyOTIyMTEsImlhdCI6MTY1NDI2MjIxMX0.0CX-BsqFb3XbqaIn7lpba3OMfk5-qosHB7LXImuXzcHVgZkaTFvpbvqCuCkbPqlCN-bS5Gt8P7YH0s0odDi_Kg",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"fromAccountIban\":1,\r\n    \"toEmail\":\"engin2@gmail.com\",\r\n    \"amount\":10,\r\n    \"description\":\"10 USD , Bu para mail yolu ile gelmiştir.\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8082/api/v1/transfers/email",
-					"host": [
-						"localhost"
-					],
-					"port": "8082",
-					"path": [
-						"api",
-						"v1",
-						"transfers",
-						"email"
-					]
-				}
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "dca5a242-720e-4a8d-9acf-fcf08b332f0c",
+    "name": "transfer",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "14959976"
+  },
+  "item": [
+    {
+      "name": "transfer by iban",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM4NTA4NTUsImlhdCI6MTY1MzgyMDg1NX0.Jqz9ynaF-HS3mU6kZPujSt2btA2iHuyd7tZwnxZQT9fgT0XuGmv9eBN5wyH9_NJGxh_zALXnhE3tSlScGQFoEA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"fromIban\": \"TR3300006100522441796955166\",\r\n    \"toIban\": \"TR3300006107374134529957779\",\r\n    \"amount\": 25,\r\n    \"description\": \"25 TRY harçlık gelmiştir. İBAN İLE\",\r\n    \"sendType\": \"OTHER\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8082/api/v1/transfers/iban",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "v1",
+            "transfers",
+            "iban"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "transfer by iban Copy",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTM4NTA4NTUsImlhdCI6MTY1MzgyMDg1NX0.Jqz9ynaF-HS3mU6kZPujSt2btA2iHuyd7tZwnxZQT9fgT0XuGmv9eBN5wyH9_NJGxh_zALXnhE3tSlScGQFoEA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"fromIban\": \"TR3300006100522441796955166\",\r\n    \"toIban\": \"TR3300006107374134529957779\",\r\n    \"amount\": 25,\r\n    \"description\": \"25 TRY harçlık gelmiştir. İBAN İLE\",\r\n    \"sendType\": \"OTHER\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8082/api/v1/transfers/iban",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "v1",
+            "transfers",
+            "iban"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "transfer by email",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMTExMTExMTExMiIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2NTQyOTIyMTEsImlhdCI6MTY1NDI2MjIxMX0.0CX-BsqFb3XbqaIn7lpba3OMfk5-qosHB7LXImuXzcHVgZkaTFvpbvqCuCkbPqlCN-bS5Gt8P7YH0s0odDi_Kg",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"fromAccountIban\":1,\r\n    \"toEmail\":\"engin2@gmail.com\",\r\n    \"amount\":10,\r\n    \"description\":\"10 USD , Bu para mail yolu ile gelmiştir.\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8082/api/v1/transfers/email",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "v1",
+            "transfers",
+            "email"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
 }

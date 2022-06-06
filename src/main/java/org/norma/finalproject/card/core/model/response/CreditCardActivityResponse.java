@@ -5,8 +5,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.norma.finalproject.card.entity.enums.SpendCategory;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.math.BigDecimal;
 import java.util.Date;
 

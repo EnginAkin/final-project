@@ -1,10 +1,12 @@
 package org.norma.finalproject.account.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.norma.finalproject.account.entity.base.Account;
 import org.norma.finalproject.account.entity.enums.Maturity;
 import org.norma.finalproject.account.entity.enums.PurposeSaving;
 import org.norma.finalproject.customer.entity.Customer;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -36,10 +38,6 @@ public class SavingAccount extends Account {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-
-
-
 
 
 }

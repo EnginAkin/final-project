@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CreditCardRepository extends JpaRepository<CreditCard , Long> {
+public interface CreditCardRepository extends JpaRepository<CreditCard, Long> {
 
     Optional<CreditCard> findByCardNumber(String cardNumber);
 

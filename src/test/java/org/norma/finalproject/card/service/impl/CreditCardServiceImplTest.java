@@ -10,14 +10,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.norma.finalproject.card.entity.CreditCard;
 import org.norma.finalproject.card.entity.CreditCardAccount;
 import org.norma.finalproject.card.repository.CreditCardRepository;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,9 +28,9 @@ class CreditCardServiceImplTest {
     private CreditCardServiceImpl underTest;
 
     @Test
-    public void givenCreditCard_whenSave_thenReturnedCreditCard(){
+    public void givenCreditCard_whenSave_thenReturnedCreditCard() {
         //give
-        CreditCard creditCard=createCreditCard();
+        CreditCard creditCard = createCreditCard();
 
         BDDMockito.given(creditCardRepository.save(creditCard)).willReturn(creditCard);
         // when
@@ -42,10 +40,11 @@ class CreditCardServiceImplTest {
         Assertions.assertThat(savedCreditCard).isEqualTo(creditCard);
 
     }
+
     @Test
-    public void givenCreditCardId_whenFindCreditCardById_thenReturnedCreditCard(){
+    public void givenCreditCardId_whenFindCreditCardById_thenReturnedCreditCard() {
         //give
-        CreditCard creditCard=createCreditCard();
+        CreditCard creditCard = createCreditCard();
         BDDMockito.given(creditCardRepository.findById(creditCard.getId())).willReturn(Optional.of(creditCard));
 
         // when
@@ -56,9 +55,9 @@ class CreditCardServiceImplTest {
     }
 
     @Test
-    public void givenCardNumber_whenFindCreditCardByCreditCardNumber_thenReturnedCreditCard(){
+    public void givenCardNumber_whenFindCreditCardByCreditCardNumber_thenReturnedCreditCard() {
         //give
-        CreditCard creditCard=createCreditCard();
+        CreditCard creditCard = createCreditCard();
         BDDMockito.given(creditCardRepository.findByCardNumber(creditCard.getCardNumber())).willReturn(Optional.of(creditCard));
         // when
         Optional<CreditCard> optionalCreditCard = underTest.findCreditCardByCreditCardNumber(creditCard.getCardNumber());
@@ -67,13 +66,12 @@ class CreditCardServiceImplTest {
         Assertions.assertThat(optionalCreditCard.get()).isEqualTo(creditCard);
 
 
-
     }
 
     @Test
-    public void givenCreditCard_whenDelete_thenReturnedCreditCard(){
+    public void givenCreditCard_whenDelete_thenReturnedCreditCard() {
         //give
-        CreditCard creditCard=createCreditCard();
+        CreditCard creditCard = createCreditCard();
         doNothing().when(creditCardRepository).delete(creditCard);
         // when
         underTest.delete(creditCard);
@@ -81,12 +79,12 @@ class CreditCardServiceImplTest {
     }
 
     @Test
-    public void whenFindAllCreditCardsCutoffDateInToday_thenReturnCreditCardList(){
+    public void whenFindAllCreditCardsCutoffDateInToday_thenReturnCreditCardList() {
         //give
-        CreditCard creditCard1=createCreditCard();
-        CreditCard creditCard2=createCreditCard();
-        CreditCard creditCard3=createCreditCard();
-        List<CreditCard> creditCardList= List.of(creditCard1,creditCard2,creditCard3);
+        CreditCard creditCard1 = createCreditCard();
+        CreditCard creditCard2 = createCreditCard();
+        CreditCard creditCard3 = createCreditCard();
+        List<CreditCard> creditCardList = List.of(creditCard1, creditCard2, creditCard3);
         BDDMockito.given(creditCardRepository.findAllCutoffDateInToday()).willReturn(creditCardList);
         // when
         List<CreditCard> allCreditCardsCutoffDateInToday = underTest.findAllCreditCardsCutoffDateInToday();
@@ -94,12 +92,13 @@ class CreditCardServiceImplTest {
         // then
         Assertions.assertThat(allCreditCardsCutoffDateInToday.size()).isEqualTo(3);
     }
-    private CreditCard createCreditCard(){
-        CreditCard creditCard=new CreditCard();
-        Long creditCardId=1L;
+
+    private CreditCard createCreditCard() {
+        CreditCard creditCard = new CreditCard();
+        Long creditCardId = 1L;
         creditCard.setId(creditCardId);
         creditCard.setCardNumber("111");
-        CreditCardAccount account=new CreditCardAccount();
+        CreditCardAccount account = new CreditCardAccount();
         account.setLastExtractDebt(BigDecimal.ZERO);
         account.setTotalDebt(BigDecimal.ZERO);
         account.setAvailableBalance(BigDecimal.ZERO);

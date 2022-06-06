@@ -7,20 +7,20 @@ import org.norma.finalproject.account.repository.SavingAccountRepository;
 import org.norma.finalproject.account.service.SavingAccountService;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 /**
- *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SavingAccountServiceImpl implements SavingAccountService {
     private final SavingAccountRepository savingAccountRepository;
+
     @Override
     public SavingAccount save(SavingAccount savingAccount) {
         return savingAccountRepository.save(savingAccount);
@@ -54,6 +54,6 @@ public class SavingAccountServiceImpl implements SavingAccountService {
 
     @Override
     public boolean isUsedParentAccountForSavingAccount(long customerId, long parentCheckingAccountId) {
-        return savingAccountRepository.existsByParentAccount_IdAndCustomer_Id(parentCheckingAccountId,customerId);
+        return savingAccountRepository.existsByParentAccount_IdAndCustomer_Id(parentCheckingAccountId, customerId);
     }
 }

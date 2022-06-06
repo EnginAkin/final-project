@@ -3,11 +3,11 @@ package org.norma.finalproject.customer.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.norma.finalproject.customer.service.IdentityVerifier;
 import org.springframework.stereotype.Service;
+
 /**
- *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 @Service
 @Slf4j

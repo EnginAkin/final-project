@@ -9,16 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.norma.finalproject.account.entity.CheckingAccount;
-import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.account.repository.CheckingAccountRepository;
-import org.norma.finalproject.account.service.impl.CheckingAccountServiceImpl;
 import org.norma.finalproject.customer.entity.Customer;
 
 import java.util.List;
 import java.util.Optional;
-
-import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 public class CheckingAccountServiceTest {
@@ -142,6 +137,7 @@ public class CheckingAccountServiceTest {
         Assertions.assertThat(checkingAccountByEmail).isNotEmpty();
 
     }
+
     @Test
     public void givenAccountNumber_whenFindAccountByAccountNumber_thenReturnCheckingAccount() {
         // given
@@ -164,7 +160,6 @@ public class CheckingAccountServiceTest {
         Assertions.assertThat(checkingAccountByEmail).isNotEmpty();
 
     }
-
 
 
     @Test

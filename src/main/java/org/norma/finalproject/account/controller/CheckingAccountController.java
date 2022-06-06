@@ -1,7 +1,6 @@
 package org.norma.finalproject.account.controller;
 
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 @RestController
 @RequestMapping("api/v1/accounts/checking")
@@ -34,7 +34,6 @@ public class CheckingAccountController {
     }
 
 
-
     @GetMapping
     public GeneralResponse getAllCustomersCheckingAccounts(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail) throws BusinessException {
         return facadeCheckinAccountService.getCustomersUnblockedCheckingAccounts(userDetail.getUser().getId());
@@ -42,26 +41,27 @@ public class CheckingAccountController {
 
     @GetMapping("/{accountID}")
     public GeneralResponse getById(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
-                                   @PathVariable long accountID) throws BusinessException {
+                                   @PathVariable @Min(0) long accountID) throws BusinessException {
         return facadeCheckinAccountService.getCheckingAccountById(userDetail.getUser().getId(), accountID);
     }
 
     @GetMapping(value = "/{accountID}/activities")
     public GeneralResponse getCheckingAccountActivities(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
-                                                        @PathVariable long accountID,
+                                                        @PathVariable @Min(0) long accountID,
                                                         @RequestBody(required = false) ActivityFilter filter) throws BusinessException {
         return facadeCheckinAccountService.getCheckingAccountActivities(userDetail.getUser().getId(), accountID, filter);
     }
 
     @RolesAllowed(CustomerConstant.ROLE_ADMIN)
     @PatchMapping("/{accountId}/block")
-    public GeneralResponse blockedAccount(@PathVariable long accountId) throws BusinessException {
+    public GeneralResponse blockedAccount(@PathVariable @Min(0) long accountId) throws BusinessException {
         return facadeCheckinAccountService.blockAccount(accountId);
 
     }
+
     @DeleteMapping("/{accountID}")
     public GeneralResponse deleteByAccountId(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail,
-                                             @PathVariable long accountID) throws BusinessException {
+                                             @PathVariable @Min(0) long accountID) throws BusinessException {
         return facadeCheckinAccountService.deleteById(userDetail.getUser().getId(), accountID);
 
     }

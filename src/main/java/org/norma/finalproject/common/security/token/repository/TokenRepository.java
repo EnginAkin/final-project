@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface TokenRepository extends JpaRepository<JWTToken,Long> {
+public interface TokenRepository extends JpaRepository<JWTToken, Long> {
 
     Optional<JWTToken> findByToken(String token);
 }

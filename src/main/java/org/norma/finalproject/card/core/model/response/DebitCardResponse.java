@@ -16,7 +16,7 @@ public class DebitCardResponse {
     private String password;
     private String cvv;
     private BigDecimal balance;
-    @JsonInclude(JsonInclude.Include. NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private BigDecimal dailyLimit;
     private Date expiryDate;
 }

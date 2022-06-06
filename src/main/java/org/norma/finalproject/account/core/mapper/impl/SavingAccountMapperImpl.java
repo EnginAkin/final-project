@@ -15,14 +15,14 @@ import java.util.Date;
 public class SavingAccountMapperImpl implements SavingAccountMapper {
     @Override
     public SavingAccount createSavingAccountToEntity(CreateSavingAccountRequest createSavingAccountRequest) {
-        SavingAccount savingAccount =new SavingAccount();
+        SavingAccount savingAccount = new SavingAccount();
         savingAccount.setSuccessRate(Utils.calculateSuccessRate(createSavingAccountRequest.getOpeningBalance(), createSavingAccountRequest.getTargetAmount()));
         savingAccount.setMaturity(createSavingAccountRequest.getMaturity());
         savingAccount.setTargetAmount(createSavingAccountRequest.getTargetAmount());
         savingAccount.setPurposeSaving(createSavingAccountRequest.getPurposeSaving());
         savingAccount.setAccountName(createSavingAccountRequest.getAccountName());
         savingAccount.setCurrencyType(createSavingAccountRequest.getCurrencyType());
-        Date today=new Date();
+        Date today = new Date();
         savingAccount.setCreatedAt(today);
         Calendar maturity = Calendar.getInstance();
         maturity.add(Calendar.DAY_OF_MONTH, createSavingAccountRequest.getMaturity().getValue()); // maturity date
@@ -34,7 +34,7 @@ public class SavingAccountMapperImpl implements SavingAccountMapper {
 
     @Override
     public SavingAccountDto toDto(SavingAccount savingAccount) {
-        SavingAccountDto response=new SavingAccountDto();
+        SavingAccountDto response = new SavingAccountDto();
         response.setIban(savingAccount.getIbanNo());
         response.setId(savingAccount.getId());
         response.setAccountNo(savingAccount.getAccountNo());

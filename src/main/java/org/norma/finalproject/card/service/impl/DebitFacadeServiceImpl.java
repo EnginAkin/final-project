@@ -33,10 +33,9 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /**
- *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 @Service
 @RequiredArgsConstructor
@@ -117,7 +116,7 @@ public class DebitFacadeServiceImpl implements DebitFacadeService {
     public GeneralDataResponse getDebitCardByID(Long customerID, long debitID) throws DebitCardNotFoundException, CustomerNotFoundException {
         log.debug("Get debit card by id started.");
         Optional<Customer> optionalCustomer = customerService.findByCustomerById(customerID);
-        if(optionalCustomer.isEmpty()){
+        if (optionalCustomer.isEmpty()) {
             throw new CustomerNotFoundException();
         }
         Optional<DebitCard> optionalDebitCard = debitCardService.findDebitCardWithCustomerIDAndCardID(customerID, debitID);

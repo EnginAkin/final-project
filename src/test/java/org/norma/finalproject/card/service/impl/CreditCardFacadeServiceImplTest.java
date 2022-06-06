@@ -21,7 +21,6 @@ import org.norma.finalproject.card.entity.base.CreditCardActivity;
 import org.norma.finalproject.card.entity.enums.SpendCategory;
 import org.norma.finalproject.card.service.CreditCardService;
 import org.norma.finalproject.card.service.CreditLimitCalculator;
-import org.norma.finalproject.card.service.impl.CreditCardFacadeServiceImpl;
 import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
@@ -59,17 +58,17 @@ public class CreditCardFacadeServiceImplTest {
     @Test
     public void givenCreateCreditCardRequest_whenCreate_thenReturnGeneralSuccessfullResponse() throws CreditCardOperationException, CustomerNotFoundException {
         // given
-        Long customerID=1L;
-        Customer customer=new Customer();
+        Long customerID = 1L;
+        Customer customer = new Customer();
         customer.setIdentityNumber("111111111111");
         customer.setIncome(BigDecimal.TEN);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
-        CreateCreditCardRequest createCreditCardRequest=new CreateCreditCardRequest();
+        CreateCreditCardRequest createCreditCardRequest = new CreateCreditCardRequest();
         createCreditCardRequest.setCreditCardLimit(BigDecimal.valueOf(2000));
         createCreditCardRequest.setPassword("1234");
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.of(customer));
-        BDDMockito.given(creditLimitCalculatorByIncome.getCreditLimit(customer.getIncome(),createCreditCardRequest.getCreditCardLimit())).willReturn(BigDecimal.valueOf(1000));
+        BDDMockito.given(creditLimitCalculatorByIncome.getCreditLimit(customer.getIncome(), createCreditCardRequest.getCreditCardLimit())).willReturn(BigDecimal.valueOf(1000));
         BDDMockito.given(uniqueNoCreator.creatCardNumber()).willReturn("11111");
         // when
         GeneralResponse response = underTest.create(customerID, createCreditCardRequest);
@@ -81,17 +80,17 @@ public class CreditCardFacadeServiceImplTest {
     @Test
     public void givenCreateCreditCardRequestWithInvalidCustomerID_whenCreate_thenReturnGeneralSuccessfullResponse() throws CreditCardOperationException, CustomerNotFoundException {
         // given
-        Long customerID=1L;
-        CreateCreditCardRequest createCreditCardRequest=new CreateCreditCardRequest();
+        Long customerID = 1L;
+        CreateCreditCardRequest createCreditCardRequest = new CreateCreditCardRequest();
         createCreditCardRequest.setCreditCardLimit(BigDecimal.valueOf(2000));
         createCreditCardRequest.setPassword("1234");
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.empty());
         // when
         CustomerNotFoundException exception = assertThrows(CustomerNotFoundException.class, () -> {
-           underTest.create(customerID, createCreditCardRequest);
+            underTest.create(customerID, createCreditCardRequest);
         });
         // then
-        String expectedExceptionMessage="Customer not found.";
+        String expectedExceptionMessage = "Customer not found.";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
 
     }
@@ -99,60 +98,61 @@ public class CreditCardFacadeServiceImplTest {
     @Test
     public void givenCreateCreditCardRequestWithInvalidCreditLimitRequestCustomerID_whenCreate_thenReturnGeneralSuccessfullResponse() throws CreditCardOperationException, CustomerNotFoundException {
         // given
-        Long customerID=1L;
-        Customer customer=new Customer();
+        Long customerID = 1L;
+        Customer customer = new Customer();
         customer.setIdentityNumber("111111111111");
         customer.setIncome(BigDecimal.ZERO);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
-        CreateCreditCardRequest createCreditCardRequest=new CreateCreditCardRequest();
+        CreateCreditCardRequest createCreditCardRequest = new CreateCreditCardRequest();
         createCreditCardRequest.setCreditCardLimit(BigDecimal.valueOf(2000));
         createCreditCardRequest.setPassword("1234");
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.of(customer));
-        BDDMockito.given(creditLimitCalculatorByIncome.getCreditLimit(customer.getIncome(),createCreditCardRequest.getCreditCardLimit())).willReturn(BigDecimal.ZERO);
+        BDDMockito.given(creditLimitCalculatorByIncome.getCreditLimit(customer.getIncome(), createCreditCardRequest.getCreditCardLimit())).willReturn(BigDecimal.ZERO);
         // when
         CreditCardOperationException exception = assertThrows(CreditCardOperationException.class, () -> {
             underTest.create(customerID, createCreditCardRequest);
         });
         // then
-        String expectedExceptionMessage="very risky";
+        String expectedExceptionMessage = "very risky";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
 
     }
+
     @Test
     public void givenCreditCardID_whenCurrentTermTransactions_thenReturnCreditCardTransactions() throws CreditCardOperationException, CustomerNotFoundException, CreditCardNotFoundException {
         // given
-        Long customerID=1L;
-        Customer customer=new Customer();
+        Long customerID = 1L;
+        Customer customer = new Customer();
         customer.setId(customerID);
         customer.setIdentityNumber("111111111111");
         customer.setIncome(BigDecimal.TEN);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
 
-        CreditCardActivity activity=new CreditCardActivity();
+        CreditCardActivity activity = new CreditCardActivity();
         activity.setSpendCategory(SpendCategory.PETROL);
         activity.setProcessDate(new Date());
         activity.setAmount(BigDecimal.TEN);
 
-        CreditCardActivity activity2=new CreditCardActivity();
+        CreditCardActivity activity2 = new CreditCardActivity();
         activity2.setSpendCategory(SpendCategory.PETROL);
         activity2.setProcessDate(new Date());
         activity2.setAmount(BigDecimal.TEN);
 
-        CreditCardActivityResponse response=new CreditCardActivityResponse();
+        CreditCardActivityResponse response = new CreditCardActivityResponse();
         response.setDescription("example");
         response.setAmount(BigDecimal.TEN);
         response.setProcessDate(new Date());
 
-        CreditCard creditCard=new CreditCard();
-        Long creditCardId=1L;
+        CreditCard creditCard = new CreditCard();
+        Long creditCardId = 1L;
         creditCard.setCustomer(customer);
         creditCard.setId(creditCardId);
         creditCard.setCardNumber("111");
-        CreditCardAccount account=new CreditCardAccount();
+        CreditCardAccount account = new CreditCardAccount();
         creditCard.setCreditCardAccount(account);
-        creditCard.getCreditCardAccount().getCurrentTermExtract().setCreditCardActivities(List.of(activity,activity2));
+        creditCard.getCreditCardAccount().getCurrentTermExtract().setCreditCardActivities(List.of(activity, activity2));
 
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.of(customer));
         BDDMockito.given(creditCardService.findCreditCardById(creditCardId)).willReturn(Optional.of(creditCard));
@@ -166,31 +166,33 @@ public class CreditCardFacadeServiceImplTest {
         assertThat(transactions.getIsSuccessful()).isTrue();
 
     }
+
     @Test
-    public void givenInvalidCustomerId_whenGetCurrentTermTransactions_thenThrowsCustomerNotFoundException(){
+    public void givenInvalidCustomerId_whenGetCurrentTermTransactions_thenThrowsCustomerNotFoundException() {
         // given
-        Long customerID=1L;
+        Long customerID = 1L;
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.empty());
 
         // when
         CustomerNotFoundException exception = assertThrows(CustomerNotFoundException.class, () -> {
-            underTest.getCurrentTermTransactions(customerID,1L);
+            underTest.getCurrentTermTransactions(customerID, 1L);
         });
         //then
-        String expectedExceptionMessage="not found";
+        String expectedExceptionMessage = "not found";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
+
     @Test
-    public void givenInvalidCreditCardId_whenGetCurrentTermTransactions_thenThrowsCreditCardFoundException(){
+    public void givenInvalidCreditCardId_whenGetCurrentTermTransactions_thenThrowsCreditCardFoundException() {
         // given
-        Long customerID=1L;
-        Customer customer=new Customer();
+        Long customerID = 1L;
+        Customer customer = new Customer();
         customer.setId(customerID);
         customer.setIdentityNumber("111111111111");
         customer.setIncome(BigDecimal.TEN);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
-        Long invalidCreditCardId=1L;
+        Long invalidCreditCardId = 1L;
 
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.of(customer));
         BDDMockito.given(creditCardService.findCreditCardById(invalidCreditCardId)).willReturn(Optional.empty());
@@ -198,33 +200,33 @@ public class CreditCardFacadeServiceImplTest {
 
         // when
         CreditCardNotFoundException exception = assertThrows(CreditCardNotFoundException.class, () -> {
-            underTest.getCurrentTermTransactions(customerID,1L);
+            underTest.getCurrentTermTransactions(customerID, 1L);
         });
         //then
-        String expectedExceptionMessage="not found";
+        String expectedExceptionMessage = "not found";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
 
     @Test
-    public void givenCreditCardOwnerNotCustomer_whenGetCurrentTermTransactions_thenThrowsCreditCardOperationException(){
+    public void givenCreditCardOwnerNotCustomer_whenGetCurrentTermTransactions_thenThrowsCreditCardOperationException() {
         // given
-        Long customerID=1L;
-        Customer customer=new Customer();
+        Long customerID = 1L;
+        Customer customer = new Customer();
         customer.setId(customerID);
         customer.setIdentityNumber("111111111111");
         customer.setIncome(BigDecimal.TEN);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
 
-        Customer customer2=new Customer();
+        Customer customer2 = new Customer();
         customer2.setId(2L);
         customer2.setIdentityNumber("111111111111");
         customer2.setIncome(BigDecimal.TEN);
         customer2.setName("ENGIN");
         customer2.setSurname("AKIN");
 
-        CreditCard creditCard=new CreditCard();
-        Long creditCardId=1L;
+        CreditCard creditCard = new CreditCard();
+        Long creditCardId = 1L;
         creditCard.setCustomer(customer2);
         creditCard.setId(creditCardId);
         creditCard.setCardNumber("111");
@@ -235,12 +237,13 @@ public class CreditCardFacadeServiceImplTest {
 
         // when
         CreditCardOperationException exception = assertThrows(CreditCardOperationException.class, () -> {
-            underTest.getCurrentTermTransactions(customerID,creditCardId);
+            underTest.getCurrentTermTransactions(customerID, creditCardId);
         });
         //then
-        String expectedExceptionMessage="not found";
+        String expectedExceptionMessage = "not found";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
+
     @Test
     public void givenCreditCustomerID_whenGetCustomerCreditCards_thenThrowsGeneralSucessfullResponse() throws CustomerNotFoundException {
         // given
@@ -270,10 +273,11 @@ public class CreditCardFacadeServiceImplTest {
         Assertions.assertThat(creditCards.getIsSuccessful()).isTrue();
         Assertions.assertThat(creditCards.getData()).isNotNull();
     }
+
     @Test
-    public void givenInvalidCustomerId_whenGetCustomerCreditCards_thenThrowsCustomerNotFoundException(){
+    public void givenInvalidCustomerId_whenGetCustomerCreditCards_thenThrowsCustomerNotFoundException() {
         // given
-        Long customerID=1L;
+        Long customerID = 1L;
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.empty());
 
         // when
@@ -281,32 +285,32 @@ public class CreditCardFacadeServiceImplTest {
             underTest.getCustomerCreditCards(customerID);
         });
         //then
-        String expectedExceptionMessage="not found";
+        String expectedExceptionMessage = "not found";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
 
     @Test
     public void givenCreditCardId_whenGetCreditCardDebt_thenReturnCreditCardDebt() throws CreditCardOperationException, CustomerNotFoundException, CreditCardNotFoundException {
         // given
-        Long customerID=1L;
-        Customer customer=new Customer();
+        Long customerID = 1L;
+        Customer customer = new Customer();
         customer.setId(customerID);
         customer.setIdentityNumber("111111111111");
         customer.setIncome(BigDecimal.TEN);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
 
-        CreditCard creditCard=new CreditCard();
-        Long creditCardId=1L;
+        CreditCard creditCard = new CreditCard();
+        Long creditCardId = 1L;
         creditCard.setCustomer(customer);
         creditCard.setId(creditCardId);
-        CreditCardAccount creditCardAccount=new CreditCardAccount();
+        CreditCardAccount creditCardAccount = new CreditCardAccount();
         creditCardAccount.setTotalDebt(BigDecimal.TEN);
         creditCardAccount.setLastExtractDebt(BigDecimal.TEN);
         creditCard.setCreditCardAccount(creditCardAccount);
         creditCard.setCardNumber("111");
 
-        CreditCardDebtResponse response=new CreditCardDebtResponse();
+        CreditCardDebtResponse response = new CreditCardDebtResponse();
         response.setTotalDebt(BigDecimal.TEN);
         response.setCurrentTermDebt(BigDecimal.TEN);
         response.setLastExtractDebt(BigDecimal.TEN);
@@ -322,9 +326,9 @@ public class CreditCardFacadeServiceImplTest {
     }
 
     @Test
-    public void givenInvalidCustomerId_whenGetCustomerCreditCardDebt_thenThrowsCustomerNotFoundException(){
+    public void givenInvalidCustomerId_whenGetCustomerCreditCardDebt_thenThrowsCustomerNotFoundException() {
         // given
-        Long customerID=1L;
+        Long customerID = 1L;
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.empty());
 
         // when
@@ -332,20 +336,21 @@ public class CreditCardFacadeServiceImplTest {
             underTest.getCustomerCreditCards(customerID);
         });
         //then
-        String expectedExceptionMessage="not found";
+        String expectedExceptionMessage = "not found";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
+
     @Test
-    public void givenInvalidCreditCardId_whenGetCreditCardDebts_thenThrowsCreditCardFoundException(){
+    public void givenInvalidCreditCardId_whenGetCreditCardDebts_thenThrowsCreditCardFoundException() {
         // given
-        Long customerID=1L;
-        Customer customer=new Customer();
+        Long customerID = 1L;
+        Customer customer = new Customer();
         customer.setId(customerID);
         customer.setIdentityNumber("111111111111");
         customer.setIncome(BigDecimal.TEN);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
-        Long invalidCreditCardId=1L;
+        Long invalidCreditCardId = 1L;
 
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.of(customer));
         BDDMockito.given(creditCardService.findCreditCardById(invalidCreditCardId)).willReturn(Optional.empty());
@@ -353,27 +358,27 @@ public class CreditCardFacadeServiceImplTest {
 
         // when
         CreditCardNotFoundException exception = assertThrows(CreditCardNotFoundException.class, () -> {
-            underTest.getCreditCardDebt(customerID,1L);
+            underTest.getCreditCardDebt(customerID, 1L);
         });
         //then
-        String expectedExceptionMessage="not found";
+        String expectedExceptionMessage = "not found";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
 
     @Test
     public void givenCreditCard_whenDeleteCreditCard_thenReturnSuccessfullyResponse() throws CreditCardOperationException, CustomerNotFoundException, CreditCardNotFoundException {
         // given
-        Long customerID=1L;
-        Customer customer=new Customer();
+        Long customerID = 1L;
+        Customer customer = new Customer();
         customer.setId(customerID);
         customer.setIdentityNumber("111111111111");
         customer.setIncome(BigDecimal.TEN);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
 
-        CreditCard creditCard=new CreditCard();
-        Long creditCardId=1L;
-        CreditCardAccount creditCardAccount=new CreditCardAccount();
+        CreditCard creditCard = new CreditCard();
+        Long creditCardId = 1L;
+        CreditCardAccount creditCardAccount = new CreditCardAccount();
         creditCardAccount.setTotalDebt(BigDecimal.ZERO);
         creditCard.setCreditCardAccount(creditCardAccount);
         creditCard.setCustomer(customer);
@@ -388,17 +393,18 @@ public class CreditCardFacadeServiceImplTest {
         Assertions.assertThat(response.getIsSuccessful()).isTrue();
 
     }
+
     @Test
-    public void givenInvalidCreditCardId_whenDeleteCreditCard_thenThrowsCreditCardFoundException(){
+    public void givenInvalidCreditCardId_whenDeleteCreditCard_thenThrowsCreditCardFoundException() {
         // given
-        Long customerID=1L;
-        Customer customer=new Customer();
+        Long customerID = 1L;
+        Customer customer = new Customer();
         customer.setId(customerID);
         customer.setIdentityNumber("111111111111");
         customer.setIncome(BigDecimal.TEN);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
-        Long invalidCreditCardId=1L;
+        Long invalidCreditCardId = 1L;
 
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.of(customer));
         BDDMockito.given(creditCardService.findCreditCardById(invalidCreditCardId)).willReturn(Optional.empty());
@@ -406,26 +412,26 @@ public class CreditCardFacadeServiceImplTest {
 
         // when
         CreditCardNotFoundException exception = assertThrows(CreditCardNotFoundException.class, () -> {
-            underTest.deleteCreditCard(customerID,1L);
+            underTest.deleteCreditCard(customerID, 1L);
         });
         //then
-        String expectedExceptionMessage="not found";
+        String expectedExceptionMessage = "not found";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
 
 
     @Test
-    public void givenInvalidCustomerId_whenDeleteCreditCard_thenThrowsCustomerNotFoundException(){
+    public void givenInvalidCustomerId_whenDeleteCreditCard_thenThrowsCustomerNotFoundException() {
         // given
-        Long customerID=1L;
+        Long customerID = 1L;
         BDDMockito.given(customerService.findByCustomerById(customerID)).willReturn(Optional.empty());
 
         // when
         CustomerNotFoundException exception = assertThrows(CustomerNotFoundException.class, () -> {
-            underTest.deleteCreditCard(customerID,1L);
+            underTest.deleteCreditCard(customerID, 1L);
         });
         //then
-        String expectedExceptionMessage="not found";
+        String expectedExceptionMessage = "not found";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
 
@@ -433,17 +439,17 @@ public class CreditCardFacadeServiceImplTest {
     @Test
     public void givenHasADebtCreditCard_whenDeleteCreditCard_thenThrowsCreditCardOperationException() throws CreditCardOperationException, CustomerNotFoundException, CreditCardNotFoundException {
         // given
-        Long customerID=1L;
-        Customer customer=new Customer();
+        Long customerID = 1L;
+        Customer customer = new Customer();
         customer.setId(customerID);
         customer.setIdentityNumber("111111111111");
         customer.setIncome(BigDecimal.TEN);
         customer.setName("ENGIN");
         customer.setSurname("AKIN");
 
-        CreditCard creditCard=new CreditCard();
-        Long creditCardId=1L;
-        CreditCardAccount creditCardAccount=new CreditCardAccount();
+        CreditCard creditCard = new CreditCard();
+        Long creditCardId = 1L;
+        CreditCardAccount creditCardAccount = new CreditCardAccount();
         creditCardAccount.setTotalDebt(BigDecimal.TEN);
         creditCard.setCreditCardAccount(creditCardAccount);
         creditCard.setCustomer(customer);
@@ -456,7 +462,7 @@ public class CreditCardFacadeServiceImplTest {
             underTest.deleteCreditCard(customerID, creditCardId);
         });
         //then
-        String expectedExceptionMessage="has a debt";
+        String expectedExceptionMessage = "has a debt";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
 
     }

@@ -35,10 +35,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DebitFacadeServiceImplTest {
@@ -62,21 +62,21 @@ class DebitFacadeServiceImplTest {
     @Test
     public void givenCreateDebitCardRequest_whenCreate_thenReturnSuccessfullyResponse() throws DebitCardOperationException, CustomerNotFoundException, CheckingAccountNotFoundException {
         // given
-        Customer customer=createCustomer();
-        DebitCard debitCard=createDebitCard();
-        CheckingAccount checkingAccount=createCheckingAccount();
+        Customer customer = createCustomer();
+        DebitCard debitCard = createDebitCard();
+        CheckingAccount checkingAccount = createCheckingAccount();
         checkingAccount.setCustomer(customer);
         debitCard.setCheckingAccount(checkingAccount);
-        DebitCardResponse response=new DebitCardResponse();
+        DebitCardResponse response = new DebitCardResponse();
         response.setPassword(debitCard.getPassword());
-        CreateDebitCardRequest debitCardRequest=new CreateDebitCardRequest();
+        CreateDebitCardRequest debitCardRequest = new CreateDebitCardRequest();
         debitCardRequest.setPassword("11111");
         debitCardRequest.setParentCheckingAccountId(debitCard.getId());
         given(customerService.findByCustomerById(customer.getId())).willReturn(Optional.of(customer));
         given(checkingAccountService.findById(debitCardRequest.getParentCheckingAccountId())).willReturn(Optional.of(checkingAccount));
         given(debitCardService.existsDebitCardByCheckingAccountId(checkingAccount.getId())).willReturn(false);
         given(uniqueNoCreator.creatAccountNo()).willReturn("1111111");
-        when(debitCardService.save(any())).thenAnswer(i->i.getArguments()[0]);
+        when(debitCardService.save(any())).thenAnswer(i -> i.getArguments()[0]);
         when(debitCardMapper.toDto(any())).thenReturn(response);
 
         // when
@@ -88,8 +88,8 @@ class DebitFacadeServiceImplTest {
     @Test
     public void givenInvalidCustomerId_whenCreate_thenThrowsCustomerNotFoundException() throws CustomerNotFoundException, AccountNameAlreadyHaveException {
         // given
-        Customer customer=createCustomer();
-        CreateDebitCardRequest debitCardRequest=new CreateDebitCardRequest();
+        Customer customer = createCustomer();
+        CreateDebitCardRequest debitCardRequest = new CreateDebitCardRequest();
         debitCardRequest.setPassword("11111");
         debitCardRequest.setParentCheckingAccountId(1L);
         Long customerID = 1L;
@@ -97,11 +97,12 @@ class DebitFacadeServiceImplTest {
         // then
         assertThrows(CustomerNotFoundException.class, () -> underTest.create(customerID, debitCardRequest));
     }
+
     @Test
     public void givenInvalidCustomerIdAndCheckingAccountId_whenCreate_thenThrowsCheckinAccountNotFoundException() throws CustomerNotFoundException, AccountNameAlreadyHaveException {
         // given
-        Customer customer=createCustomer();
-        CreateDebitCardRequest debitCardRequest=new CreateDebitCardRequest();
+        Customer customer = createCustomer();
+        CreateDebitCardRequest debitCardRequest = new CreateDebitCardRequest();
         debitCardRequest.setPassword("11111");
         debitCardRequest.setParentCheckingAccountId(1L);
         Long customerID = 1L;
@@ -114,9 +115,9 @@ class DebitFacadeServiceImplTest {
     @Test
     public void givenExistsDebitCardByCheckingAccount_whenCreate_thenThrowsDebitCardOperationException() throws CustomerNotFoundException, AccountNameAlreadyHaveException {
         // given
-        CreateDebitCardRequest debitCardRequest=new CreateDebitCardRequest();
-        CheckingAccount checkingAccount=createCheckingAccount();
-        Customer customer=createCustomer();
+        CreateDebitCardRequest debitCardRequest = new CreateDebitCardRequest();
+        CheckingAccount checkingAccount = createCheckingAccount();
+        Customer customer = createCustomer();
         checkingAccount.setCustomer(customer);
         debitCardRequest.setPassword("11111");
         debitCardRequest.setParentCheckingAccountId(1L);
@@ -127,11 +128,12 @@ class DebitFacadeServiceImplTest {
         // then
         assertThrows(DebitCardOperationException.class, () -> underTest.create(customerID, debitCardRequest));
     }
+
     @Test
     public void givenInvalidParentAccountId_whenCreate_thenThrowsCheckingAccountNotFoundException() throws CustomerNotFoundException, AccountNameAlreadyHaveException {
         // given
-        CreateDebitCardRequest debitCardRequest=new CreateDebitCardRequest();
-        Customer customer=createCustomer();
+        CreateDebitCardRequest debitCardRequest = new CreateDebitCardRequest();
+        Customer customer = createCustomer();
         debitCardRequest.setPassword("11111");
         debitCardRequest.setParentCheckingAccountId(1L);
         Long customerID = 1L;
@@ -139,29 +141,31 @@ class DebitFacadeServiceImplTest {
         // then
         assertThrows(CheckingAccountNotFoundException.class, () -> underTest.create(customerID, debitCardRequest));
     }
+
     @Test
     public void givenDebitCardId_whenGetDebitCardActivities_thenReturnSuccessfullyResponse() throws DebitCardNotFoundException, CustomerNotFoundException {
         // given
-        DebitCard debitCard=createDebitCard();
-        CheckingAccount checkingAccount=createCheckingAccount();
+        DebitCard debitCard = createDebitCard();
+        CheckingAccount checkingAccount = createCheckingAccount();
         checkingAccount.setActivities(Collections.emptyList());
         debitCard.setCheckingAccount(checkingAccount);
-        Customer customer=createCustomer();
+        Customer customer = createCustomer();
         BDDMockito.given(customerService.findByCustomerById(customer.getId())).willReturn(Optional.of(customer));
-        BDDMockito.given(debitCardService.findDebitCardWithCustomerIDAndCardID(customer.getId(),debitCard.getId())).willReturn(Optional.of(debitCard));
+        BDDMockito.given(debitCardService.findDebitCardWithCustomerIDAndCardID(customer.getId(), debitCard.getId())).willReturn(Optional.of(debitCard));
         // when
         GeneralResponse response = underTest.getDebitCardActivities(customer.getId(), debitCard.getId(), null);
         // then
         Assertions.assertThat(response.getIsSuccessful()).isTrue();
     }
+
     @Test
     public void givenDebitCardId_whenGetDebitCardByID_thenReturnGeneralDataResponse() throws DebitCardNotFoundException, CustomerNotFoundException {
         // given
-        DebitCard debitCard=createDebitCard();
-        Customer customer=createCustomer();
-        DebitCardResponse response=new DebitCardResponse();
+        DebitCard debitCard = createDebitCard();
+        Customer customer = createCustomer();
+        DebitCardResponse response = new DebitCardResponse();
         BDDMockito.given(customerService.findByCustomerById(customer.getId())).willReturn(Optional.of(customer));
-        BDDMockito.given(debitCardService.findDebitCardWithCustomerIDAndCardID(customer.getId(),debitCard.getId())).willReturn(Optional.of(debitCard));
+        BDDMockito.given(debitCardService.findDebitCardWithCustomerIDAndCardID(customer.getId(), debitCard.getId())).willReturn(Optional.of(debitCard));
         BDDMockito.given(debitCardMapper.toDto(debitCard)).willReturn(response);
         // when
         GeneralDataResponse generalDataResponse = underTest.getDebitCardByID(customer.getId(), debitCard.getId());
@@ -174,10 +178,10 @@ class DebitFacadeServiceImplTest {
     @Test
     public void givenCustomerID_whenGetAllCustomerDebitCards_thenReturnSuccessfully() throws DebitCardNotFoundException, CustomerNotFoundException {
         // given
-        DebitCard debitCard1=createDebitCard();
-        DebitCard debitCard2=createDebitCard();
-        Customer customer=createCustomer();
-        List<DebitCard> debitCardList= List.of(debitCard2,debitCard1);
+        DebitCard debitCard1 = createDebitCard();
+        DebitCard debitCard2 = createDebitCard();
+        Customer customer = createCustomer();
+        List<DebitCard> debitCardList = List.of(debitCard2, debitCard1);
         given(customerService.findByCustomerById(customer.getId())).willReturn(Optional.of(customer));
         given(debitCardService.getAllCustomersDebitCards(customer.getId())).willReturn(debitCardList);
         // when
@@ -189,13 +193,13 @@ class DebitFacadeServiceImplTest {
     @Test
     public void givenDebitCardIdAndUpdateDebitCardRequest_whenUpdate_thenReturnSuccessfullyResponse() throws DebitCardOperationException, CustomerNotFoundException {
         // given
-        DebitCard debitCard=createDebitCard();
-        Customer customer=createCustomer();
-        UpdateDebitCardRequest request=new UpdateDebitCardRequest();
+        DebitCard debitCard = createDebitCard();
+        Customer customer = createCustomer();
+        UpdateDebitCardRequest request = new UpdateDebitCardRequest();
         request.setPassword("1111");
         request.setDailyLimit(BigDecimal.ZERO);
         given(customerService.findByCustomerById(customer.getId())).willReturn(Optional.of(customer));
-        given(debitCardService.findDebitCardWithCustomerIDAndCardID(customer.getId(),debitCard.getId())).willReturn(Optional.of(debitCard));
+        given(debitCardService.findDebitCardWithCustomerIDAndCardID(customer.getId(), debitCard.getId())).willReturn(Optional.of(debitCard));
         // when
         GeneralResponse response = underTest.update(customer.getId(), debitCard.getId(), request);
         // then
@@ -205,30 +209,31 @@ class DebitFacadeServiceImplTest {
     @Test
     public void givenDebitCardId_whenDeleteDebitCardById_thenReturnSuccessfullyResponse() throws DebitCardOperationException, CustomerNotFoundException {
         // given
-        DebitCard debitCard=createDebitCard();
-        CheckingAccount checkingAccount=createCheckingAccount();
+        DebitCard debitCard = createDebitCard();
+        CheckingAccount checkingAccount = createCheckingAccount();
         checkingAccount.setBalance(BigDecimal.ZERO);
         debitCard.setCheckingAccount(checkingAccount);
-        Customer customer=createCustomer();
+        Customer customer = createCustomer();
         given(customerService.findByCustomerById(customer.getId())).willReturn(Optional.of(customer));
-        given(debitCardService.findDebitCardWithCustomerIDAndCardID(customer.getId(),debitCard.getId())).willReturn(Optional.of(debitCard));
+        given(debitCardService.findDebitCardWithCustomerIDAndCardID(customer.getId(), debitCard.getId())).willReturn(Optional.of(debitCard));
         // when
         GeneralResponse response = underTest.deleteDebitCardById(customer.getId(), debitCard.getId());
         // then
         assertThat(response.getIsSuccessful()).isTrue();
     }
+
     @Test
     public void givenHasbalanceDebitCard_whenDeleteDebitCardById_thenThrowsDebitCardOperationException() throws DebitCardOperationException, CustomerNotFoundException {
         // given
-        DebitCard debitCard=createDebitCard();
-        CheckingAccount checkingAccount=createCheckingAccount();
+        DebitCard debitCard = createDebitCard();
+        CheckingAccount checkingAccount = createCheckingAccount();
         checkingAccount.setBalance(BigDecimal.TEN);
         debitCard.setCheckingAccount(checkingAccount);
-        Customer customer=createCustomer();
+        Customer customer = createCustomer();
         given(customerService.findByCustomerById(customer.getId())).willReturn(Optional.of(customer));
-        given(debitCardService.findDebitCardWithCustomerIDAndCardID(customer.getId(),debitCard.getId())).willReturn(Optional.of(debitCard));
+        given(debitCardService.findDebitCardWithCustomerIDAndCardID(customer.getId(), debitCard.getId())).willReturn(Optional.of(debitCard));
         // when
-        assertThrows(DebitCardOperationException.class, () ->underTest.deleteDebitCardById(customer.getId(), debitCard.getId()));
+        assertThrows(DebitCardOperationException.class, () -> underTest.deleteDebitCardById(customer.getId(), debitCard.getId()));
         // then
     }
     /*
@@ -258,8 +263,8 @@ class DebitFacadeServiceImplTest {
         return checkingAccount;
     }
 
-    private DebitCard createDebitCard(){
-        DebitCard debitCard=new DebitCard();
+    private DebitCard createDebitCard() {
+        DebitCard debitCard = new DebitCard();
         debitCard.setCardNumber("1111");
         debitCard.setId(1L);
         debitCard.setPassword("1111");
@@ -268,8 +273,9 @@ class DebitFacadeServiceImplTest {
         debitCard.setExpiryDate(new Date());
         return debitCard;
     }
-    private Customer createCustomer(){
-        Customer customer=new Customer();
+
+    private Customer createCustomer() {
+        Customer customer = new Customer();
         customer.setIdentityNumber("111111111111");
         customer.setId(1L);
         customer.setName("ENGIN");

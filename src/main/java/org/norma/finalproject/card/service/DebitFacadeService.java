@@ -12,15 +12,15 @@ import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
 
 public interface DebitFacadeService {
 
-   GeneralDataResponse create(long customerID,CreateDebitCardRequest createDebitCardRequest) throws DebitCardOperationException, DebitCardNotFoundException, CheckingAccountNotFoundException, CustomerNotFoundException;
+    GeneralDataResponse create(long customerID, CreateDebitCardRequest createDebitCardRequest) throws DebitCardOperationException, DebitCardNotFoundException, CheckingAccountNotFoundException, CustomerNotFoundException;
 
-   GeneralDataResponse getDebitCardByID(Long id, long debitID) throws CustomerNotFoundException, DebitCardNotFoundException;
+    GeneralDataResponse getDebitCardByID(Long id, long debitID) throws CustomerNotFoundException, DebitCardNotFoundException;
 
-   GeneralDataResponse getAllCustomerDebitCards(Long customerID) throws CustomerNotFoundException, DebitCardNotFoundException;
+    GeneralDataResponse getAllCustomerDebitCards(Long customerID) throws CustomerNotFoundException, DebitCardNotFoundException;
 
-   GeneralResponse update(Long CustomerID, long debitCardID, UpdateDebitCardRequest updateDebitCardRequest) throws CustomerNotFoundException, DebitCardOperationException;
+    GeneralResponse update(Long CustomerID, long debitCardID, UpdateDebitCardRequest updateDebitCardRequest) throws CustomerNotFoundException, DebitCardOperationException;
 
-   GeneralResponse deleteDebitCardById(Long customerID, long debitCardID) throws CustomerNotFoundException, DebitCardOperationException;
+    GeneralResponse deleteDebitCardById(Long customerID, long debitCardID) throws CustomerNotFoundException, DebitCardOperationException;
 
-   GeneralResponse getDebitCardActivities(Long customerID, long debitCardID, ActivityFilter filter) throws CustomerNotFoundException, DebitCardNotFoundException;
+    GeneralResponse getDebitCardActivities(Long customerID, long debitCardID, ActivityFilter filter) throws CustomerNotFoundException, DebitCardNotFoundException;
 }

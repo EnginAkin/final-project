@@ -11,6 +11,7 @@ public interface CheckingAccountMapper {
     CheckingAccount toEntity(CreateCheckingAccountRequest createCheckingAccountRequest);
 
     CreateDepositAccountResponse toCreateCheckingAccountDto(CheckingAccount checkingAccount);
+
     CheckingAccountResponse toAccountResponses(CheckingAccount checkingAccount);
 
 

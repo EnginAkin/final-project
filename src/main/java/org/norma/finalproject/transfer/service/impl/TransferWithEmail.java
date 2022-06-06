@@ -15,19 +15,19 @@ import org.norma.finalproject.exchange.core.exception.AmountNotValidException;
 import org.norma.finalproject.exchange.service.FacadeExchangeService;
 import org.norma.finalproject.transfer.core.exception.TransferOperationException;
 import org.norma.finalproject.transfer.core.mapper.TransferMapper;
-import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
 import org.norma.finalproject.transfer.core.model.request.EmailTransferRequest;
+import org.norma.finalproject.transfer.core.model.request.IbanTransferRequest;
 import org.norma.finalproject.transfer.entity.Transfer;
 import org.norma.finalproject.transfer.service.TransferService;
 import org.norma.finalproject.transfer.service.base.TransferBase;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+
 /**
- *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 @Component("transfer-email")
 @Slf4j
@@ -62,7 +62,7 @@ public class TransferWithEmail extends TransferBase<EmailTransferRequest> {
             log.error("Sender account not found.");
             throw new TransferOperationException("Sender account not found.");
         }
-        Account fromAccount=optionalFromAccount.get();
+        Account fromAccount = optionalFromAccount.get();
         boolean fromAccountIDOwnerIsCustomer = checkAccountIDOwnerIsCustomer(optionalCustomer.get(), fromAccount.getId());
         if (!fromAccountIDOwnerIsCustomer) {
             log.error("Account not found.");
@@ -80,8 +80,7 @@ public class TransferWithEmail extends TransferBase<EmailTransferRequest> {
         }
         // call base method
         this.sendTransferWithIban(fromAccount.getIbanNo(), optionalToAccount.get().getIbanNo(), emailTransferRequest.getAmount(), emailTransferRequest.getDescription());
-
-        Transfer transfer = transferMapper.toEntity(new IbanTransferRequest(fromAccount.getIbanNo(),optionalToAccount.get().getIbanNo(),emailTransferRequest.getAmount(),emailTransferRequest.getDescription(),emailTransferRequest.getTransferType()));
+        Transfer transfer = transferMapper.toEntity(new IbanTransferRequest(fromAccount.getIbanNo(), optionalToAccount.get().getIbanNo(), emailTransferRequest.getAmount(), emailTransferRequest.getDescription(), emailTransferRequest.getTransferType()));
         transfer.setCurrencyType(fromAccount.getCurrencyType());
         transferService.save(transfer);
         log.debug("Transfer for email ended.");
@@ -91,7 +90,7 @@ public class TransferWithEmail extends TransferBase<EmailTransferRequest> {
 
     public boolean checkAccountIDOwnerIsCustomer(Customer customer, long accountId) {
         return customer.getSavingAccounts().stream()
-                        .anyMatch(savingAccount -> savingAccount.getId().equals(accountId)) ||
+                .anyMatch(savingAccount -> savingAccount.getId().equals(accountId)) ||
                 customer.getCheckingAccounts().stream()
                         .anyMatch(checkingAccount -> checkingAccount.getId().equals(accountId));
     }

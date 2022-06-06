@@ -9,7 +9,9 @@ import org.norma.finalproject.card.core.model.request.ActivityFilter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Builder
@@ -28,8 +30,8 @@ public class Account {
     private String accountNo;
     @NotNull
     private String accountName;
-    private BigDecimal balance=BigDecimal.ZERO;
-    private BigDecimal lockedBalance=BigDecimal.ZERO;
+    private BigDecimal balance = BigDecimal.ZERO;
+    private BigDecimal lockedBalance = BigDecimal.ZERO;
 
 
     @Enumerated(EnumType.STRING)
@@ -37,8 +39,8 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "account")
-    private List<AccountActivity> activities=new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
+    private List<AccountActivity> activities = new ArrayList<>();
 
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -47,10 +49,11 @@ public class Account {
     @Column(length = 50)
     private String createdBy;
 
-    public void addActivity(AccountActivity accountActivity){
+    public void addActivity(AccountActivity accountActivity) {
         activities.add(accountActivity);
     }
-    public List<AccountActivity> getActivityWithFilterDate(ActivityFilter filter){
+
+    public List<AccountActivity> getActivityWithFilterDate(ActivityFilter filter) {
         return activities.stream().filter(accountActivity -> accountActivity.getDate().before(filter.getToDate()) &&
                 accountActivity.getDate().after(filter.getFromDate())).toList();
     }

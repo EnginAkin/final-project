@@ -14,8 +14,8 @@ import java.util.Date;
 public class CheckingAccountMapperImpl implements CheckingAccountMapper {
     @Override
     public CheckingAccount toEntity(CreateCheckingAccountRequest createCheckingAccountRequest) {
-        CheckingAccount checkingAccount=new CheckingAccount();
-        checkingAccount.setAccountName(createCheckingAccountRequest.getBranchName()+"-"+createCheckingAccountRequest.getBranchCode());
+        CheckingAccount checkingAccount = new CheckingAccount();
+        checkingAccount.setAccountName(createCheckingAccountRequest.getBranchName() + "-" + createCheckingAccountRequest.getBranchCode());
         checkingAccount.setBranchCode(createCheckingAccountRequest.getBranchCode());
         checkingAccount.setBankCode(createCheckingAccountRequest.getBankCode());
         checkingAccount.setBranchName(createCheckingAccountRequest.getBranchName());
@@ -27,15 +27,16 @@ public class CheckingAccountMapperImpl implements CheckingAccountMapper {
 
 
     }
+
     @Override
     public CreateDepositAccountResponse toCreateCheckingAccountDto(CheckingAccount checkingAccount) {
-        return new CreateDepositAccountResponse(checkingAccount.getAccountName(), checkingAccount.getAccountNo(),checkingAccount.getIbanNo());
+        return new CreateDepositAccountResponse(checkingAccount.getAccountName(), checkingAccount.getAccountNo(), checkingAccount.getIbanNo());
     }
 
     @Override
     public CheckingAccountResponse toAccountResponses(CheckingAccount checkingAccount) {
 
-        CheckingAccountResponse checkingAccountResponse=new CheckingAccountResponse();
+        CheckingAccountResponse checkingAccountResponse = new CheckingAccountResponse();
         checkingAccountResponse.setId(checkingAccount.getId());
         checkingAccountResponse.setBalance(checkingAccount.getBalance());
         checkingAccountResponse.setCurrencyType(checkingAccount.getCurrencyType());

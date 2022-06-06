@@ -5,12 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.norma.finalproject.account.service.BaseAccountService;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public final class UniqueNoCreator{
+public final class UniqueNoCreator {
     private final BaseAccountService accountService;
 
 
@@ -33,17 +32,15 @@ public final class UniqueNoCreator{
     }
 
     public String createIbanNo(String accountNo, String bankCode) {
-            String reservedField="0";
-            String iBANCheckDigits="33";
-            String ibanNumber="TR"+iBANCheckDigits+bankCode+reservedField+accountNo;
-            if (!(accountService.checkIsIbanNoUnique(ibanNumber))) {
-                log.info("Deposit unique iban no created : {}", ibanNumber);
-                return ibanNumber;
-            }
-            return creatAccountNo();
+        String reservedField = "0";
+        String iBANCheckDigits = "33";
+        String ibanNumber = "TR" + iBANCheckDigits + bankCode + reservedField + accountNo;
+        if (!(accountService.checkIsIbanNoUnique(ibanNumber))) {
+            log.info("Deposit unique iban no created : {}", ibanNumber);
+            return ibanNumber;
+        }
+        return creatAccountNo();
     }
-
-
 
 
 }

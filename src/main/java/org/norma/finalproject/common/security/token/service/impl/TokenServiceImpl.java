@@ -2,8 +2,8 @@ package org.norma.finalproject.common.security.token.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.norma.finalproject.common.security.token.entity.JWTToken;
 import org.norma.finalproject.common.security.token.core.exception.TokenNotFoundException;
+import org.norma.finalproject.common.security.token.entity.JWTToken;
 import org.norma.finalproject.common.security.token.repository.TokenRepository;
 import org.norma.finalproject.common.security.token.service.TokenService;
 import org.springframework.stereotype.Service;
@@ -18,11 +18,11 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public JWTToken getToken(String value) throws TokenNotFoundException {
-        if(StringUtils.isEmpty(value)){
+        if (StringUtils.isEmpty(value)) {
             throw new TokenNotFoundException();
         }
-        Optional<JWTToken> token=tokenRepository.findByToken(value);
-        if(token.isEmpty()){
+        Optional<JWTToken> token = tokenRepository.findByToken(value);
+        if (token.isEmpty()) {
             throw new TokenNotFoundException();
         }
         return token.get();
@@ -36,7 +36,7 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public void delete(String token) throws TokenNotFoundException {
         Optional<JWTToken> optionalToken = tokenRepository.findByToken(token);
-        if(optionalToken.isEmpty()){
+        if (optionalToken.isEmpty()) {
             throw new TokenNotFoundException();
         }
 

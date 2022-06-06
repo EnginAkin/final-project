@@ -11,7 +11,7 @@ public class AmountValidator implements Validator<BigDecimal> {
 
     @Override
     public void validate(BigDecimal amount) throws AmountNotValidException {
-        if (amount.compareTo(BigDecimal.ZERO)<0) {
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new AmountNotValidException("Amount Not Valid");
         }
     }

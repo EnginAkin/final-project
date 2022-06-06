@@ -36,7 +36,7 @@ public class CustomerController {
     @Operation(tags = "Customer Controller", description = "Update Customer By Customer")
     @PatchMapping(path = "/update")
     public GeneralResponse update(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody UpdateCustomerRequest updateCustomerRequest) throws UpdateCustomerSamePasswordException, CustomerNotFoundException {
-        return facadeCustomerService.update(userDetail.getUser().getId(),updateCustomerRequest);
+        return facadeCustomerService.update(userDetail.getUser().getId(), updateCustomerRequest);
     }
 
 
@@ -51,9 +51,6 @@ public class CustomerController {
  1. hesap TRY TR3300006108322085465286169 1000
  2. hesap usd  TR3300000303345420223971662 0
  */
-
-
-
 
 
 }

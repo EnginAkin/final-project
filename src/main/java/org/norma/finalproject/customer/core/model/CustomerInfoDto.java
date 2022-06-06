@@ -15,7 +15,7 @@ import java.util.Date;
 public class CustomerInfoDto {
 
     @NotNull(message = "Identity number cannot be null.")
-    @Size(min = 11, max = 11,message = "Identity size must be 11 digit.")
+    @Size(min = 11, max = 11, message = "Identity size must be 11 digit.")
     @UniqueIdentity
     private String identityNumber;
 
@@ -33,7 +33,7 @@ public class CustomerInfoDto {
     private String email;
 
     @NotNull(message = "Password cannot be null")
-    @Size(min = 6, max = 6,message = "password size must be 6 digit.")
+    @Size(min = 6, max = 6, message = "password size must be 6 digit.")
     private String password;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -41,7 +41,7 @@ public class CustomerInfoDto {
     private Date birthDay; // 1999-03-03
 
     @NotNull(message = "Telephone Cannot be null.")
-    @Pattern(regexp = "^[0-9]{10}$",message = "Only number and 11 digit accept for telephone number")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Only number and 11 digit accept for telephone number")
     private String telephone;
 
     @NotNull(message = "Income Cannot be null.")

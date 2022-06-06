@@ -11,12 +11,12 @@ import javax.validation.constraints.Size;
 @Setter
 public class LoginFormRequest {
     @NotNull(message = "Identity number cannot be null.")
-    @Size(min = 11, max = 11,message = "Identity size must be 11 digit.")
+    @Size(min = 11, max = 11, message = "Identity size must be 11 digit.")
     @JsonProperty(value = "identity")
     private String userNumber;
 
     @NotNull(message = "Password cannot be null")
-    @Size(min = 6, max = 6,message = "password size must be 6 digit.")
+    @Size(min = 6, max = 6, message = "password size must be 6 digit.")
     private String password;
 
 }

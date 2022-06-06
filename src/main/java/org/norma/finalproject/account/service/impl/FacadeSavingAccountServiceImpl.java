@@ -15,7 +15,6 @@ import org.norma.finalproject.account.core.utils.UniqueNoCreator;
 import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.SavingAccount;
 import org.norma.finalproject.account.entity.base.AccountActivity;
-import org.norma.finalproject.account.entity.enums.AccountType;
 import org.norma.finalproject.account.service.AccountActivityService;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.account.service.FacadeSavingAccountService;
@@ -44,11 +43,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 /**
- *
  * @author Engin Akin
- * @since version v1.0.0
  * @version v1.0.0
+ * @since version v1.0.0
  */
 @Service
 @RequiredArgsConstructor
@@ -187,7 +186,6 @@ public class FacadeSavingAccountServiceImpl implements FacadeSavingAccountServic
         SavingAccountDto dto = savingAccountMapper.toDto(optionalSavingAccount.get());
         log.debug("get account by account id ended.");
         return new GeneralDataResponse<>(dto);
-
     }
 
     private boolean checkOwnersAccountIsCustomer(Customer customer, long accountId) {

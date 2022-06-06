@@ -7,7 +7,6 @@ import org.norma.finalproject.card.entity.enums.CardStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
@@ -27,14 +26,13 @@ public class DebitCard {
     private String cvv;
 
     @Enumerated(EnumType.STRING)
-    private CardStatus status=CardStatus.ACTIVE;
+    private CardStatus status = CardStatus.ACTIVE;
 
     @Temporal(TemporalType.DATE)
     private Date expiryDate;
 
     @OneToOne(fetch = FetchType.LAZY)
     private CheckingAccount checkingAccount;
-
 
 
 }

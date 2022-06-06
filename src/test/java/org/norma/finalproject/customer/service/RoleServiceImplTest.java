@@ -13,18 +13,18 @@ import org.norma.finalproject.customer.service.impl.RoleServiceImpl;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class RoleServiceImplTest {
     @Mock
     private RoleRepository roleRepository;
     @InjectMocks
     private RoleServiceImpl underTest;
+
     @Test
-    public void givenUserRole_whenGetRoleByName_thenReturnsRoleObject(){
+    public void givenUserRole_whenGetRoleByName_thenReturnsRoleObject() {
         // given
-        String roleName="USER_ROLE";
-        Role userRole=new Role(roleName);
+        String roleName = "USER_ROLE";
+        Role userRole = new Role(roleName);
         roleRepository.save(userRole);
         BDDMockito.given(roleRepository.findByName(roleName)).willReturn(Optional.of(userRole));
         // when

@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account,Long> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 
     boolean existsAccountByAccountNo(String accountNo);
+
     boolean existsAccountByIbanNo(String ibanNo);
 
     Optional<Account> findByIbanNo(String ibanNo);

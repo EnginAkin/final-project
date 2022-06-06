@@ -6,7 +6,7 @@ import java.util.GregorianCalendar;
 
 public final class Utils {
 
-    private Utils(){
+    private Utils() {
         throw new UnsupportedOperationException();
     }
 
@@ -15,7 +15,7 @@ public final class Utils {
         Calendar cal = new GregorianCalendar();
         cal.setTime(today);
         cal.add(Calendar.DAY_OF_MONTH, -30);// default a month getting activities
-        Date aMonthAgo=cal.getTime();
+        Date aMonthAgo = cal.getTime();
         return aMonthAgo;
     }
 

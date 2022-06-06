@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 
@@ -12,9 +11,9 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 public class ActivityFilter {
-     @DateTimeFormat(pattern="yyyy-MM-dd")
-     private Date fromDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date fromDate;
 
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date toDate;
 }

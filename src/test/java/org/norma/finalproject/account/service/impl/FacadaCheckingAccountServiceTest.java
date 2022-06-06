@@ -16,7 +16,6 @@ import org.norma.finalproject.account.entity.CheckingAccount;
 import org.norma.finalproject.account.entity.enums.CurrencyType;
 import org.norma.finalproject.account.service.CheckingAccountService;
 import org.norma.finalproject.account.service.FacadeSavingAccountService;
-import org.norma.finalproject.account.service.impl.FacadeCheckingAccountServiceImpl;
 import org.norma.finalproject.common.core.result.GeneralDataResponse;
 import org.norma.finalproject.common.core.result.GeneralResponse;
 import org.norma.finalproject.customer.core.exception.CustomerNotFoundException;
@@ -28,7 +27,6 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
@@ -120,7 +118,7 @@ public class FacadaCheckingAccountServiceTest {
     @Test
     public void givenCustomerId_whenBlockCheckingAccount_thenReturnGeneralSuccessfull() throws CheckingAccountNotFoundException {
         // given
-        CheckingAccount checkingAccount=createCheckingAccount();
+        CheckingAccount checkingAccount = createCheckingAccount();
         checkingAccount.setId(1L);
         BDDMockito.given(checkingAccountService.findById(checkingAccount.getId())).willReturn(Optional.of(checkingAccount));
         BDDMockito.given(checkingAccountService.save(checkingAccount)).willReturn(checkingAccount);
@@ -138,11 +136,9 @@ public class FacadaCheckingAccountServiceTest {
         BDDMockito.given(checkingAccountService.findById(accountId)).willReturn(Optional.empty());
         // then
         assertThrows(CheckingAccountNotFoundException.class, () -> underTest.blockAccount(accountId));
-        Mockito.verify(checkingAccountService,times(0)).save(createCheckingAccount());
+        Mockito.verify(checkingAccountService, times(0)).save(createCheckingAccount());
 
     }
-
-
 
 
     private CreateDepositAccountResponse createDepositAccountResponse(CheckingAccount checkingAccount) {

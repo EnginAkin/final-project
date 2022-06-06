@@ -3,7 +3,10 @@ package org.norma.finalproject.customer.service;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.norma.finalproject.account.core.exception.AccountNameAlreadyHaveException;
 import org.norma.finalproject.account.core.model.request.CreateCheckingAccountRequest;
@@ -29,22 +32,22 @@ import java.util.Calendar;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 class FacadeCustomerServiceImplTest {
     @Mock
-    private  CustomerService customerService;
+    private CustomerService customerService;
     @Mock
-    private  IdentityVerifier identityVerifier;
+    private IdentityVerifier identityVerifier;
     @Mock
-    private  PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     @Mock
-    private  CustomerMapper customerMapper;
+    private CustomerMapper customerMapper;
     @Mock
-    private  FacadeCheckinAccountService facadeCheckinAccountService;
+    private FacadeCheckinAccountService facadeCheckinAccountService;
     @Spy
     @InjectMocks
     private FacadeCustomerServiceImpl underTest;
@@ -56,18 +59,18 @@ class FacadeCustomerServiceImplTest {
         CustomerInfoDto customerInfoDto = getCustomerInfoDto();
         AddressDto addressDto = getAddressDto();
         CreateCheckingAccountRequest checkingAccountRequest = getCreateCheckingAccountRequest();
-        CreateCustomerRequest createCustomerRequest=new CreateCustomerRequest();
+        CreateCustomerRequest createCustomerRequest = new CreateCustomerRequest();
         createCustomerRequest.setCustomerInfo(customerInfoDto);
         createCustomerRequest.setAddress(addressDto);
         createCustomerRequest.setCheckingAccount(checkingAccountRequest);
-        Customer customer=new Customer();
+        Customer customer = new Customer();
         customer.setId(1L);
         customer.setEmail(customerInfoDto.getEmail());
         customer.setPassword(customerInfoDto.getPassword());
         customer.setName(customerInfoDto.getName());
         customer.setIdentityNumber(customerInfoDto.getIdentityNumber());
         customer.setBirthDay(customerInfoDto.getBirthDay());
-        Address address=new Address();
+        Address address = new Address();
         address.setState(addressDto.getState());
         address.setAddressType(addressDto.getAddressType());
         address.setCountry(addressDto.getCountry());
@@ -77,7 +80,7 @@ class FacadeCustomerServiceImplTest {
         BDDMockito.given(customerMapper.customerInfoDtoToCustomer(createCustomerRequest)).willReturn(customer);
         BDDMockito.given(identityVerifier.verify(customer.getIdentityNumber())).willReturn(true);
         BDDMockito.given(customerService.save(customer)).willReturn(customer);
-        BDDMockito.given(facadeCheckinAccountService.create(customer.getId(),checkingAccountRequest)).willReturn(new GeneralSuccessfullResponse("succesfful"));
+        BDDMockito.given(facadeCheckinAccountService.create(customer.getId(), checkingAccountRequest)).willReturn(new GeneralSuccessfullResponse("succesfful"));
         // when
         GeneralResponse response = underTest.signup(createCustomerRequest);
         // then
@@ -93,18 +96,18 @@ class FacadeCustomerServiceImplTest {
         CustomerInfoDto customerInfoDto = getCustomerInfoDto();
         AddressDto addressDto = getAddressDto();
         CreateCheckingAccountRequest checkingAccountRequest = getCreateCheckingAccountRequest();
-        CreateCustomerRequest createCustomerRequest=new CreateCustomerRequest();
+        CreateCustomerRequest createCustomerRequest = new CreateCustomerRequest();
         createCustomerRequest.setCustomerInfo(customerInfoDto);
         createCustomerRequest.setAddress(addressDto);
         createCustomerRequest.setCheckingAccount(checkingAccountRequest);
-        Customer customer=new Customer();
+        Customer customer = new Customer();
         customer.setId(1L);
         customer.setEmail(customerInfoDto.getEmail());
         customer.setPassword(customerInfoDto.getPassword());
         customer.setName(customerInfoDto.getName());
         customer.setIdentityNumber("invalid");
         customer.setBirthDay(customerInfoDto.getBirthDay());
-        Address address=new Address();
+        Address address = new Address();
         address.setState(addressDto.getState());
         address.setAddressType(addressDto.getAddressType());
         address.setCountry(addressDto.getCountry());
@@ -118,15 +121,15 @@ class FacadeCustomerServiceImplTest {
             underTest.signup(createCustomerRequest);
         });
         // then
-        String expectedExceptionMessage="Identity not valid.";
+        String expectedExceptionMessage = "Identity not valid.";
         assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
 
     @Test
     public void givenInvalidCustomerIdAndUpdateCustomerRequest_whenUpdate_ThenThrowsCustomerNotFound() throws UpdateCustomerSamePasswordException, CustomerNotFoundException {
         // given
-        Long customerId=1L;
-        UpdateCustomerRequest request=new UpdateCustomerRequest();
+        Long customerId = 1L;
+        UpdateCustomerRequest request = new UpdateCustomerRequest();
         request.setPassword("new password");
         request.setTelephone("new telephone");
         BDDMockito.given(customerService.findByCustomerById(customerId)).willReturn(Optional.empty());
@@ -137,19 +140,20 @@ class FacadeCustomerServiceImplTest {
         //then
         Assertions.assertThat(exception).isNotNull();
     }
+
     @Test
     public void givenCustomerIdAndInvalidUpdateCustomerRequest_whenUpdate_ThenThrowsUpdateCustomerSamePasswordException() throws UpdateCustomerSamePasswordException, CustomerNotFoundException {
         // given
-        Long customerId=1L;
-        Customer customer=new Customer();
+        Long customerId = 1L;
+        Customer customer = new Customer();
         customer.setId(customerId);
         customer.setPassword("old password");
         customer.setTelephone("old telephone");
-        UpdateCustomerRequest request=new UpdateCustomerRequest();
+        UpdateCustomerRequest request = new UpdateCustomerRequest();
         request.setPassword("new password");
         request.setTelephone("new telephone");
         BDDMockito.given(customerService.findByCustomerById(customerId)).willReturn(Optional.of(customer));
-        BDDMockito.given(passwordEncoder.matches(request.getPassword(),customer.getPassword())).willReturn(true);
+        BDDMockito.given(passwordEncoder.matches(request.getPassword(), customer.getPassword())).willReturn(true);
         // when
         UpdateCustomerSamePasswordException exception = assertThrows(UpdateCustomerSamePasswordException.class, () -> {
             underTest.update(customerId, request);
@@ -157,19 +161,20 @@ class FacadeCustomerServiceImplTest {
         //then
         Assertions.assertThat(exception).isNotNull();
     }
+
     @Test
     public void givenCustomerIdAndUpdateCustomerRequest_whenUpdate_ThenReturnGeneralSuccessfullyResponse() throws UpdateCustomerSamePasswordException, CustomerNotFoundException {
         // given
-        Long customerId=1L;
-        Customer customer=new Customer();
+        Long customerId = 1L;
+        Customer customer = new Customer();
         customer.setId(customerId);
         customer.setPassword("old password");
         customer.setTelephone("old telephone");
-        UpdateCustomerRequest request=new UpdateCustomerRequest();
+        UpdateCustomerRequest request = new UpdateCustomerRequest();
         request.setPassword("new password");
         request.setTelephone("new telephone");
         BDDMockito.given(customerService.findByCustomerById(customerId)).willReturn(Optional.of(customer));
-        BDDMockito.given(passwordEncoder.matches(request.getPassword(),customer.getPassword())).willReturn(false);
+        BDDMockito.given(passwordEncoder.matches(request.getPassword(), customer.getPassword())).willReturn(false);
         doNothing().when(customerService).update(customer);
         // when
         GeneralResponse response = underTest.update(customerId, request);
@@ -182,8 +187,8 @@ class FacadeCustomerServiceImplTest {
     @Test
     public void givenCustomerId_whenDelete_thenReturnGeneralSuccessfullyResponse() throws CustomerDeleteException, CustomerNotFoundException {
         // given
-        Long customerId=1L;
-        Customer customer=new Customer();
+        Long customerId = 1L;
+        Customer customer = new Customer();
         customer.setId(customerId);
         customer.setPassword("old password");
         customer.setTelephone("old telephone");
@@ -201,8 +206,8 @@ class FacadeCustomerServiceImplTest {
     @Test
     public void givenInvalidCustomerId_whenDelete_thenReturnThrowsCustomerNotFoundException() throws CustomerDeleteException, CustomerNotFoundException {
         // given
-        Long customerId=1L;
-        Customer customer=new Customer();
+        Long customerId = 1L;
+        Customer customer = new Customer();
         customer.setId(customerId);
         customer.setPassword("old password");
         customer.setTelephone("old telephone");
@@ -215,11 +220,12 @@ class FacadeCustomerServiceImplTest {
         Assertions.assertThat(exception).isNotNull();
 
     }
+
     @Test
     public void givenHasMoneyInBalanceCustomer_whenDelete_thenReturnThrowsCustomerDeleteException() throws CustomerDeleteException, CustomerNotFoundException {
         // given
-        Long customerId=1L;
-        Customer customer=new Customer();
+        Long customerId = 1L;
+        Customer customer = new Customer();
         customer.setId(customerId);
         customer.setPassword("old password");
         customer.setTelephone("old telephone");
@@ -235,7 +241,7 @@ class FacadeCustomerServiceImplTest {
     }
 
     private CreateCheckingAccountRequest getCreateCheckingAccountRequest() {
-        CreateCheckingAccountRequest request=new CreateCheckingAccountRequest();
+        CreateCheckingAccountRequest request = new CreateCheckingAccountRequest();
         request.setBankCode("000000");
         request.setBankCode("00");
         request.setBranchName("FATIH");
@@ -244,7 +250,7 @@ class FacadeCustomerServiceImplTest {
     }
 
     private AddressDto getAddressDto() {
-        AddressDto addressDto=new AddressDto();
+        AddressDto addressDto = new AddressDto();
         addressDto.setAddressType(AddressType.HOME);
         addressDto.setCity("Mersin");
         addressDto.setCountry("Turkey");
@@ -254,13 +260,13 @@ class FacadeCustomerServiceImplTest {
         return addressDto;
     }
 
-    private CustomerInfoDto getCustomerInfoDto(){
-        CustomerInfoDto customerInfoDto=new CustomerInfoDto();
+    private CustomerInfoDto getCustomerInfoDto() {
+        CustomerInfoDto customerInfoDto = new CustomerInfoDto();
         customerInfoDto.setPassword("password");
         customerInfoDto.setEmail("email");
         customerInfoDto.setTelephone("4444");
-        Calendar calendar=Calendar.getInstance();
-        calendar.set(1999,03,03);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1999, 03, 03);
         customerInfoDto.setBirthDay(calendar.getTime());
         customerInfoDto.setIncome(BigDecimal.ONE);
         customerInfoDto.setIdentityNumber("111111111");

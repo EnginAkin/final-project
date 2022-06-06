@@ -1,76 +1,76 @@
 {
-	"info": {
-		"_postman_id": "430cb203-fa5a-4ceb-a628-456944ce9991",
-		"name": "shopping",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "14959976"
-	},
-	"item": [
-		{
-			"name": "debit card",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"cardNumber\":\"6804950585425874\",\r\n    \"cardPassword\":\"456655\",\r\n    \"shoppingAmount\":80\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8082/api/v1/shopping/debit-card",
-					"host": [
-						"localhost"
-					],
-					"port": "8082",
-					"path": [
-						"api",
-						"v1",
-						"shopping",
-						"debit-card"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "credit card",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"cardNumber\":\"5209706250390263\",\r\n    \"cardPassword\":\"1234\",\r\n    \"shoppingAmount\":150,\r\n    \"spendCategory\":\"MARKET\",\r\n    \"description\":\"Shopping\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8082/api/v1/shopping/credit-card",
-					"host": [
-						"localhost"
-					],
-					"port": "8082",
-					"path": [
-						"api",
-						"v1",
-						"shopping",
-						"credit-card"
-					]
-				}
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "430cb203-fa5a-4ceb-a628-456944ce9991",
+    "name": "shopping",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "14959976"
+  },
+  "item": [
+    {
+      "name": "debit card",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"cardNumber\":\"6804950585425874\",\r\n    \"cardPassword\":\"456655\",\r\n    \"shoppingAmount\":80\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8082/api/v1/shopping/debit-card",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "v1",
+            "shopping",
+            "debit-card"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "credit card",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"cardNumber\":\"5209706250390263\",\r\n    \"cardPassword\":\"1234\",\r\n    \"shoppingAmount\":150,\r\n    \"spendCategory\":\"MARKET\",\r\n    \"description\":\"Shopping\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8082/api/v1/shopping/credit-card",
+          "host": [
+            "localhost"
+          ],
+          "port": "8082",
+          "path": [
+            "api",
+            "v1",
+            "shopping",
+            "credit-card"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
 }
