@@ -38,8 +38,4 @@ public class TransferController {
     public GeneralResponse transferByEmail(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @RequestBody EmailTransferRequest emailTransferRequest) throws BusinessException {
         return emailTransfer.transfer(userDetail.getUser().getId(), emailTransferRequest);
     }
-
-
-    // 1. hesap engin.27@gmail.com  // 150 tl
-    // 2. hesap engin.28@gmail.com // 100 tl bakiye
 }

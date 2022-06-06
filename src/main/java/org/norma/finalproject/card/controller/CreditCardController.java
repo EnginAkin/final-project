@@ -45,10 +45,4 @@ public class CreditCardController {
     public GeneralResponse deleteCreditCard(@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetail userDetail, @PathVariable long creditCardId) throws BusinessException {
         return creditCardFacadeService.deleteCreditCard(userDetail.getUser().getId(), creditCardId);
     }
-
-
 }
-/*
-1. iban TR3300006103097710655552051
-2. iban TR3300006106191958547160111
- */
