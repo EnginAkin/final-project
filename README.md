@@ -1,18 +1,20 @@
-# NORMA FINAL PROJESI
+# NORMA FINAL PROJECT
 
-## Proje Tanıtımı
+## Overview
 
-Online bankacılık sistemi, banka şubesine gitmeden internet erişimi olan bir bilgisayar aracılığı ile 
-yapılan bir backend uygulaması olup birçok bankacılık işlemini kapsar.
-Müşterilere verilen 4 temel hizmet vardır.
 
-* Müşteri yönetimi
-* Hesap yönetimi
-* Kart yönetimi
-* Transfer yönetimi
+
+The online banking system can be accessed via a computer with internet access without going to the bank branch.
+It is a backend application made and covers many banking transactions.
+There are 4 basic services provided to customers.
+
+* Customer Management
+* Account Management
+* Card Management
+* Transfer Management
 ----
 
-### Projede Kullanılan Teknolojiler
+### Used Technologies
 * Java 17
 * Spring Boot
 * Hibernate
@@ -26,16 +28,18 @@ Müşterilere verilen 4 temel hizmet vardır.
 * Swagger v3
 
 ---
+## Help
 
-### Uygulamayı localde başlatmak için komut  dizisi
+---
+### Quick start in locale
 ```
 git clone https://github.com/EnginAkin/final-project.git
-$ PostgreSql de "norma" adında bir database oluşturun.
+$ craete database 'norma' in postgresql
 $ mvn clean install
 $ mvn spring-boot:run
 ```
 ----
-### Uygulamayı docker üzerinden başlatmak için komut  dizisi
+### Quick start in docker
 ```
 git clone https://github.com/EnginAkin/final-project.git
 $ mvn clean install
@@ -44,36 +48,39 @@ $ cd ./compose
 $ docker-compose up
 ```
 ----
-#### Kullanıcılara sunulan hizmetler
-* üyelik
-* kullanıcı bilgilerini güncelleme
-* kullanıcı silme
-* giriş yap
-* çıkış yap
-* vadesiz hesap oluşturma
-* vadesiz hesabın hesap hareketlerini detaylı görüntüleme
-* vadesiz hesabın hesap hareketlerini filtreli (tarih aralığı)görüntüleme
-* vadeli birikim hesabı oluşturma
-* vadeli hesabın hesap hareketlerini detaylı görüntüleme
-* vadeli hesabın hesap hareketlerini filtreli (tarih aralığı)görüntüleme
-* vadeli birikimli hesaptan verilen vade ile para biriktirme (faiz) ( schehuled ile yapıldı)
-* banka kartı oluşturma
-* kredi kartı oluşturma
-* banka kartı ile alışveriş , para yatırma ve çekme işlemleri
-* kredi kartı ile alışveriş yapma
-* kredi kartının güncel ve önceki ekstreden kalan borçları görüntüleme
-* kredi kartlarının detaylı hesap hareketlerini görüntüleme
-* hesaplar arasında para transferi yapma
-* iban üzerinden ve email üzerinden transfer yapma
-* farklı türlerde açılmış hesaplar arasında güncel kurdan anlık para transferi
+###  services provided to customers details
+* Sign-up
+* Update user information
+* Delete user
+* Login
+* Logout
+* Create a checkin account
+* Detailed view of the account activities of the checking account
+* Detailed view of the account activities of the checking account with filter(
+  date range)
+* Create a saving account
+* Detailed view of the account activities of the saving account
+* Detailed view of the account activities of the saving account with filter(
+  date range)
+* Saving money (interest) with a maturity given from a savings account (made with schehuled)
+* Create a debit card
+* Create a credit card
+* shopping, depositing and withdrawing with a debit card
+* Shopping with credit card
+* view the current debt and remaining debts of the credit card from the previous extract
+* Detailed view of the account activities of the credit card account
+* transfer money between accounts
+* Making transfers via iban and email method
+* Instant money transfer between different types currency of accounts at the current exchange rate
 ---
 
 
 ## Swagger 
 
-### Postman Collection 
+---------
+### Postman Collection
 
-**/postman-collections** dizininden postman koleksiyonlarını import edip endpointleri test edebilirsiniz.
+**/postman-collections** You can import the postman collections from the directory and test the endpoints.
 
 
 ### Customer endpoints
@@ -117,7 +124,7 @@ $ docker-compose up
 ![presentation](screen-shoots/table-diagrams/database-diagram.png)
 
 ---
-### Test sonuçları
-* çalışan test sayısı : **123**
-* detaylı test sonuçları için \target\site\jacoco\index.html üzerinden görüntüleyebilirsiniz.
+### Test results
+* Number of test method: **125**
+* To see detail test result =>  \target\site\jacoco\index.html 
 ![presentation](screen-shoots/test-coverage/coverage-project.PNG)
