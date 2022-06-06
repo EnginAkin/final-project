@@ -1,6 +1,6 @@
-# NORMA FINAL PROJECT
+# NORMA FINAL PROJESI
 
-## Proje tanıtımı
+## Proje Tanıtımı
 
 Online bankacılık sistemi, banka şubesine gitmeden internet erişimi olan bir bilgisayar aracılığı ile 
 yapılan bir backend uygulaması olup birçok bankacılık işlemini kapsar.
@@ -12,7 +12,7 @@ Müşterilere verilen 4 temel hizmet vardır.
 * Transfer yönetimi
 ----
 
-### Projede kullanılan teknolojiler
+### Projede Kullanılan Teknolojiler
 * Java 17
 * Spring Boot
 * Hibernate
@@ -30,13 +30,20 @@ Müşterilere verilen 4 temel hizmet vardır.
 ### Uygulamayı localde başlatmak için komut  dizisi
 ```
 git clone https://github.com/EnginAkin/final-project.git
-$ cd ./compose
-$ docker-compose up
+$ PostgreSql de "norma" adında bir database oluşturun.
 $ mvn clean install
 $ mvn spring-boot:run
 ```
 ----
-
+### Uygulamayı docker üzerinden başlatmak için komut  dizisi
+```
+git clone https://github.com/EnginAkin/final-project.git
+$ mvn clean install
+$ docker build -t engbank:0.0.1 .
+$ cd ./compose
+$ docker-compose up
+```
+----
 #### Kullanıcılara sunulan hizmetler
 * üyelik
 * kullanıcı bilgilerini güncelleme
@@ -49,7 +56,7 @@ $ mvn spring-boot:run
 * vadeli birikim hesabı oluşturma
 * vadeli hesabın hesap hareketlerini detaylı görüntüleme
 * vadeli hesabın hesap hareketlerini filtreli (tarih aralığı)görüntüleme
-* vadeli birikimli hesaptan verilen vade ile para biriktirme (faiz)
+* vadeli birikimli hesaptan verilen vade ile para biriktirme (faiz) ( schehuled ile yapıldı)
 * banka kartı oluşturma
 * kredi kartı oluşturma
 * banka kartı ile alışveriş , para yatırma ve çekme işlemleri
@@ -65,7 +72,8 @@ $ mvn spring-boot:run
 ## Swagger 
 
 ### Postman Collection 
-**/postman-collections** dizininden import edip endpointleri test edebilirsiniz.
+
+**/postman-collections** dizininden postman koleksiyonlarını import edip endpointleri test edebilirsiniz.
 
 
 ### Customer endpoints
@@ -111,4 +119,5 @@ $ mvn spring-boot:run
 ---
 ### Test sonuçları
 * çalışan test sayısı : **123**
+* detaylı test sonuçları için \target\site\jacoco\index.html üzerinden görüntüleyebilirsiniz.
 ![presentation](screen-shoots/test-coverage/coverage-project.PNG)
